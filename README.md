@@ -1,8 +1,11 @@
 # joes_jwellery_crm
 
-A new Flutter project.
+A project for joes customer.
 
 ## Getting Started
+
+# Flutter 3.29.0 
+# Dart 3.7.0
 
 This project is a starting point for a Flutter application.
 
