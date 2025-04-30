@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
-import 'package:joes_jwellery_crm/data/model/customer_model.dart';
+import 'package:joes_jwellery_crm/data/model/customer_list_model.dart';
 
 
 class CustomerTile extends StatelessWidget {
-  final Customer customer;
+  final Customers customer;
   final VoidCallback onView;
 
   const CustomerTile({super.key, required this.customer, required this.onView});
@@ -32,7 +32,7 @@ class CustomerTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        customer.name,
+                        customer.name ?? "",
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: AppDimens.textSize16),
                       ),
 

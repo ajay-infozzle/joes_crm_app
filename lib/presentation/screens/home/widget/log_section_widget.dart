@@ -4,7 +4,7 @@ import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 
 class LogSectionWidget extends StatelessWidget {
   final String title;
-  final String assetIcon;
+  final List<String> assetIcon;
   final List<String> names;
   final VoidCallback? onTap;
 
@@ -42,10 +42,13 @@ class LogSectionWidget extends StatelessWidget {
             ),
           ),
           Column(
-            children: names.map((name) {
+            children: names.asMap().entries.map((entry) {
+              int index = entry.key;
+              String name = entry.value;
+
               return ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: width*0.04, vertical: 0),
-                leading: Image.asset(assetIcon, width: AppDimens.icon20, height: AppDimens.icon20),
+                leading: Image.asset(assetIcon[index], width: AppDimens.icon20, height: AppDimens.icon20),
                 title: Text(name),
               );
             }).toList(),

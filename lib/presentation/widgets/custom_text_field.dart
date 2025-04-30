@@ -3,20 +3,24 @@ import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 
 class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
   final String hintText;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final bool obscureText;
+  final bool enabled;
   final FocusNode focusNode;
   final ValueChanged<String>? onChanged;
   final String? Function(String?)? validator;
 
   const CustomTextField({
     super.key,
+    required this.controller,
     required this.hintText,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
     this.obscureText = false,
+    this.enabled = true,
     required this.focusNode,
     this.onChanged,
     this.validator,
@@ -39,8 +43,10 @@ class CustomTextField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        controller: controller,
         focusNode: focusNode,
         obscureText: obscureText,
+        enabled: enabled,
         cursorColor: AppColor.primary,
         cursorWidth: 1,
         decoration: InputDecoration(
