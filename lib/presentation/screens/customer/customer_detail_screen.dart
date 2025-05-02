@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_header.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/expandable_section.dart';
 
@@ -17,6 +19,12 @@ class CustomerDetailScreen extends StatefulWidget {
 
 class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   @override
+  void initState() {
+    super.initState();
+    context.read<CustomerCubit>().fetchSingleCustomer(id: widget.id);
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
@@ -26,13 +34,24 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         scrolledUnderElevation: 0,
         backgroundColor: AppColor.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded, color: AppColor.primary, size: AppDimens.spacing20,), 
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+            color: AppColor.primary,
+            size: AppDimens.spacing20,
+          ),
           onPressed: () {
             context.pop();
-          }
+          },
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert, color: AppColor.primary, size: AppDimens.spacing20,)),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.more_vert,
+              color: AppColor.primary,
+              size: AppDimens.spacing20,
+            ),
+          ),
         ],
         elevation: 0,
       ),
@@ -41,68 +60,85 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         child: Container(
           width: width,
           color: AppColor.white,
-          child: ListView(
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: width*0.05, vertical: width*0.05),
-                child: CustomerHeader(name: widget.name),
-              ),
+          child: BlocConsumer<CustomerCubit, CustomerState>(
+            listener: (context, state) {
+              
+            },
+            builder: (context, state) {
+              if (state is CustomerLoading) {
+                return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
+              } else if (state is CustomerLoaded) {
+                final customer = state.customer;
 
-              15.h,
+                return ListView(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: width * 0.05,
+                        vertical: width * 0.05,
+                      ),
+                      child: CustomerHeader(name: widget.name),
+                    ),
 
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: width*0.05),
-                child: ExpandableSection(
-                  title: "Basic Details",
-                  content: {
-                    "ID": "910968",
-                    "Name": "David-Berland",
-                    "Email": "lorem ipsum",
-                    "Country": "lorem ipsum",
-                    "Store": "lorem ipsum",
-                    "Contact Number": "lorem ipsum",
-                    "Birthday": "lorem ipsum",
-                    "Anniversary": "lorem ipsum",
-                  },
-                ),
-              ),
+                    15.h,
 
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: width*0.05),
-                child: ExpandableSection(
-                  title: "Sales",
-                  content: {
-                    "Sale Date": "910968",
-                    "Store": "David-Berland",
-                    "Amount": "lorem ipsum",
-                    "Sales Associate(s)": "lorem ipsum",
-                    "Total Sales": "lorem ipsum",
-                    "Last Sale Date": "lorem ipsum",
-                  },
-                ),
-              ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: ExpandableSection(
+                        title: "Basic Details",
+                        content: {
+                          "ID": customer.id ?? '-',
+                          "Name": customer.name ?? '-',
+                          "Surname": customer.surname ?? '-',
+                          "Email": customer.email ?? '-',
+                          "Country": customer.country ?? '-',
+                          "Store": customer.store ?? '-',
+                          "Contact Number": customer.phone ?? '-',
+                          "Birthday": customer.birthday ?? '-',
+                          "Anniversary": customer.anniversary ?? '-',
+                          "Spouse Name": customer.spouseName ?? '-',
+                          "Wife Email": customer.wifeEmail ?? '-',
+                          "Wife Phone": customer.wifePhone ?? '-',
+                          "Wife Birthday": customer.wifeBirthday ?? '-',
+                        },
+                      ),
+                    ),
 
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: width*0.05),
-                child: const ExpandableSection(
-                  title: "SMS Log",
-                ),
-              ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: ExpandableSection(
+                        title: "Sales",
+                        content: {
+                          "Sale Date": "910968",
+                          "Store": "David-Berland",
+                          "Amount": "lorem ipsum",
+                          "Sales Associate(s)": "lorem ipsum",
+                          "Total Sales": "lorem ipsum",
+                          "Last Sale Date": "lorem ipsum",
+                        },
+                      ),
+                    ),
 
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: width*0.05),
-                child: const ExpandableSection(
-                  title: "Activity Stream",
-                ),
-              ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: const ExpandableSection(title: "SMS Log"),
+                    ),
 
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: width*0.05),
-                child: const ExpandableSection(
-                  title: "Wish List",
-                ),
-              ),
-            ],
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: const ExpandableSection(title: "Activity Stream"),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: const ExpandableSection(title: "Wish List"),
+                    ),
+                  ],
+                );
+              }
+
+              return const SizedBox.shrink();
+            },
           ),
         ),
       ),

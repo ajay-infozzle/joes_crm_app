@@ -10,7 +10,16 @@ sealed class CustomerState extends Equatable {
 final class CustomerInitial extends CustomerState {}
 
 
+class CustomerLoading extends CustomerState {}
 class CustomerListLoading extends CustomerState {}
+
+class CustomerLoaded extends CustomerState {
+  final Customer customer;
+  const CustomerLoaded(this.customer);
+
+  @override
+  List<Object> get props => [customer];
+}
 
 class CustomerListLoaded extends CustomerState {
   final List<Customers> customers;
@@ -18,6 +27,14 @@ class CustomerListLoaded extends CustomerState {
 
   @override
   List<Object> get props => [customers];
+}
+
+class CustomerError extends CustomerState {
+  final String message;
+  const CustomerError(this.message);
+
+  @override
+  List<Object> get props => [message];
 }
 
 class CustomerListError extends CustomerState {

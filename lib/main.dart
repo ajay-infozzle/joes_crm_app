@@ -5,7 +5,9 @@ import 'package:joes_jwellery_crm/core/routes/app_routes.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/utils/dependency_injection.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/auth/auth_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/call/call_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/dashboard/dashboard_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 
 void main() {
@@ -22,8 +24,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => getIt<AuthCubit>()),
+        BlocProvider(create: (context) => getIt<DashboardCubit>()),
         BlocProvider(create: (context) => getIt<HomeCubit>()),
-        BlocProvider(create: (context) => getIt<CustomerCubit>())
+        BlocProvider(create: (context) => getIt<CustomerCubit>()),
+        BlocProvider(create: (context) => getIt<CallCubit>())
       ],
       child: MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),

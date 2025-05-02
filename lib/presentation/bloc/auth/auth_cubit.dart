@@ -54,4 +54,18 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+ Future<bool> logout() async {
+    emit(AuthLoggingOut());
+    try {
+      final sessionManager = SessionManager();
+      await sessionManager.clearSession();
+      
+      emit(AuthLoggedOut());
+      return true ;
+    } catch (e) {
+      emit(AuthLogoutError());
+      return false ;
+    }
+  }
+
 }

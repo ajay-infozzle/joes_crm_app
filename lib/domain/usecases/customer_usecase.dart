@@ -7,4 +7,8 @@ class CustomerUseCase {
   Future<dynamic> fetchCustomers() {
     return repository.getCustomers();
   }
+
+  Future<dynamic> fetchSingleCustomer({required String id}) {
+    return repository.getCustomerDetail(id);
+  }
 }

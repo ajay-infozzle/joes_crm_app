@@ -145,10 +145,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 child: BlocBuilder<CustomerCubit, CustomerState>(
                   builder: (context, state) {
                     if (state is CustomerListLoading) {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator(color: AppColor.primary));
                     }
-                    else if (state is CustomerListLoaded){
-                      _onDataLoaded(state.customers);
+                    else if (state is CustomerListLoaded || allCustomers.isNotEmpty){
+                      if (state is CustomerListLoaded && allCustomers.isEmpty) {
+                        _onDataLoaded(state.customers);
+                      }
 
                       return ListView.builder(
                         padding: const EdgeInsets.symmetric(

@@ -27,4 +27,26 @@ class CustomerRepositoryImpl implements CustomerRepository {
       rethrow ;
     }
   }
+
+  @override
+  Future<dynamic> getCustomerDetail(String id) async {
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.get(
+        '',
+        queryParams: {
+          'view' : 'customers',
+          'task' : 'getCustomer',
+          'id' : id,
+          'token' : token
+        }
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
 }

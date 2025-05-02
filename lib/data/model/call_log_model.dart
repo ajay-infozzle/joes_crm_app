@@ -1,3 +1,5 @@
+// enum CallType {incoming, outgoing, missed}
+
 class CallLogModel {
   List<CallLog>? callLog;
 
@@ -7,7 +9,7 @@ class CallLogModel {
     if (json['call_log'] != null) {
       callLog = <CallLog>[];
       json['call_log'].forEach((v) {
-        callLog!.add(new CallLog.fromJson(v));
+        callLog!.add(CallLog.fromJson(v));
       });
     }
   }
