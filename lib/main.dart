@@ -9,6 +9,8 @@ import 'package:joes_jwellery_crm/presentation/bloc/call/call_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/dashboard/dashboard_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/sms/sms_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/whatsapp/whatsapp_cubit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +29,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<DashboardCubit>()),
         BlocProvider(create: (context) => getIt<HomeCubit>()),
         BlocProvider(create: (context) => getIt<CustomerCubit>()),
-        BlocProvider(create: (context) => getIt<CallCubit>())
+        BlocProvider(create: (context) => getIt<CallCubit>()),
+        BlocProvider(create: (context) => getIt<SmsCubit>()),
+        BlocProvider(create: (context) => getIt<WhatsappCubit>())
       ],
       child: MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),

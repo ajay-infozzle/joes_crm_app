@@ -10,6 +10,7 @@ import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/data/model/customer_list_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_tile.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
 class CustomerScreen extends StatefulWidget {
   const CustomerScreen({super.key});
@@ -147,33 +148,47 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     if (state is CustomerListLoading) {
                       return Center(child: CircularProgressIndicator(color: AppColor.primary));
                     }
+                    else if (state is CustomerListError) {
+                      return RetryWidget(
+                        onTap: () async{
+                          context.read<CustomerCubit>().fetchCustomers();
+                        },
+                      );
+                    }
                     else if (state is CustomerListLoaded || allCustomers.isNotEmpty){
                       if (state is CustomerListLoaded && allCustomers.isEmpty) {
                         _onDataLoaded(state.customers);
                       }
 
-                      return ListView.builder(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        itemCount: filteredCustomers.length,
-                        itemBuilder: (context, index) {
-                          Customers customer = filteredCustomers[index];
-                          return CustomerTile(
-                            customer: customer,
-                            onView: () {
-                              log(
-                                "customer id => ${customer.id}",
-                                name: "customer tile",
-                              );
-                              context.pushNamed(
-                                RoutesName.customerDetailScreen,
-                                extra: {'name': customer.name, 'id': customer.id},
-                              );
-                            },
-                          );
+                      return RefreshIndicator(
+                        color: AppColor.primary,
+                        onRefresh: () async {
+                          context.read<CustomerCubit>().fetchCustomers();
                         },
+                        child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppDimens.spacing15,
+                            vertical: AppDimens.spacing8,
+                          ),
+                          itemCount: filteredCustomers.length,
+                          itemBuilder: (context, index) {
+                            Customers customer = filteredCustomers[index];
+                            return CustomerTile(
+                              customer: customer,
+                              onView: () {
+                                log(
+                                  "customer id => ${customer.id}",
+                                  name: "customer tile",
+                                );
+                                context.pushNamed(
+                                  RoutesName.customerDetailScreen,
+                                  extra: {'name': customer.name, 'id': customer.id},
+                                );
+                              },
+                            );
+                          },
+                        ),
                       );
                     }else {
                       return SizedBox();

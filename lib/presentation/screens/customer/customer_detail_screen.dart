@@ -7,6 +7,7 @@ import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_header.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/expandable_section.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
 class CustomerDetailScreen extends StatefulWidget {
   final String name;
@@ -67,7 +68,15 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
             builder: (context, state) {
               if (state is CustomerLoading) {
                 return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
-              } else if (state is CustomerLoaded) {
+              } 
+              else if (state is CustomerError) {
+                return RetryWidget(
+                  onTap: () async{
+                    context.read<CustomerCubit>().fetchSingleCustomer(id: widget.id);
+                  },
+                );
+              } 
+              else if (state is CustomerLoaded) {
                 final customer = state.customer;
 
                 return ListView(
@@ -126,7 +135,11 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
 
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: const ExpandableSection(title: "Activity Stream"),
+                      child: ExpandableSection(
+                        title: "Activity Stream",
+                        isActivityStream: true,
+                        activityList: customer.activityStream,
+                      ),
                     ),
 
                     Container(

@@ -13,6 +13,7 @@ import 'package:joes_jwellery_crm/presentation/bloc/dashboard/dashboard_cubit.da
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/home/widget/log_section_widget.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -85,6 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context, state) {
               if (state is HomeLoading) {
                 return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
+              }
+              else if (state is HomeError) {
+                return RetryWidget(
+                  onTap: () async{
+                    await context.read<HomeCubit>().fetchHomeData();
+                  },
+                );
               }
               else if(state is HomeLoaded){
                 final phoneLogs = state.homeData.phoneLogs ?? [];

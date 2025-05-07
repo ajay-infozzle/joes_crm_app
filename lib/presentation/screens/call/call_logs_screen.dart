@@ -7,6 +7,7 @@ import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/data/model/call_log_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/call/call_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/call/widget/call_log_tile.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
 class CallLogsScreen extends StatefulWidget {
   const CallLogsScreen({super.key});
@@ -142,7 +143,15 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
                     builder: (context, state) {
                       if (state is CallLogLoading) {
                         return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
-                      } else if (state is CallLogLoaded) {
+                      } 
+                      else if (state is CallLogError) {
+                        return RetryWidget(
+                          onTap: () async{
+                            await context.read<CallCubit>().fetchCalls();
+                          }, 
+                        );
+                      } 
+                      else if (state is CallLogLoaded) {
                         _allCalls = state.callLogModel.callLog ?? [];
                         _filteredCalls = _searchController.text.isEmpty
                             ? _allCalls
