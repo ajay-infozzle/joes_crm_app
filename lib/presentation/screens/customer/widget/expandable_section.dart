@@ -1,23 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
-import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/single_customer_model.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/activity_list_widget.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/sales_list_widget.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/sms_log_list_widget.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/wish_list_widget.dart';
 
 
 class ExpandableSection extends StatefulWidget {
   final String title;
   final bool isActivityStream;
+  final bool isSales;
+  final bool isSmsLogs;
+  final bool isWishList;
   final Map<String, String>? content;
   final List<ActivityStream>? activityList;
+  final List<Sales>? salesList;
+  final List<SmsLog>? smsLogList;
+  final List<WishList>? wishList;
 
   const ExpandableSection({
     super.key, 
     required this.title, 
     this.content,
     this.isActivityStream = false,
-    this.activityList
+    this.isSales = false,
+    this.isSmsLogs = false,
+    this.isWishList = false,
+    this.activityList,
+    this.salesList,
+    this.smsLogList,
+    this.wishList
   });
 
   @override
@@ -67,8 +82,9 @@ class _ExpandableSectionState extends State<ExpandableSection> {
             ),
           ),
 
-          if (_isExpanded && (widget.content != null || widget.activityList != null))
+          if (_isExpanded && (widget.content != null || widget.activityList != null || widget.salesList != null || widget.smsLogList != null || widget.wishList != null))
             Container(
+              width: width,
               decoration: BoxDecoration(
                 color: AppColor.white,
                 borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
@@ -79,90 +95,50 @@ class _ExpandableSectionState extends State<ExpandableSection> {
                   color: AppColor.greenishGrey.withValues(alpha: .4),
                   borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
                 ),
-                child: 
-                  widget.isActivityStream && widget.activityList != null
-                  ?Column(
-                    children: widget.activityList!.map((item) {
-                      final dateTime = formatDateTime(item.date??'');
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: AppDimens.spacing8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Builder(
+                  builder: (context) {
+                    if (widget.isActivityStream && widget.activityList != null) {
+                      return ActivityListWidget(activityList: widget.activityList);
+                    } else if (widget.isSales && widget.salesList != null) {
+                      return SalesListWidget(salesList: widget.salesList!); 
+                    } else if (widget.isSmsLogs && widget.smsLogList != null) {
+                      return SmsLogListWidget(smsLogList: widget.smsLogList!); 
+                    } else if (widget.isWishList && widget.wishList != null) {
+                      return WishListWidget(wishList: widget.wishList!); 
+                    } else if (widget.content != null) {
+                      return Column(
+                        children: widget.content!.entries.map((entry) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: AppDimens.spacing4),
+                            child: Row(
                               children: [
-                                Text(
-                                  item.user ?? '',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: AppDimens.textSize14,
-                                    color: AppColor.primary
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    entry.key, style: TextStyle(fontSize: AppDimens.textSize14, fontWeight: FontWeight.w500)
                                   ),
                                 ),
-                                Text(
-                                  dateTime['time']??'',
-                                  style: TextStyle(
-                                    fontSize: AppDimens.textSize12,
-                                    color: Colors.grey[600],
+
+                                5.w,
+
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    entry.value, 
+                                    style: const TextStyle(fontSize: AppDimens.textSize14, fontWeight: FontWeight.w400)
                                   ),
                                 ),
                               ],
                             ),
-                            4.h,
-
-                            Text(
-                              item.action ?? '',
-                              style: TextStyle(
-                                fontSize: AppDimens.textSize14,
-                                color: AppColor.primary
-                              ),
-                            ),
-                            5.h,
-
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                dateTime['date'] ?? '',
-                                style: TextStyle(
-                                  fontSize: AppDimens.textSize12,
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                            ),
-                            Divider(thickness: 1, color: Colors.grey[300]),
-                          ],
-                        ),
+                          );
+                        }).toList(),
                       );
-                    }).toList(),
-                  )
-                  :Column(
-                    children: widget.content!.entries.map((entry) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: AppDimens.spacing8),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                entry.key, style: TextStyle(fontSize: AppDimens.textSize14, fontWeight: FontWeight.w500)
-                              ),
-                            ),
-
-                            5.w,
-
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                entry.value, 
-                                style: const TextStyle(fontSize: AppDimens.textSize14, fontWeight: FontWeight.w400)
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                    }
+                    else {
+                      return const SizedBox(); 
+                    }
+                  }, 
+                )
               ),
             ),
         ],

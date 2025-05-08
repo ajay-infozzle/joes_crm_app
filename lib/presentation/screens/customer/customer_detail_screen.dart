@@ -109,6 +109,8 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                           "Wife Email": customer.wifeEmail ?? '-',
                           "Wife Phone": customer.wifePhone ?? '-',
                           "Wife Birthday": customer.wifeBirthday ?? '-',
+                          "Total Sales": customer.totalSales ?? '-',
+                          "Last Sale Date": customer.lastSaleDate ?? '-',
                         },
                       ),
                     ),
@@ -117,20 +119,18 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                       margin: EdgeInsets.symmetric(horizontal: width * 0.05),
                       child: ExpandableSection(
                         title: "Sales",
-                        content: {
-                          "Sale Date": "910968",
-                          "Store": "David-Berland",
-                          "Amount": "lorem ipsum",
-                          "Sales Associate(s)": "lorem ipsum",
-                          "Total Sales": "lorem ipsum",
-                          "Last Sale Date": "lorem ipsum",
-                        },
+                        isSales: true,
+                        salesList: customer.sales,
                       ),
                     ),
 
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: const ExpandableSection(title: "SMS Log"),
+                      child: ExpandableSection(
+                        title: "SMS Log",
+                        isSmsLogs: true,
+                        smsLogList: customer.smsLog,
+                      ),
                     ),
 
                     Container(
@@ -144,7 +144,11 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
 
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: const ExpandableSection(title: "Wish List"),
+                      child: ExpandableSection(
+                        title: "Wish List",
+                        isWishList: true,
+                        wishList: customer.wishList,
+                      ),
                     ),
                   ],
                 );
