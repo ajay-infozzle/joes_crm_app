@@ -43,8 +43,14 @@ class _CustomerScreenState extends State<CustomerScreen> {
   }
 
   void _onDataLoaded(List<Customers> customers) {
-    allCustomers = customers;
-    filteredCustomers = customers; 
+    allCustomers = customers ;
+    filteredCustomers = searchController.text.isEmpty
+          ? allCustomers
+          : allCustomers
+              .where((item) => item.name
+                  ?.toLowerCase()
+                  .contains(searchController.text.toLowerCase()) ?? false)
+              .toList();
   }
 
   @override
@@ -143,7 +149,14 @@ class _CustomerScreenState extends State<CustomerScreen> {
               ),
 
               Expanded(
-                child: BlocBuilder<CustomerCubit, CustomerState>(
+                child: BlocConsumer<CustomerCubit, CustomerState>(
+                  listener: (context, state) {
+                    if (state is CustomerListLoaded) {
+                      allCustomers.clear();
+                      filteredCustomers.clear();
+                      _onDataLoaded(state.customers);
+                    }
+                  },
                   builder: (context, state) {
                     if (state is CustomerListLoading) {
                       return Center(child: CircularProgressIndicator(color: AppColor.primary));
@@ -155,11 +168,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         },
                       );
                     }
-                    else if (state is CustomerListLoaded || allCustomers.isNotEmpty){
-                      if (state is CustomerListLoaded && allCustomers.isEmpty) {
-                        _onDataLoaded(state.customers);
-                      }
-
+                    else if (allCustomers.isNotEmpty){
                       return RefreshIndicator(
                         color: AppColor.primary,
                         onRefresh: () async {

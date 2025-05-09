@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final bool enabled;
   final FocusNode focusNode;
+  final Color? fieldBackColor;
   final ValueChanged<String>? onChanged;
   final String? Function(String?)? validator;
 
@@ -22,6 +23,7 @@ class CustomTextField extends StatelessWidget {
     this.obscureText = false,
     this.enabled = true,
     required this.focusNode,
+    this.fieldBackColor,
     this.onChanged,
     this.validator,
   });
@@ -32,7 +34,7 @@ class CustomTextField extends StatelessWidget {
       height: AppDimens.spacing50,
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
-        color: AppColor.greenishGrey.withValues(alpha:0.4),
+        color: fieldBackColor ?? AppColor.greenishGrey.withValues(alpha:0.4),
         borderRadius: BorderRadius.circular(AppDimens.radius16),
         boxShadow: [
           BoxShadow(
