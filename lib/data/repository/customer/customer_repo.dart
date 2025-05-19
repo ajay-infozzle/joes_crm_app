@@ -12,4 +12,10 @@ abstract class CustomerRepository {
     required String wifeEmail,
     required String wifePhone
   });
+  Future<dynamic> addCustomerDetail({
+    required Map<String, String> formdata,
+  });
+  Future<dynamic> searchCustomerDetail({
+    required Map<String, String> formdata,
+  });
 }

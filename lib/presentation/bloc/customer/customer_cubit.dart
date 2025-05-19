@@ -5,8 +5,10 @@ import 'package:equatable/equatable.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/data/model/customer_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/single_customer_model.dart';
+import 'package:joes_jwellery_crm/data/model/store_list_model.dart';
 import 'package:joes_jwellery_crm/domain/usecases/customer_usecase.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/origination_dropdown_widget.dart';
 
 part 'customer_state.dart';
 
@@ -39,6 +41,186 @@ class CustomerCubit extends Cubit<CustomerState> {
     }
   }
 
+
+  String vip = "No" ;
+  String subscribe = "No" ;
+  String country = "" ; //UnitedStates, Canada, UnitedKingdom, SintMaarten, other
+  String statte = "" ;
+  String city = "" ;
+  OriginationOption  origination = OriginationOption(value: '', display: 'Select origination');  //ship, hotel, mailchimp, NotAvailable
+  Stores? store;
+  String tempCustEmail = "";
+
+  void changeStore(Stores value){
+    store = value;
+    emit(CustomerAddFormUpdate());
+  }
+
+  String checkCountry(){
+    switch (country) {
+      case "":
+        return "" ;
+      case "United States":
+        return "UnitedStates" ;
+      case "Canada":
+        return "Canada" ;
+      case "United Kingdom":
+        return "UnitedKingdom" ;
+      case "Sint Maarten (Dutch part)":
+        return "SintMaarten" ;
+      default:
+        return "other";
+    }
+  }
+
+  void changeVip(String value){
+    emit(CustomerInitial());
+    vip = value ;
+    emit(CustomerAddFormUpdate());
+  }
+
+  void changeSubscribe(String value){
+    emit(CustomerInitial());
+    subscribe = value ;
+    emit(CustomerAddFormUpdate());
+  }
+
+  void changeCountry(String value){
+    country = value ;
+    emit(CustomerAddFormUpdate());
+  }
+
+  void changeState(String value){
+    statte = value ;
+    emit(CustomerAddFormUpdate());
+  }
+
+  void changeCity(String value){
+    city = value ;
+    emit(CustomerAddFormUpdate());
+  }
+  final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+
+  void validateFormAndSubmit({
+    required String storeId,
+    required String name,
+    required String surname,
+    required String email,
+    required String phone,
+    required String cntry,
+    required String spouseName,
+    required String wifeEmail,
+    required String wifePhone,
+    required String ship,
+    required String vip,
+    required String address,
+    required String city,
+    required String sstate,
+    required String zip,
+    required String birthday,
+    required String wifeBirthday,
+    required String anniversary,
+    required String unsubscribe,
+  }){
+    if(storeId.isEmpty){
+      emit(CustomerAddError("Please select store"));
+      return ;
+    }
+    if(email.isEmpty){
+      emit(CustomerAddError("Please enter email"));
+      return ;
+    }
+    if (!emailRegex.hasMatch(email)) {
+      emit(CustomerAddError("Please enter a valid email"));
+      return;
+    }
+    if (cntry.isEmpty) {
+      emit(CustomerAddError("Please select country"));
+      return;
+    }
+
+    addCustomer(
+      formdata: {
+        'store_id' : storeId,
+        'email' : email,
+        'country' : cntry,
+        'name' : name,
+        'surname' : surname,
+        'spouse_name' : spouseName,
+        'wife_email' : wifeEmail,
+        'vip' : vip,
+        'ship' : ship,
+        'address' : address,
+        'city' : city,
+        'state' : sstate,
+        'zip' : zip,
+        'phone' : phone,
+        'wife_phone' : wifePhone,
+        'birthday' : birthday,
+        'spouse_birthday' : wifeBirthday,
+        'anniversary' : anniversary,
+        'unsubscribed' : unsubscribe
+      } 
+    );
+    
+  }
+  
+  Future<void> isCustomerExist({
+    required Map<String, String> formdata
+  }) async {
+    try {
+      if(formdata['query'] == '' ){
+        emit(CustomerExistError("Please enter customer email !"));
+        return ;
+      }
+      if(!emailRegex.hasMatch(formdata['query']!)){
+        emit(CustomerExistError("Please enter valid email !"));
+        return ;
+      }
+
+      emit(CustomerExistVerifying());
+      final response = await customerUseCase.searchCustomer(formdata: formdata);
+      if(response != null){
+        if(response['customers'].length > 0){
+          showToast(msg: "${formdata['query']} is already exist", backColor: AppColor.red);
+          emit(CustomerExist());
+        }else if(response['customers'].length == 0){
+          showToast(msg: "${formdata['query']} is available", backColor: AppColor.green);
+          emit(CustomerNotExist());
+        }
+      }else{
+        emit(CustomerExistError("Something went wrong !"));
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(CustomerExistError(e.toString()));
+    }
+  }
+
+  Future<void> addCustomer({
+    required Map<String, String> formdata
+  }) async {
+    try {
+      emit(CustomerAddFormLoading());
+      final response = await customerUseCase.addCustomer(formdata: formdata);
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+
+        store = null;
+        origination = OriginationOption(value: '', display: "Select Origination");
+        country = "";
+        city = "";
+        statte = "";
+        tempCustEmail = "";
+        emit(CustomerAddFormSubmitted());
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(CustomerAddError(e.toString()));
+    }
+  }
+
+
   Future<void> updateCustomer({
     required String id,
     required String name,
@@ -64,4 +246,5 @@ class CustomerCubit extends Cubit<CustomerState> {
       emit(CustomerError(e.toString()));
     }
   }
+
 }

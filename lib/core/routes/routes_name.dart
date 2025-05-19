@@ -4,6 +4,10 @@ class RoutesName {
   static const String dashboardScreen = "dashboard";
   static const String homeScreen = "home";
   static const String customerScreen = "customer";
+  static const String searchCustomerScreen = "search-customer";
+  static const String addCustomerScreen = "add-customer";
   static const String customerDetailScreen = "customer-detail";
   static const String emailThreadScreen = "email-thread";
+  static const String searchLeadsScreen = "search-leads";
+  static const String addLeadsScreen = "add-leads";
 }

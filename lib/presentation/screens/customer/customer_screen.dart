@@ -84,22 +84,24 @@ class _CustomerScreenState extends State<CustomerScreen> {
           },
         ),
         actions: [
-          IconButton(
-            icon: Image.asset(
-              AssetsConstant.filterIcon,
-              width: AppDimens.icon18,
-              height: AppDimens.icon18,
-              color: AppColor.primary,
-            ),
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: Image.asset(
+          //     AssetsConstant.filterIcon,
+          //     width: AppDimens.icon18,
+          //     height: AppDimens.icon18,
+          //     color: AppColor.primary,
+          //   ),
+          //   onPressed: () {},
+          // ),
           IconButton(
             icon: Icon(
               Icons.add,
               size: AppDimens.icon25,
               color: AppColor.primary,
             ),
-            onPressed: () {},
+            onPressed: () {
+              context.pushNamed(RoutesName.searchCustomerScreen);
+            },
           ),
         ],
         elevation: 0,

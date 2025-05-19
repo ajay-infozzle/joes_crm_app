@@ -1,26 +1,27 @@
+import 'package:dio/dio.dart';
 import 'package:joes_jwellery_crm/core/utils/session_manager.dart';
 import 'package:joes_jwellery_crm/data/network/api_service.dart';
-import 'package:joes_jwellery_crm/data/repository/home/home_repo.dart';
+import 'package:joes_jwellery_crm/data/repository/leads/leads_repo.dart';
 
-
-class HomeRepositoryImpl implements HomeRepository {
+class LeadsRepoImpl implements LeadsRepository{
   final ApiService apiService;
 
-  HomeRepositoryImpl(this.apiService);
+  LeadsRepoImpl(this.apiService);
 
   @override
-  Future<dynamic> fetch() async {
+  Future<dynamic> addLeads({required Map<String, String> formdata}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
     try {
-      final response = await apiService.get(
+      final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'home',
-          'task' : 'getPhoneLogs',
+          'view' : 'leads',
+          'task' : 'addLead',
           'token' : token
-        }
+        },
+        body: FormData.fromMap(formdata),
       );
       
       return response;
@@ -30,18 +31,19 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
-  Future<dynamic> getStores() async {
+  Future<dynamic> searchLeads({required Map<String, String> query}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
     try {
-      final response = await apiService.get(
+      final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'stores',
-          'task' : 'getStores',
+          'view' : 'leads',
+          'task' : 'searchLeads',
           'token' : token
-        }
+        },
+        body: FormData.fromMap(query),
       );
       
       return response;
@@ -49,4 +51,5 @@ class HomeRepositoryImpl implements HomeRepository {
       rethrow ;
     }
   }
+
 }

@@ -82,6 +82,8 @@ class ApiService {
     switch (response.statusCode) {
       case 200:
         return response.data;
+      case 201:
+        return response.data;
       case 400:
         throw BadRequestException(response.data['error'] ?? ''); //Bad Request
       case 401:

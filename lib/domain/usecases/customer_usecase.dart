@@ -25,4 +25,16 @@ class CustomerUseCase {
   }) {
     return repository.editCustomerDetail(id: id, name: name, surname: surname, email: email, phone: phone, country: country, spouseName: spouseName, wifeEmail: wifeEmail, wifePhone: wifePhone);
   }
+
+  Future<dynamic> addCustomer({
+    required Map<String, String> formdata,
+  }) {
+    return repository.addCustomerDetail(formdata: formdata);
+  }
+
+  Future<dynamic> searchCustomer({
+    required Map<String, String> formdata,
+  }) {
+    return repository.searchCustomerDetail(formdata: formdata);
+  }
 }

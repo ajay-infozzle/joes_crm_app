@@ -25,8 +25,33 @@ class AssetsConstant {
   static const outgoingIcon = "$assetIconPath/outgoing.png";
   static const missedCallIcon = "$assetIconPath/missed_call.png";
 
+  static const newCustIcon = "$assetIconPath/new_customer.png";
+  static const custSearchIcon = "$assetIconPath/customer_search.png";
+  static const newLeadsIcon = "$assetIconPath/new_leads.png";
+  static const taskIcon = "$assetIconPath/task.png";
+  static const logoutIcon = "$assetIconPath/logout.png";
+  static const cameraIcon = "$assetIconPath/camera.png";
+
 
   /// images ///
   static const assetImgPath = "assets/images";
   static const joesLogo = "$assetImgPath/joes_logo.png";
 }
+
+// return Scaffold(
+//       backgroundColor: AppColor.greenishGrey,
+//       appBar: AppBar(
+//         automaticallyImplyLeading: true,
+//         title: Text(
+//           "Add Customer"
+//         ),
+//       ),
+//       body: SafeArea(
+//         child: Container(
+//           color: AppColor.white,
+//           child: ListView(
+            
+//           ),
+//         ) 
+//       ),
+//     );

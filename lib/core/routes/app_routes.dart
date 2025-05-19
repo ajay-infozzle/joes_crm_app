@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
 import 'package:joes_jwellery_crm/presentation/screens/auth/login_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/add_customer_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/customer_detail_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/customer_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/search_customer_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/dashboard/dashboard_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/email/email_thread_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/leads/add_leads_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/leads/search_lead_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/splash_screen.dart';
 
 class AppRoutes {
@@ -41,11 +45,59 @@ class AppRoutes {
           ),
 
           GoRoute(
+            path: RoutesName.searchLeadsScreen,
+            name: RoutesName.searchLeadsScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const SearchLeadScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.addLeadsScreen,
+            name: RoutesName.addLeadsScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const AddLeadsScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
             path: RoutesName.customerScreen,
             name: RoutesName.customerScreen,
             pageBuilder: (context, state) {
               return customPageRouteBuilder(
                 const CustomerScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.searchCustomerScreen,
+            name: RoutesName.searchCustomerScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const SearchCustomerScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.addCustomerScreen,
+            name: RoutesName.addCustomerScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const AddCustomerScreen(),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

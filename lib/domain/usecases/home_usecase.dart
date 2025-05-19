@@ -7,4 +7,8 @@ class HomeUseCase {
   Future<dynamic> call() {
     return repository.fetch();
   }
+
+  Future<dynamic> getStores() {
+    return repository.getStores();
+  }
 }

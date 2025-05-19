@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 
 Map<String, String> formatDateTime(String rawDateTime) {
   try {
@@ -31,5 +33,23 @@ String getDaySuffix(int day) {
       return 'rd';
     default:
       return 'th';
+  }
+}
+
+Future<String> getDateFromUser(BuildContext context) async{
+  DateTime? pickedDate = await showDatePicker(
+    context: context, 
+    initialDate: DateTime.now(), 
+    firstDate: DateTime(1900), 
+    lastDate: DateTime(2050),
+    currentDate: DateTime.now(),
+  );
+
+  if(pickedDate != null){
+    // return DateFormat.yMd().format(pickedDate);
+    // return DateFormat('d MMM').format(pickedDate);
+    return DateFormat('yyyy-MM-dd').format(pickedDate);
+  }else{
+    return '' ;
   }
 }

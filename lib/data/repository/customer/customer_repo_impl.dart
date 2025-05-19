@@ -92,4 +92,52 @@ class CustomerRepositoryImpl implements CustomerRepository {
       rethrow ;
     }
   }
+
+  @override
+  Future<dynamic> addCustomerDetail({
+    required Map<String, String> formdata
+  }) async{
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.post(
+        '',
+        queryParams: {
+          'view' : 'customers',
+          'task' : 'addCustomer',
+          'token' : token
+        },
+        body: FormData.fromMap(formdata),
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
+
+  @override
+  Future<dynamic> searchCustomerDetail({
+    required Map<String, String> formdata
+  }) async{
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.post(
+        '',
+        queryParams: {
+          'view' : 'customers',
+          'task' : 'searchCustomers',
+          'token' : token
+        },
+        body: FormData.fromMap(formdata),
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
 }

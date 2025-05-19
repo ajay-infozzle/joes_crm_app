@@ -81,6 +81,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                   ],
                 ),
               ),
+
               PopupMenuItem<String>(
                 value: 'delete',
                 child: Row(
@@ -88,6 +89,61 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                     Image.asset(AssetsConstant.deleteIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
                     5.w,
                     Text('Delete')
+                  ],
+                ),
+              ),
+
+              PopupMenuItem<String>(
+                value: 'take_photo',
+                child: Row(
+                  children: [
+                    Image.asset(AssetsConstant.cameraIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
+                    5.w,
+                    Text('Take Photo')
+                  ],
+                ),
+              ),
+
+              PopupMenuItem<String>(
+                value: 'send_him_email',
+                child: Row(
+                  children: [
+                    Image.asset(AssetsConstant.emailIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
+                    5.w,
+                    Text('Send Him Email')
+                  ],
+                ),
+              ),
+
+              PopupMenuItem<String>(
+                value: 'send_her_email',
+                child: Row(
+                  children: [
+                    Image.asset(AssetsConstant.emailIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
+                    5.w,
+                    Text('Send Her Email')
+                  ],
+                ),
+              ),
+
+              PopupMenuItem<String>(
+                value: 'send_water_taxi_email',
+                child: Row(
+                  children: [
+                    Image.asset(AssetsConstant.emailIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
+                    5.w,
+                    Text('Send Water Taxi Email')
+                  ],
+                ),
+              ),
+              
+              PopupMenuItem<String>(
+                value: 'send_appr_cert_email',
+                child: Row(
+                  children: [
+                    Image.asset(AssetsConstant.emailIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
+                    5.w,
+                    Text('Send Appraisal Certificate Email')
                   ],
                 ),
               ),

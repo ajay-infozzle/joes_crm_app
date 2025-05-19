@@ -34,6 +34,7 @@ class LogSectionWidget extends StatelessWidget {
               borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radius14))
             ),
             child: ListTile(
+              minTileHeight: AppDimens.spacing45,
               contentPadding: EdgeInsets.symmetric(horizontal: width*0.04, vertical: 0),
               tileColor: AppColor.greenishGrey,
               title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),

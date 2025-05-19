@@ -1,0 +1,32 @@
+part of 'leads_cubit.dart';
+
+sealed class LeadsState extends Equatable {
+  const LeadsState();
+
+  @override
+  List<Object> get props => [];
+}
+
+final class LeadsInitial extends LeadsState {}
+
+final class LeadsAddFormUpdate extends LeadsState {}
+final class LeadsAddFormLoading extends LeadsState {}
+final class LeadsAdded extends LeadsState {}
+final class LeadsAddError extends LeadsState {
+  final String message;
+  const LeadsAddError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class SearchTextChange extends LeadsState {}
+final class LeadsSearching extends LeadsState {}
+final class LeadsLoaded extends LeadsState {}
+final class LeadsSearchError extends LeadsState {
+  final String message;
+  const LeadsSearchError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

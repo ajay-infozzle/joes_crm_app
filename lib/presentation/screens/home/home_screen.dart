@@ -11,7 +11,9 @@ import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/auth/auth_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/dashboard/dashboard_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/screens/home/widget/header_items.dart';
 import 'package:joes_jwellery_crm/presentation/screens/home/widget/log_section_widget.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/app_drawer.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
@@ -23,6 +25,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  List headerItem = [
+    {
+      "title" : "New Customer",
+      "icon"  : AssetsConstant.newCustIcon
+    },
+    {
+      "title" : "Search Customer",
+      "icon"  : AssetsConstant.custSearchIcon
+    },
+    {
+      "title" : "New Lead",
+      "icon"  : AssetsConstant.newLeadsIcon
+    },
+    {
+      "title" : "Search Lead",
+      "icon"  : AssetsConstant.custSearchIcon
+    },
+    {
+      "title" : "View Tasks",
+      "icon"  : AssetsConstant.taskIcon
+    },
+    {
+      "title" : "Logout",
+      "icon"  : AssetsConstant.logoutIcon
+    }
+  ];
 
   @override
   void initState() {
@@ -45,39 +74,37 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Image.asset(AssetsConstant.joesLogo, fit: BoxFit.contain),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: AppColor.primary),
-          onPressed: () {},
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: AppColor.primary),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          }
         ),
         actions: [
           // IconButton(
-          //   icon: Image.asset(
-          //     AssetsConstant.searchIcon,
-          //     width: AppDimens.spacing20,
-          //     height: AppDimens.spacing22,
+          //   icon: Icon(
+          //     Icons.logout,
           //     color: AppColor.primary,
+          //     size: AppDimens.spacing22,
           //   ),
-          //   onPressed: () {},
+          //   onPressed: () async{
+          //     bool isSuccess = await context.read<AuthCubit>().logout();
+          //     if(isSuccess){
+          //       showAppSnackBar(context, message: "logged out succesfuly", backgroundColor: AppColor.green);
+          //       context.goNamed(RoutesName.loginScreen);
+          //     }else{
+          //       showAppSnackBar(context, message: "Something went wrong in logging out..");
+          //     }
+          //   },
           // ),
-          IconButton(
-            icon: Icon(
-              Icons.logout,
-              color: AppColor.primary,
-              size: AppDimens.spacing22,
-            ),
-            onPressed: () async{
-              bool isSuccess = await context.read<AuthCubit>().logout();
-              if(isSuccess){
-                showAppSnackBar(context, message: "logged out succesfuly", backgroundColor: AppColor.green);
-                context.goNamed(RoutesName.loginScreen);
-              }else{
-                showAppSnackBar(context, message: "Something went wrong in logging out..");
-              }
-            },
-          ),
         ],
         elevation: 0,
       ),
+      drawer: AppDrawer(),
       body: SafeArea(
         child: Container(
           width: width,
@@ -95,10 +122,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }
               else if(state is HomeLoaded){
-                final phoneLogs = state.homeData.phoneLogs ?? [];
-                // if(phoneLogs.length > 5){
-                //   phoneLogs.fillRange(0, 4);
-                // }
+                // final phoneLogs = state.homeData.phoneLogs ?? [];
+                final phoneLogs = (state.homeData.phoneLogs ?? []).take(5).toList();
             
                 return RefreshIndicator(
                   color: AppColor.primary,
@@ -109,28 +134,46 @@ class _HomeScreenState extends State<HomeScreen> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     children: [
                       AppDimens.spacing10.h,
-                      GestureDetector(
-                        onTap: () {
-                          context.pushNamed(RoutesName.customerScreen);
+
+                      HeaderItemList(
+                        items: headerItem.map((e) => {
+                          "title": e['title'],
+                          "icon": e['icon']
+                        }).toList(),
+                        onTap: (index) async{
+                          final title = headerItem[index]['title'];
+
+                          switch (title) {
+                            case "Logout":
+                              bool isSuccess = await context.read<AuthCubit>().logout();
+                              if(isSuccess){
+                                showAppSnackBar(context, message: "logged out succesfuly", backgroundColor: AppColor.green);
+                                context.goNamed(RoutesName.loginScreen);
+                              }else{
+                                showAppSnackBar(context, message: "Something went wrong in logging out..");
+                              }
+                              break;
+                            case "New Customer":
+                              context.pushNamed(RoutesName.searchCustomerScreen);
+                              break;
+                            case "Search Customer":
+                              context.pushNamed(RoutesName.customerScreen);
+                              break;
+                            case "New Lead":
+                              context.pushNamed(RoutesName.addLeadsScreen);
+                              break;
+                            case "Search Lead":
+                              context.pushNamed(RoutesName.searchLeadsScreen);
+                              break;
+                            case "View Tasks":
+                              // context.pushNamed(RoutesName.customerScreen);
+                              break;
+                            default:
+                              break;
+                          }
                         },
-                        child: SizedBox(
-                          width: width,
-                          height: 70,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: List.generate(6, (_) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
-                                child: CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: Colors.grey.shade300,
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
                       ),
-                      AppDimens.spacing15.h,
+                      AppDimens.spacing10.h,
                   
                       LogSectionWidget(
                         title: "Phone Logs",

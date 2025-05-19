@@ -131,7 +131,7 @@ class EditCustomerDialog extends StatelessWidget {
 
   Widget _buildField(String label, TextEditingController controller, FocusNode focusNode) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: AppDimens.spacing6),
       child: CustomTextField(
         controller: controller,
         focusNode: focusNode,
