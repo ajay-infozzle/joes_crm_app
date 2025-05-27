@@ -44,6 +44,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
   final TextEditingController stateController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController zipController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
 
   final FocusNode nameFocus = FocusNode();
   final FocusNode surnameFocus = FocusNode();
@@ -60,6 +61,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
   final FocusNode stateFocus = FocusNode();
   final FocusNode cityFocus = FocusNode();
   final FocusNode zipFocus = FocusNode();
+  final FocusNode notesFocus = FocusNode();
 
 
   @override
@@ -67,6 +69,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     super.initState();
 
    emailController.text = context.read<CustomerCubit>().tempCustEmail;
+   context.read<CustomerCubit>().currentPickedImg = null ;
   }
 
   @override
@@ -139,6 +142,26 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
                   TextfieldTitleTextWidget(title: "Email"),
                   _buildField("Email", emailController, emailFocus),
+                  7.h,
+
+                  TextfieldTitleTextWidget(title: "Photo"),
+                  GestureDetector(
+                    onTap: () => context.read<CustomerCubit>().pickImage(),
+                    child: Container(
+                      height: 150,
+                      margin: EdgeInsets.symmetric(vertical: AppDimens.spacing10),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColor.greenishGrey.withAlpha(40),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      alignment: Alignment.center,
+                      child: context.read<CustomerCubit>().currentPickedImg != null
+                          ? Image.file(context.read<CustomerCubit>().currentPickedImg!, fit: BoxFit.cover)
+                          : const Text("Choose Image", style: TextStyle(color: Colors.black54)),
+                    ),
+                  ),
                   7.h,
 
                   TextfieldTitleTextWidget(title: "Phone"),
@@ -313,6 +336,15 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                   _buildField("Zip", zipController, zipFocus, inputType: TextInputType.number),
                   7.h,
 
+                  TextfieldTitleTextWidget(title: "Notes"),
+                  _buildField(
+                    "Notes",
+                    notesController,
+                    notesFocus,
+                    maxline: 7,
+                  ),
+                  7.h,
+
                   TextfieldTitleTextWidget(title: "Unsubscribe from emails"),
                   7.h,
                   Row(
@@ -362,6 +394,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                             wifeBirthday: spouseBirthController.text, 
                             anniversary: anniversaryController.text, 
                             unsubscribe: customerCubit.subscribe == "No"? "0" : "1",
+                            notes: notesController.text
                           );
                         },
                         borderRadius: AppDimens.radius16,

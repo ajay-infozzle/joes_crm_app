@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:joes_jwellery_crm/data/model/assoc_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/home_detail_model.dart';
 import 'package:joes_jwellery_crm/data/model/store_list_model.dart';
 import 'package:joes_jwellery_crm/domain/usecases/home_usecase.dart';
@@ -14,6 +15,7 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit({required this.homeUseCase}) : super(HomeInitial());
 
   List<Stores> storeList = [];
+  List<Users> usersList = [];
 
   Future<void> fetchHomeData() async {
     emit(HomeLoading());
@@ -25,6 +27,11 @@ class HomeCubit extends Cubit<HomeState> {
       final storeResponse = await homeUseCase.getStores();
       final storeData = StoreListModel.fromJson(storeResponse);
       storeList = storeData.stores ?? [] ;
+
+      //~ fetch users/assoc as well
+      final usersResponse = await homeUseCase.getUsers();
+      final usersData = AssocListModel.fromJson(usersResponse);
+      usersList = usersData.users ?? [] ;
       
       emit(HomeLoaded(data));
     } catch (e) {

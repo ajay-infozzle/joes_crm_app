@@ -1,8 +1,12 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
+import 'package:joes_jwellery_crm/core/utils/custome_image_picker.dart';
 import 'package:joes_jwellery_crm/data/model/customer_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/single_customer_model.dart';
 import 'package:joes_jwellery_crm/data/model/store_list_model.dart';
@@ -99,6 +103,22 @@ class CustomerCubit extends Cubit<CustomerState> {
     city = value ;
     emit(CustomerAddFormUpdate());
   }
+
+  File? currentPickedImg ;
+  Future<void> pickImage() async {
+    final picked = await CustomeImagePicker.pickImageFromGallery(); 
+    if (picked != null) {
+      currentPickedImg = picked;
+      if(state is CustomerAddFormUpdate){
+        emit(CustomerInitial());
+        emit(CustomerAddFormUpdate());
+      }
+      else{
+        emit(CustomerAddFormUpdate());
+      }
+    }
+  }
+
   final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
 
   void validateFormAndSubmit({
@@ -121,7 +141,8 @@ class CustomerCubit extends Cubit<CustomerState> {
     required String wifeBirthday,
     required String anniversary,
     required String unsubscribe,
-  }){
+    required String notes,
+  }) async{
     if(storeId.isEmpty){
       emit(CustomerAddError("Please select store"));
       return ;
@@ -159,7 +180,13 @@ class CustomerCubit extends Cubit<CustomerState> {
         'birthday' : birthday,
         'spouse_birthday' : wifeBirthday,
         'anniversary' : anniversary,
-        'unsubscribed' : unsubscribe
+        'unsubscribed' : unsubscribe,
+        'notes' : notes,
+        'photo' : await MultipartFile.fromFile(
+          currentPickedImg?.path ?? "", 
+          filename: "${name}_${DateTime.now().millisecondsSinceEpoch}.jpg",
+          contentType: MediaType('image', 'jpeg')
+        ),
       } 
     );
     
@@ -183,10 +210,17 @@ class CustomerCubit extends Cubit<CustomerState> {
       if(response != null){
         if(response['customers'].length > 0){
           showToast(msg: "${formdata['query']} is already exist", backColor: AppColor.red);
-          emit(CustomerExist());
+          final data = CustomerListModel.fromJson(response);
+          emit(CustomerExist(data.customers??[]));
         }else if(response['customers'].length == 0){
-          showToast(msg: "${formdata['query']} is available", backColor: AppColor.green);
-          emit(CustomerNotExist());
+          //~ now validate email from api
+          final emailResponse = await customerUseCase.validateEmail(email: formdata['query']!);
+          if(emailResponse['status'] == 200){
+            showToast(msg: "${formdata['query']} is available", backColor: AppColor.green);
+            emit(CustomerNotExist());
+          }else{
+            emit(CustomerExistError(emailResponse['info']));
+          }
         }
       }else{
         emit(CustomerExistError("Something went wrong !"));
@@ -198,7 +232,7 @@ class CustomerCubit extends Cubit<CustomerState> {
   }
 
   Future<void> addCustomer({
-    required Map<String, String> formdata
+    required Map<String, dynamic> formdata
   }) async {
     try {
       emit(CustomerAddFormLoading());
@@ -244,6 +278,52 @@ class CustomerCubit extends Cubit<CustomerState> {
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Customer Cubit");
       emit(CustomerError(e.toString()));
+    }
+  }
+
+  Future<void> updateCustomerPhoto({
+    required File file,
+    required String id,
+  }) async {
+    try {
+      emit(CustomerLoading());
+      final response = await customerUseCase.updateCustomerPhoto(file: file, id: id);
+      if(response != null && response['success']== true){
+        showToast(msg: response['message'], backColor: AppColor.green);
+
+        await fetchCustomers(); 
+        await fetchSingleCustomer(id: id);
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(CustomerError(e.toString()));
+    }
+  }
+
+  Future<void> sendHimEmail({
+    required String custId,
+    required String subject,
+    required String message
+  }) async {
+    try {
+      emit(CustomerSendingEmail());
+      final response = await customerUseCase.sendHimEmail(
+        formdata: {
+          'customer_id' : custId,
+          'subject' : subject,
+          'message' : message,
+        }
+      );
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+        emit(CustomerEmailSent());
+      }else{
+        emit(CustomerEmailSentError("Something went wrong !"));
+      }
+      emit(CustomerEmailSent());
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(CustomerEmailSentError(e.toString()));
     }
   }
 

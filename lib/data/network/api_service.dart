@@ -13,8 +13,8 @@ class ApiService {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConstant.baseUrl,
-        connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 10),
+        connectTimeout: const Duration(seconds: 20),
+        receiveTimeout: const Duration(seconds: 30),
         responseType: ResponseType.json,
       ),
     );

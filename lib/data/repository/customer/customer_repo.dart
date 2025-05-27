@@ -1,3 +1,5 @@
+import 'dart:io';
+
 abstract class CustomerRepository {
   Future<dynamic> getCustomers();
   Future<dynamic> getCustomerDetail(String id);
@@ -13,9 +15,19 @@ abstract class CustomerRepository {
     required String wifePhone
   });
   Future<dynamic> addCustomerDetail({
-    required Map<String, String> formdata,
+    required Map<String, dynamic> formdata,
+  });
+  Future<dynamic> sendHimEmail({
+    required Map<String, dynamic> formdata,
+  });
+  Future<dynamic> updateCustomerPhoto({
+    required File file,
+    required String id,
   });
   Future<dynamic> searchCustomerDetail({
     required Map<String, String> formdata,
+  });
+  Future<dynamic> validateEmail({
+    required String email,
   });
 }

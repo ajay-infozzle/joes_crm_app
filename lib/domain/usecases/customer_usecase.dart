@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:joes_jwellery_crm/data/repository/customer/customer_repo.dart';
 
 class CustomerUseCase {
@@ -27,14 +29,33 @@ class CustomerUseCase {
   }
 
   Future<dynamic> addCustomer({
-    required Map<String, String> formdata,
+    required Map<String, dynamic> formdata,
   }) {
     return repository.addCustomerDetail(formdata: formdata);
+  }
+
+  Future<dynamic> sendHimEmail({
+    required Map<String, dynamic> formdata,
+  }) {
+    return repository.sendHimEmail(formdata: formdata);
+  }
+
+  Future<dynamic> updateCustomerPhoto({
+    required File file,
+    required String id,
+  }) {
+    return repository.updateCustomerPhoto(file: file, id: id);
   }
 
   Future<dynamic> searchCustomer({
     required Map<String, String> formdata,
   }) {
     return repository.searchCustomerDetail(formdata: formdata);
+  }
+
+  Future<dynamic> validateEmail({
+    required String email,
+  }) {
+    return repository.validateEmail(email: email);
   }
 }

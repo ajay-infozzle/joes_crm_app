@@ -11,6 +11,7 @@ import 'package:joes_jwellery_crm/presentation/bloc/dashboard/dashboard_cubit.da
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/leads/leads_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sms/sms_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/task/task_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/whatsapp/whatsapp_cubit.dart';
 
 void main() {
@@ -33,12 +34,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<CallCubit>()),
         BlocProvider(create: (context) => getIt<SmsCubit>()),
         BlocProvider(create: (context) => getIt<WhatsappCubit>()),
-        BlocProvider(create: (context) => getIt<LeadsCubit>())
+        BlocProvider(create: (context) => getIt<LeadsCubit>()),
+        BlocProvider(create: (context) => getIt<TaskCubit>())
       ],
       child: MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
         child: MaterialApp.router(
-          title: 'Joes Jwellery',
+          title: 'Joes Jewelry',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
             textTheme: GoogleFonts.montserratTextTheme(),

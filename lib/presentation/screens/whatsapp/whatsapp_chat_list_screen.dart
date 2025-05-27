@@ -5,6 +5,7 @@ import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/data/model/whatsapp_chat_list_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/whatsapp/whatsapp_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/app_drawer.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/chat_tile.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
@@ -72,13 +73,19 @@ class _ChatListScreenState extends State<WhatsappChatListScreen> {
           child: Image.asset(AssetsConstant.joesLogo, fit: BoxFit.contain),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: AppColor.primary),
-          onPressed: () {},
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: AppColor.primary),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          }
         ),
         elevation: 0,
       ),
-
+      drawer: AppDrawer(),
       body: SafeArea(
         child: Container(
           color: AppColor.white,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
-import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
+import 'package:joes_jwellery_crm/data/model/leads_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/leads/leads_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/auth/widget/textfield_title_text_widget.dart';
@@ -13,34 +14,62 @@ import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_text_field.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/store_drop_down_widget.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/title_dropdown_widget.dart';
-import 'package:phone_form_field/phone_form_field.dart';
 
-class AddLeadsScreen extends StatefulWidget {
-  const AddLeadsScreen({super.key});
+
+class EditLeadsScreen extends StatefulWidget {
+  final Leads leads ;
+  const EditLeadsScreen({super.key, required this.leads});
 
   @override
-  State<AddLeadsScreen> createState() => _AddLeadsScreenState();
+  State<EditLeadsScreen> createState() => _EditLeadsScreenState();
 }
 
-class _AddLeadsScreenState extends State<AddLeadsScreen> {
+class _EditLeadsScreenState extends State<EditLeadsScreen> {
 
   TextEditingController nameController = TextEditingController();
   TextEditingController surnameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController followDateController = TextEditingController();
   TextEditingController amountController = TextEditingController();
-  PhoneController phoneController = PhoneController(
-    initialValue: const PhoneNumber(isoCode: IsoCode.US, nsn: ''),
-  );
+  TextEditingController saleAssocController = TextEditingController();
+  // PhoneController phoneController = PhoneController(
+  //   initialValue: const PhoneNumber(isoCode: IsoCode.US, nsn: ''),
+  // );
   final TextEditingController addressController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
 
   FocusNode nameFocusNode = FocusNode();
   FocusNode surnameFocusNode = FocusNode();
   FocusNode emailFocusNode = FocusNode();
-  FocusNode followDateFocusNode = FocusNode();
   FocusNode amountFocusNode = FocusNode();
-  final FocusNode phoneFocus = FocusNode();
+  // final FocusNode phoneFocus = FocusNode();
   final FocusNode addressFocus = FocusNode();
+  final FocusNode salesAssocFocus = FocusNode();
+  final FocusNode notesFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    nameController.text = widget.leads.name ?? "" ;
+    surnameController.text = widget.leads.surname ?? "" ;
+    emailController.text = widget.leads.email ?? "" ;
+    amountController.text = widget.leads.amount ?? "" ;
+    // saleAssocController.text = widget.leads.salesAssoc2 ?? "" ; 
+    context.read<LeadsCubit>().title = TitleOption(value: widget.leads.title?.toLowerCase() ?? '', display: widget.leads.title?.capitalizeFirst() ?? "Select title");
+
+    context.read<HomeCubit>().storeList.forEach((e) {
+      if(widget.leads.store == e.name){
+        context.read<LeadsCubit>().store = e ;
+      }
+    },);
+
+    context.read<HomeCubit>().usersList.forEach((e) {
+      if(widget.leads.salesAssoc2 == e.id){
+        // saleAssocController.text = e.name ?? "" ;
+        context.read<LeadsCubit>().assoc = e ;
+      }
+    },);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +83,7 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
         backgroundColor: AppColor.white,
         title: SizedBox(
           child: Text(
-            "Add Lead",
+            "Edit Lead",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: AppDimens.spacing18,
@@ -71,12 +100,13 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
           color: AppColor.white,
           child: BlocConsumer<LeadsCubit, LeadsState>(
             listener: (context, state) {
-              if(state is LeadsAddError){
+              if(state is LeadsEditError){
                 showAppSnackBar(context, message: state.message, backgroundColor: AppColor.red);
               }
 
-              if(state is LeadsAdded){
+              if(state is LeadsUpdated){
                 clearAllTextField();
+                context.pop();
               }
             },
             // buildWhen: (previous, current) => current is LeadsAddFormUpdate || current is LeadsAddFormLoading,
@@ -84,7 +114,7 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
               LeadsCubit leadsCubit = context.read<LeadsCubit>() ;
 
 
-              if(state is LeadsAddFormLoading){
+              if(state is LeadsEditFormLoading){
                 return Center(child: CircularProgressIndicator(color: AppColor.backgroundColor,));
               }
 
@@ -126,23 +156,10 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
                   _buildField("Email", emailController, emailFocusNode),
                   7.h,
 
-                  TextfieldTitleTextWidget(title: "Phone"),
-                  _buildPhoneField("Phone", phoneController, phoneFocus),
-                  7.h,
+                  // TextfieldTitleTextWidget(title: "Phone"),
+                  // _buildPhoneField("Phone", phoneController, phoneFocus),
+                  // 7.h,
 
-                  TextfieldTitleTextWidget(title: "Follow Date"),
-                  GestureDetector(
-                    child: _buildField(
-                      "Follow Date",
-                      followDateController,
-                      followDateFocusNode,
-                      isEnable: false,
-                    ),
-                    onTap: () async {
-                      followDateController.text = await getDateFromUser(context);
-                    },
-                  ),
-                  7.h,
 
                   TextfieldTitleTextWidget(title: "Amount"),
                   _buildField("Amount", amountController, amountFocusNode, inputType: TextInputType.number),
@@ -164,6 +181,15 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
                     onSelected: (selectedUser) => leadsCubit.changeAssoc(selectedUser),
                     initialSelected: leadsCubit.assoc,
                   ),
+                  10.h,
+
+                  TextfieldTitleTextWidget(title: "Notes"),
+                  _buildField(
+                    "Notes",
+                    notesController,
+                    notesFocus,
+                    maxline: 7,
+                  ),
                   30.h,
 
                   Row(
@@ -171,18 +197,17 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
                     children: [
                       CustomButton(
                         padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-                        text: "Add",
+                        text: "Save",
                         onPressed: () {
                           FocusScope.of(context).unfocus();
-                          leadsCubit.validateFormAndSubmit(
+                          leadsCubit.validateEditFormAndSubmit(
+                            id: widget.leads.id ?? "",
                             storeId: leadsCubit.store?.id ?? '', 
                             amount: amountController.text,
-                            followDate: followDateController.text,
-                            salesAssoc: leadsCubit.assoc?.id ?? '',
+                            salesAssoc: saleAssocController.text,
                             name: nameController.text, 
                             surname: surnameController.text, 
                             email: emailController.text, 
-                            phone: phoneController.value.nsn, 
                             address: addressController.text, 
                           );
                         },
@@ -227,36 +252,35 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
     );
   }
 
-  Widget _buildPhoneField(
-    String label,
-    PhoneController controller,
-    FocusNode focusNode, {
-    bool isEnable = true,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppDimens.spacing6),
-      child: CustomPhoneField(
-        controller: controller,
-        focusNode: focusNode,
-        fieldBackColor: AppColor.greenishGrey.withValues(alpha: 0.4),
-        hintText: label,
-        enabled: isEnable,
-        keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.next,
-      ),
-    );
-  }
+  // Widget _buildPhoneField(
+  //   String label,
+  //   PhoneController controller,
+  //   FocusNode focusNode, {
+  //   bool isEnable = true,
+  // }) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: AppDimens.spacing6),
+  //     child: CustomPhoneField(
+  //       controller: controller,
+  //       focusNode: focusNode,
+  //       fieldBackColor: AppColor.greenishGrey.withValues(alpha: 0.4),
+  //       hintText: label,
+  //       enabled: isEnable,
+  //       keyboardType: TextInputType.text,
+  //       textInputAction: TextInputAction.next,
+  //     ),
+  //   );
+  // }
   
   void clearAllTextField() {
     nameController.clear();
     surnameController.clear();
     emailController.clear();
-    phoneController.value = const PhoneNumber(isoCode: IsoCode.US, nsn: '');
-    followDateController.clear();
+    // phoneController.value = const PhoneNumber(isoCode: IsoCode.US, nsn: '');
     amountController.clear();
     addressController.clear();
+    saleAssocController.clear();
     context.read<LeadsCubit>().store = null;
-    context.read<LeadsCubit>().assoc = null;
     context.read<LeadsCubit>().title = TitleOption(value: '', display: "Select title");
     context.read<LeadsCubit>().initial();
   }

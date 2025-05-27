@@ -69,9 +69,11 @@ class CustomerExistVerifying extends CustomerState {
   List<Object> get props => [];
 }
 class CustomerExist extends CustomerState {
-  
+  final List<Customers> customers;
+  const CustomerExist(this.customers);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [customers];
 }
 class CustomerNotExist extends CustomerState {
   
@@ -93,3 +95,13 @@ class CustomerExistError extends CustomerState {
   @override
   List<Object> get props => [message];
 }
+class CustomerEmailSentError extends CustomerState {
+  final String message;
+  const CustomerEmailSentError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+class CustomerSendingEmail extends CustomerState {}
+class CustomerEmailSent extends CustomerState {}

@@ -34,6 +34,8 @@ class Customer {
   String? anniversary;
   String? totalSales;
   String? lastSaleDate;
+  String? notes;
+  String? photo;
   List<Sales>? sales;
   List<SmsLog>? smsLog;
   List<ActivityStream>? activityStream;
@@ -55,6 +57,8 @@ class Customer {
       this.anniversary,
       this.totalSales,
       this.lastSaleDate,
+      this.notes,
+      this.photo,
       this.sales,
       this.smsLog,
       this.activityStream,
@@ -76,6 +80,8 @@ class Customer {
     anniversary = json['anniversary'];
     totalSales = json['total_sales'];
     lastSaleDate = json['last_sale_date'];
+    notes = json['notes'];
+    photo = json['photo'];
     if (json['sales'] != null) {
       sales = <Sales>[];
       json['sales'].forEach((v) {
@@ -119,6 +125,8 @@ class Customer {
     data['anniversary'] = anniversary;
     data['total_sales'] = totalSales;
     data['last_sale_date'] = lastSaleDate;
+    data['notes'] = notes;
+    data['photo'] = photo;
     if (sales != null) {
       data['sales'] = sales!.map((v) => v.toJson()).toList();
     }

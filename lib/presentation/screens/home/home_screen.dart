@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context.pushNamed(RoutesName.searchLeadsScreen);
                               break;
                             case "View Tasks":
-                              // context.pushNamed(RoutesName.customerScreen);
+                              context.pushNamed(RoutesName.taskListScreen);
                               break;
                             default:
                               break;

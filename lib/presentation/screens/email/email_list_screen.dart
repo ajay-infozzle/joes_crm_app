@@ -8,6 +8,7 @@ import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/presentation/screens/email/widget/email_list_item_widget.dart';
 import 'package:joes_jwellery_crm/presentation/screens/email/widget/filter_buttons_widget.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/app_drawer.dart';
 
 class EmailListScreen extends StatefulWidget {
   const EmailListScreen({super.key});
@@ -118,12 +119,19 @@ class _EmailListScreenState extends State<EmailListScreen> {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: AppColor.primary),
-          onPressed: () {},
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: AppColor.primary),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          }
         ),
         elevation: 0,
       ),
+      drawer: AppDrawer(),
       body: SafeArea(
         child: Container(
           color: AppColor.white,

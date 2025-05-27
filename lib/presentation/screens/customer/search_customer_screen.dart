@@ -89,6 +89,37 @@ class _SearchCustomerScreenState extends State<SearchCustomerScreen> {
 
                   Spacer(),
 
+                  Builder(
+                    builder: (context) {
+                      if(state is CustomerExist){
+                        return Column(
+                          children: [
+                            SizedBox(
+                              width: width,
+                              child: CustomButton(
+                                text: "Go to customer",
+                                borderRadius: AppDimens.radius16,
+                                backgroundColor: AppColor.green,
+                                isActive: true,
+                                buttonHeight: AppDimens.buttonHeight50,
+                                fontSize: AppDimens.textSize18,
+                                onPressed: () {
+                                  context.pushNamed(RoutesName.customerDetailScreen, extra: {
+                                    "id":state.customers[0].id,
+                                    "name":state.customers[0].name
+                                  });
+                                },
+                              ),
+                            ),
+                            20.h,
+                          ],
+                        );
+                      }else{
+                        return SizedBox();
+                      }
+                    }, 
+                  ),
+
                   SizedBox(
                     width: width,
                     child: CustomButton(

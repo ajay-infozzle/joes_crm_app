@@ -9,6 +9,8 @@ import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_header.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/edit_customer_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/expandable_section.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/send_him_email_dialog.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/take_customer_photo_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
@@ -68,6 +70,10 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                 onEditSelected(context : context);
               } else if (value == 'delete') {
                 showAppSnackBar(context, message: "Not available !");
+              } else if (value == 'take_photo') {
+                onTakePhotoSelected(context : context);
+              } else if (value == 'send_him_email') {
+                onSendHimEmailSelected(context : context);
               }
             },
             itemBuilder: (BuildContext context) => [
@@ -159,8 +165,11 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
           color: AppColor.white,
           child: BlocConsumer<CustomerCubit, CustomerState>(
             listener: (context, state) {
-              
+              if(state is CustomerEmailSentError){
+                showAppSnackBar(context, message: state.message);
+              }
             },
+            buildWhen: (previous, current) => !(current is CustomerEmailSent || current is CustomerSendingEmail || current is CustomerEmailSentError ),
             builder: (context, state) {
               if (state is CustomerLoading) {
                 return const Center(child: CircularProgressIndicator(color: AppColor.primary,));
@@ -182,7 +191,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                         horizontal: width * 0.05,
                         vertical: width * 0.05,
                       ),
-                      child: CustomerHeader(name: customer.name ?? widget.name),
+                      child: CustomerHeader(customer: customer),
                     ),
 
                     15.h,
@@ -332,4 +341,46 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
       // wifePhoneController.dispose();
     });
   }
+
+  void onTakePhotoSelected({required BuildContext context}) {
+    showDialog(
+      context: context,
+      builder: (_) => TakeCustomerPhotoDialog(
+        onSave: (file) {
+          context.read<CustomerCubit>().updateCustomerPhoto(
+            file: file,
+            id: widget.id 
+          );
+        },
+      ),
+    );
+  }
+  
+  void onSendHimEmailSelected({required BuildContext context}) {
+    final customer = (context.read<CustomerCubit>().state as CustomerLoaded).customer;
+
+    final subjectFocus = FocusNode();
+    final messageFocus = FocusNode();
+    
+    final subjectController = TextEditingController();
+    final messageController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (_) => SendHimEmailDialog(
+        subjectController: subjectController, 
+        messageController: messageController, 
+        subjectFocus: subjectFocus, 
+        messageFocus: messageFocus, 
+        onSend: () async{
+          await context.read<CustomerCubit>().sendHimEmail(
+            custId: customer.id!,
+            subject: subjectController.text,
+            message: messageController.text 
+          );
+        },
+      ),
+    );
+  }
+
 }

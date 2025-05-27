@@ -5,6 +5,10 @@ class LeadsUseCase {
   final LeadsRepository repository;
   LeadsUseCase(this.repository);
 
+  Future<dynamic> getAllLeads() {
+    return repository.getAllLeads();
+  }
+
   Future<dynamic> searchLeads({
     required Map<String, String> query,
   }) {
@@ -15,5 +19,11 @@ class LeadsUseCase {
     required Map<String, String> formdata,
   }) {
     return repository.addLeads(formdata: formdata);
+  }
+
+  Future<dynamic> updateLeads({
+    required Map<String, String> formdata,
+  }) {
+    return repository.updateLeads(formdata: formdata);
   }
 }

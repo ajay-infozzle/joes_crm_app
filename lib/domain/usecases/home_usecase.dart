@@ -11,4 +11,8 @@ class HomeUseCase {
   Future<dynamic> getStores() {
     return repository.getStores();
   }
+
+  Future<dynamic> getUsers() {
+    return repository.getUsers();
+  }
 }

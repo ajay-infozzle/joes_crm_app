@@ -1,15 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:joes_jwellery_crm/core/utils/session_manager.dart';
 import 'package:joes_jwellery_crm/data/network/api_service.dart';
-import 'package:joes_jwellery_crm/data/repository/leads/leads_repo.dart';
+import 'package:joes_jwellery_crm/data/repository/task/task_repo.dart';
 
-class LeadsRepoImpl implements LeadsRepository{
-  final ApiService apiService;
-
-  LeadsRepoImpl(this.apiService);
+class TaskRepoImpl extends TaskRepository{
+  final ApiService apiService ;
+  TaskRepoImpl({required this.apiService});
 
   @override
-  Future<dynamic> addLeads({required Map<String, String> formdata}) async{
+  Future<dynamic> editTask({required Map<String, dynamic> formdata}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -17,8 +16,8 @@ class LeadsRepoImpl implements LeadsRepository{
       final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'leads',
-          'task' : 'addLead',
+          'view' : 'tasks',
+          'task' : 'editTask',
           'token' : token
         },
         body: FormData.fromMap(formdata),
@@ -31,7 +30,7 @@ class LeadsRepoImpl implements LeadsRepository{
   }
 
   @override
-  Future<dynamic> updateLeads({required Map<String, String> formdata}) async{
+  Future<dynamic> getSingleTask({required Map<String, dynamic> formdata}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -39,8 +38,8 @@ class LeadsRepoImpl implements LeadsRepository{
       final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'leads',
-          'task' : 'editLead',
+          'view' : 'tasks',
+          'task' : 'getTask',
           'token' : token
         },
         body: FormData.fromMap(formdata),
@@ -53,29 +52,7 @@ class LeadsRepoImpl implements LeadsRepository{
   }
 
   @override
-  Future<dynamic> searchLeads({required Map<String, String> query}) async{
-    final sessionManager = SessionManager();
-    String token = sessionManager.getToken() ?? "";
-
-    try {
-      final response = await apiService.post(
-        '',
-        queryParams: {
-          'view' : 'leads',
-          'task' : 'searchLeads',
-          'token' : token
-        },
-        body: FormData.fromMap(query),
-      );
-      
-      return response;
-    } catch (e) {
-      rethrow ;
-    }
-  }
-
-  @override
-  Future<dynamic> getAllLeads() async{
+  Future<dynamic> getTaskList() async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -83,10 +60,10 @@ class LeadsRepoImpl implements LeadsRepository{
       final response = await apiService.get(
         '',
         queryParams: {
-          'view' : 'leads',
-          'task' : 'getLeads',
+          'view' : 'tasks',
+          'task' : 'getTasks',
           'token' : token
-        },
+        }
       );
       
       return response;

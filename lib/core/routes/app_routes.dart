@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
+import 'package:joes_jwellery_crm/data/model/leads_model.dart';
+import 'package:joes_jwellery_crm/data/model/single_task_model.dart';
 import 'package:joes_jwellery_crm/presentation/screens/auth/login_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/add_customer_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/customer_detail_screen.dart';
@@ -9,8 +11,12 @@ import 'package:joes_jwellery_crm/presentation/screens/customer/search_customer_
 import 'package:joes_jwellery_crm/presentation/screens/dashboard/dashboard_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/email/email_thread_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/add_leads_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/leads/edit_leads_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/search_lead_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/splash_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/task/task_edit_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/task/task_list_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/task/task_screen.dart';
 
 class AppRoutes {
   static final GoRouter router = GoRouter(
@@ -62,6 +68,59 @@ class AppRoutes {
             pageBuilder: (context, state) {
               return customPageRouteBuilder(
                 const AddLeadsScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.editLeadScreen,
+            name: RoutesName.editLeadScreen,
+            pageBuilder: (context, state) {
+              final Leads lead = state.extra as Leads;
+              return customPageRouteBuilder(
+                EditLeadsScreen(
+                  leads: lead,
+                ),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.taskListScreen,
+            name: RoutesName.taskListScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const TaskListScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.taskScreen,
+            name: RoutesName.taskScreen,
+            pageBuilder: (context, state) {
+              final String id = state.extra as String;
+              return customPageRouteBuilder(
+                TaskScreen(id: id),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.editTaskScreen,
+            name: RoutesName.editTaskScreen,
+            pageBuilder: (context, state) {
+              final Task task = state.extra as Task;
+              return customPageRouteBuilder(
+                TaskEditScreen(task: task),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

@@ -49,4 +49,25 @@ class HomeRepositoryImpl implements HomeRepository {
       rethrow ;
     }
   }
+
+  @override
+  Future<dynamic> getUsers() async {
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.get(
+        '',
+        queryParams: {
+          'view' : 'users',
+          'task' : 'getUsers',
+          'token' : token
+        }
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
 }

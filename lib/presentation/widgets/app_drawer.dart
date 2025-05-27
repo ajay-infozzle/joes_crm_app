@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/dashboard/dashboard_cubit.dart';
 
 class AppDrawer extends StatelessWidget {
   final void Function(String)? onItemSelected;
@@ -33,7 +35,8 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Home', style: TextStyle(fontWeight: FontWeight.bold),),
             onTap: () {
               context.pop();
-              context.goNamed(RoutesName.dashboardScreen);
+              context.read<DashboardCubit>().changeIndex(2);
+              // context.goNamed(RoutesName.dashboardScreen);
               onItemSelected?.call('Home');
             },
           ),
@@ -53,6 +56,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Tasks', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               context.pop();
+              context.pushNamed(RoutesName.taskListScreen);
               onItemSelected?.call('Tasks');
             },
           ),
@@ -80,6 +84,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Leads', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               context.pop();
+              context.pushNamed(RoutesName.searchLeadsScreen);
               onItemSelected?.call('Leads');
             },
           ),

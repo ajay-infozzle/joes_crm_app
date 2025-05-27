@@ -20,6 +20,17 @@ final class LeadsAddError extends LeadsState {
   List<Object> get props => [message];
 }
 
+final class LeadsEditFormUpdate extends LeadsState {}
+final class LeadsEditFormLoading extends LeadsState {}
+final class LeadsUpdated extends LeadsState {}
+final class LeadsEditError extends LeadsState {
+  final String message;
+  const LeadsEditError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
 final class SearchTextChange extends LeadsState {}
 final class LeadsSearching extends LeadsState {}
 final class LeadsLoaded extends LeadsState {}

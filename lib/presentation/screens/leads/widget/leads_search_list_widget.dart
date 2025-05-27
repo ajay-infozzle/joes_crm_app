@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
-import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/leads_model.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
 
 
-class LeadsListWidget extends StatelessWidget {
+class LeadsSearchListWidget extends StatelessWidget {
   final Leads leads ;
-  const LeadsListWidget({super.key, required this.leads});
+  const LeadsSearchListWidget({super.key, required this.leads});
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +31,7 @@ class LeadsListWidget extends StatelessWidget {
           5.h,
 
           Text(
-            "Title : ${leads.title!.capitalizeFirst()}",
-            style: TextStyle(
-              fontSize: AppDimens.textSize14,
-              color: AppColor.primary
-            ),
-          ),
-
-          Text(
-            "Name : ${leads.name!.capitalizeFirst()} ${leads.surname}",
+            "Name : ${leads.name} ${leads.surname}",
             style: TextStyle(
               fontSize: AppDimens.textSize14,
               color: AppColor.primary
@@ -65,30 +54,6 @@ class LeadsListWidget extends StatelessWidget {
             ),
           ),
 
-          Text(
-            "Pending : ${leads.status!.capitalizeFirst()}",
-            style: TextStyle(
-              fontSize: AppDimens.textSize14,
-              color: AppColor.primary
-            ),
-          ),
-
-          Text(
-            "Creation date : ${formatDateTime(leads.creationDate ?? "")['date']}",
-            style: TextStyle(
-              fontSize: AppDimens.textSize14,
-              color: AppColor.primary
-            ),
-          ),
-
-          Text(
-            "Follow-up date : ${formatDateTime(leads.followDate ?? "")['date']}",
-            style: TextStyle(
-              fontSize: AppDimens.textSize14,
-              color: AppColor.primary
-            ),
-          ),
-
           10.h,
 
           Row(
@@ -99,7 +64,7 @@ class LeadsListWidget extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: AppDimens.spacing10),
                   text: "View",
                   onPressed: () {
-                    
+                
                   },
                   borderRadius: AppDimens.radius10,
                   isActive: true,
@@ -114,10 +79,7 @@ class LeadsListWidget extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: AppDimens.spacing10),
                   text: "Edit",
                   onPressed: () {
-                    context.pushNamed(
-                      RoutesName.editLeadScreen,
-                      extra: leads
-                    );
+                
                   },
                   borderRadius: AppDimens.radius10,
                   isActive: true,
@@ -128,7 +90,6 @@ class LeadsListWidget extends StatelessWidget {
               ),
             ],
           ),
-
 
           Divider(thickness: 1, color: Colors.grey[300]),
         ],

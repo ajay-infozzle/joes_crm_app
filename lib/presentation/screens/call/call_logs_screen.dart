@@ -7,6 +7,7 @@ import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/data/model/call_log_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/call/call_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/call/widget/call_log_tile.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/app_drawer.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
 class CallLogsScreen extends StatefulWidget {
@@ -83,12 +84,19 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: AppColor.primary),
-          onPressed: () {},
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: AppColor.primary),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          }
         ),
         elevation: 0,
       ),
+      drawer: AppDrawer(),
       body: SafeArea(
         child: Container(
           color: AppColor.white,

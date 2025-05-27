@@ -8,6 +8,7 @@ import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/leads/leads_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/widget/leads_list_widget.dart';
+import 'package:joes_jwellery_crm/presentation/screens/leads/widget/leads_search_list_widget.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 
 class SearchLeadScreen extends StatefulWidget {
@@ -25,8 +26,9 @@ class _SearchLeadScreenState extends State<SearchLeadScreen> {
   @override
   void initState() {
     super.initState();
-
+  
     context.read<LeadsCubit>().currentSearchLeads.clear();
+    context.read<LeadsCubit>().getAllLeads();
   }
 
   @override
@@ -158,30 +160,53 @@ class _SearchLeadScreenState extends State<SearchLeadScreen> {
                   ),
 
                   10.h,
-                  
-                  context.read<LeadsCubit>().currentSearchLeads.isNotEmpty 
-                  ?Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppDimens.spacing12),
-                      child: ListView.builder(
-                        itemCount: context.read<LeadsCubit>().currentSearchLeads.length,
-                        itemBuilder:  (context, index) {
-                          return LeadsListWidget(leads: context.read<LeadsCubit>().currentSearchLeads[index]);
-                        },
-                      ),
-                    ) 
-                  )
-                  :Expanded(
-                    child: Center(
-                      child: Text(
-                        "Empty Leads",
-                        style: TextStyle(
-                          color: AppColor.primary.withValues(alpha: .7),
-                          fontSize: AppDimens.textSize14
-                        ),
-                      ),
-                    ),
-                  )
+
+                  Builder(
+                    builder: (context) {
+                      if(context.read<LeadsCubit>().currentSearchLeads.isNotEmpty && searchController.text.isNotEmpty){
+                        return Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: AppDimens.spacing12),
+                            child: ListView.builder(
+                              itemCount: context.read<LeadsCubit>().currentSearchLeads.length,
+                              itemBuilder:  (context, index) {
+                                return LeadsSearchListWidget(leads: context.read<LeadsCubit>().currentSearchLeads[index]);
+                              },
+                            ),
+                          ) 
+                        );
+                      }
+                      else if(context.read<LeadsCubit>().allLeads.isNotEmpty){
+                        return Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: AppDimens.spacing12),
+                            child: RefreshIndicator(
+                              color: AppColor.primary,
+                              onRefresh: () => context.read<LeadsCubit>().getAllLeads(),
+                              child: ListView.builder(
+                                itemCount: context.read<LeadsCubit>().allLeads.length,
+                                itemBuilder:  (context, index) {
+                                  return LeadsListWidget(leads: context.read<LeadsCubit>().allLeads[index]);
+                                },
+                              ),
+                            ),
+                          ) 
+                        );
+                      }else{
+                        return Expanded(
+                          child: Center(
+                            child: Text(
+                              "Empty Leads",
+                              style: TextStyle(
+                                color: AppColor.primary.withValues(alpha: .7),
+                                fontSize: AppDimens.textSize14
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    }, 
+                  ),
                 ],
               );
             },
