@@ -10,6 +10,7 @@ class RoutesName {
   static const String emailThreadScreen = "email-thread";
   static const String searchLeadsScreen = "search-leads";
   static const String addLeadsScreen = "add-leads";
+  static const String leadScreen = "lead";
   static const String editLeadScreen = "edit-leads";
   static const String taskListScreen = "task-list";
   static const String taskScreen = "task";

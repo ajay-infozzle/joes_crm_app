@@ -40,6 +40,7 @@ class Customer {
   List<SmsLog>? smsLog;
   List<ActivityStream>? activityStream;
   List<WishList>? wishList;
+  List<CommunicationLog>? communicationLog;
 
   Customer(
       {this.id,
@@ -62,6 +63,7 @@ class Customer {
       this.sales,
       this.smsLog,
       this.activityStream,
+      this.communicationLog,
       this.wishList});
 
   Customer.fromJson(Map<String, dynamic> json) {
@@ -98,6 +100,12 @@ class Customer {
       activityStream = <ActivityStream>[];
       json['activity_stream'].forEach((v) {
         activityStream!.add(ActivityStream.fromJson(v));
+      });
+    }
+    if (json['communication_log'] != null) {
+      communicationLog = <CommunicationLog>[];
+      json['communication_log'].forEach((v) {
+        communicationLog!.add(CommunicationLog.fromJson(v));
       });
     }
     if (json['wish_list'] != null) {
@@ -137,6 +145,10 @@ class Customer {
       data['activity_stream'] =
           activityStream!.map((v) => v.toJson()).toList();
     }
+    if (communicationLog != null) {
+      data['communication_log'] =
+          communicationLog!.map((v) => v.toJson()).toList();
+    }
     if (wishList != null) {
       data['wish_list'] = wishList!.map((v) => v.toJson()).toList();
     }
@@ -152,8 +164,7 @@ class Sales {
   String? amount;
   List<SalesAssociates>? salesAssociates;
 
-  Sales(
-      {this.id, this.saleDate, this.store, this.amount, this.salesAssociates});
+  Sales({this.id, this.saleDate, this.store, this.amount, this.salesAssociates});
 
   Sales.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -296,6 +307,31 @@ class WishList {
           salesAssociates!.map((v) => v.toJson()).toList();
     }
     data['creation_date'] = creationDate;
+    return data;
+  }
+}
+
+class CommunicationLog {
+  String? user;
+  String? date;
+  String? dateAgo;
+  String? action;
+
+  CommunicationLog({this.user, this.date, this.dateAgo, this.action});
+
+  CommunicationLog.fromJson(Map<String, dynamic> json) {
+    user = json['user'];
+    date = json['date'];
+    dateAgo = json['date_ago'];
+    action = json['action'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['user'] = user;
+    data['date'] = date;
+    data['date_ago'] = dateAgo;
+    data['action'] = action;
     return data;
   }
 }

@@ -26,4 +26,10 @@ class LeadsUseCase {
   }) {
     return repository.updateLeads(formdata: formdata);
   }
+
+  Future<dynamic> getLeadDetail({
+    required Map<String, String> formdata,
+  }) {
+    return repository.getLeadDetail(formdata: formdata);
+  }
 }

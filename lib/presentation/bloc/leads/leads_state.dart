@@ -41,3 +41,34 @@ final class LeadsSearchError extends LeadsState {
   @override
   List<Object> get props => [message];
 }
+
+
+final class LeadsDetailLoading extends LeadsState {}
+final class LeadsDetailLoaded extends LeadsState {}
+final class LeadsDetailError extends LeadsState {
+  final String message;
+  const LeadsDetailError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class LeadsPhotoUpdating extends LeadsState {}
+final class LeadsPhotoUpdated extends LeadsState {}
+final class LeadsPhotoError extends LeadsState {
+  final String message;
+  const LeadsPhotoError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class LeadsSendingEmail extends LeadsState {}
+final class LeadsEmailSent extends LeadsState {}
+final class LeadsEmailSentError extends LeadsState {
+  final String message;
+  const LeadsEmailSentError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

@@ -10,6 +10,7 @@ import 'package:joes_jwellery_crm/presentation/screens/auth/widget/textfield_tit
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_text_field.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/radio_box_button.dart';
 
 class SearchCustomerScreen extends StatefulWidget {
   const SearchCustomerScreen({super.key});
@@ -21,6 +22,8 @@ class SearchCustomerScreen extends StatefulWidget {
 class _SearchCustomerScreenState extends State<SearchCustomerScreen> {
   final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocus = FocusNode();
+
+  String gender = "M";
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +60,7 @@ class _SearchCustomerScreenState extends State<SearchCustomerScreen> {
               }
               if(state is CustomerNotExist){
                 context.read<CustomerCubit>().tempCustEmail = searchController.text.trim();
+                context.read<CustomerCubit>().tempCustGender = gender;
                 searchController.clear();
 
                 context.pushReplacementNamed(
@@ -87,6 +91,31 @@ class _SearchCustomerScreenState extends State<SearchCustomerScreen> {
                   _buildField("Enter email", searchController, searchFocus),
                   7.h,
 
+                  TextfieldTitleTextWidget(title: "Gender"),
+                  7.h,
+                  Row(
+                    children: [
+                      RadioBoxButton(
+                        text: 'Male',
+                        groupValue: gender,
+                        value: 'M',
+                        onChanged: (value) => setState(() {
+                          gender = value! ;
+                        }),
+                      ),
+                      10.w,
+                      RadioBoxButton(
+                        text: 'Female',
+                        groupValue: gender,
+                        value: 'F',
+                        onChanged: (value) => setState(() {
+                          gender = value! ;
+                        }),
+                      ),
+                    ],
+                  ),
+                  10.h,
+
                   Spacer(),
 
                   Builder(
@@ -106,7 +135,7 @@ class _SearchCustomerScreenState extends State<SearchCustomerScreen> {
                                 onPressed: () {
                                   context.pushNamed(RoutesName.customerDetailScreen, extra: {
                                     "id":state.customers[0].id,
-                                    "name":state.customers[0].name
+                                    "name":state.customers[0].name,
                                   });
                                 },
                               ),

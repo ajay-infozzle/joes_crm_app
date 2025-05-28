@@ -95,16 +95,16 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
                   right: AppDimens.spacing15,
                 ),
                 children: [
-                  TextfieldTitleTextWidget(title: "Store"),
+                  TextfieldTitleTextWidget(title: "Store", isMandatory: true,),
                   5.h,
                   StoreDropdown(
                     storeList: context.read<HomeCubit>().storeList,
                     onSelected:(selectedStore) => leadsCubit.changeStore(selectedStore),
                     initialSelected: leadsCubit.store,
                   ),
-                  7.h,
+                  10.h,
 
-                  TextfieldTitleTextWidget(title: "Title"),
+                  TextfieldTitleTextWidget(title: "Title", isMandatory: true,),
                   5.h,
                   TitleDropdown(
                     initialSelected: leadsCubit.title,
@@ -112,9 +112,9 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
                       leadsCubit.title = selected ;
                     },
                   ),
-                  7.h,
+                  10.h,
 
-                  TextfieldTitleTextWidget(title: "Name"),
+                  TextfieldTitleTextWidget(title: "Name", isMandatory: true,),
                   _buildField("Name", nameController, nameFocusNode),
                   7.h,
 
@@ -122,7 +122,7 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
                   _buildField("Surname", surnameController, surnameFocusNode),
                   7.h,
 
-                  TextfieldTitleTextWidget(title: "Email"),
+                  TextfieldTitleTextWidget(title: "Email", isMandatory: true,),
                   _buildField("Email", emailController, emailFocusNode),
                   7.h,
 
@@ -130,7 +130,7 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
                   _buildPhoneField("Phone", phoneController, phoneFocus),
                   7.h,
 
-                  TextfieldTitleTextWidget(title: "Follow Date"),
+                  TextfieldTitleTextWidget(title: "Follow Date", isMandatory: true,),
                   GestureDetector(
                     child: _buildField(
                       "Follow Date",
@@ -144,7 +144,7 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
                   ),
                   7.h,
 
-                  TextfieldTitleTextWidget(title: "Amount"),
+                  TextfieldTitleTextWidget(title: "Amount", isMandatory: true,),
                   _buildField("Amount", amountController, amountFocusNode, inputType: TextInputType.number),
                   7.h,
 

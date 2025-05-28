@@ -176,6 +176,19 @@ class _SearchLeadScreenState extends State<SearchLeadScreen> {
                           ) 
                         );
                       }
+                      else if(context.read<LeadsCubit>().currentSearchLeads.isEmpty && searchController.text.isNotEmpty){
+                        return Expanded(
+                          child: Center(
+                            child: Text(
+                              "Empty Leads",
+                              style: TextStyle(
+                                color: AppColor.primary.withValues(alpha: .7),
+                                fontSize: AppDimens.textSize14
+                              ),
+                            ),
+                          ),
+                        );
+                      }
                       else if(context.read<LeadsCubit>().allLeads.isNotEmpty){
                         return Expanded(
                           child: Padding(

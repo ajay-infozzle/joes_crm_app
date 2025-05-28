@@ -54,6 +54,7 @@ class CustomerCubit extends Cubit<CustomerState> {
   OriginationOption  origination = OriginationOption(value: '', display: 'Select origination');  //ship, hotel, mailchimp, NotAvailable
   Stores? store;
   String tempCustEmail = "";
+  String tempCustGender = "M";
 
   void changeStore(Stores value){
     store = value;
@@ -147,14 +148,14 @@ class CustomerCubit extends Cubit<CustomerState> {
       emit(CustomerAddError("Please select store"));
       return ;
     }
-    if(email.isEmpty){
-      emit(CustomerAddError("Please enter email"));
-      return ;
-    }
-    if (!emailRegex.hasMatch(email)) {
-      emit(CustomerAddError("Please enter a valid email"));
-      return;
-    }
+    // if(email.isEmpty){
+    //   emit(CustomerAddError("Please enter email"));
+    //   return ;
+    // }
+    // if (!emailRegex.hasMatch(email)) {
+    //   emit(CustomerAddError("Please enter a valid email"));
+    //   return;
+    // }
     if (cntry.isEmpty) {
       emit(CustomerAddError("Please select country"));
       return;
@@ -219,7 +220,7 @@ class CustomerCubit extends Cubit<CustomerState> {
             showToast(msg: "${formdata['query']} is available", backColor: AppColor.green);
             emit(CustomerNotExist());
           }else{
-            emit(CustomerExistError(emailResponse['info']));
+            emit(CustomerExistError("Invalid Email (${emailResponse['info']})"));
           }
         }
       }else{

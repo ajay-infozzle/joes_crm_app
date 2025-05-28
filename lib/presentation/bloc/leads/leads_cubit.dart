@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -21,6 +22,7 @@ class LeadsCubit extends Cubit<LeadsState> {
 
   List<Leads> currentSearchLeads = [];
   List<Leads> allLeads = [];
+  Leads? currentLeadDetail ;
   String currentSearchText = '' ;
   Stores? store;
   Users? assoc;
@@ -78,14 +80,19 @@ class LeadsCubit extends Cubit<LeadsState> {
       emit(LeadsAddError("Please enter amount"));
       return ;
     }
+    if(email.isEmpty){
+      emit(LeadsAddError("Please enter email"));
+      return ;
+    }
     if(email.isNotEmpty && !emailRegex.hasMatch(email)){
       emit(LeadsAddError("Please enter a valid email"));
       return ;
     }
     if(email.isNotEmpty){
+      emit(LeadsAddFormLoading());
       final emailResponse = await CustomerUseCase(getIt()).validateEmail(email: email);
       if(emailResponse['status'] != 200){
-        emit(LeadsAddError(emailResponse['info']));
+        emit(LeadsAddError("Invalid Email (${emailResponse['info']})"));
         return;
       }
     }
@@ -227,6 +234,28 @@ class LeadsCubit extends Cubit<LeadsState> {
     }
   }
 
+  Future<void> getLeadDetail(String id) async {
+    try {
+      emit(LeadsDetailLoading());
+      final response = await leadsUseCase.getLeadDetail(formdata: {"id":id});
+      if(response != null){
+        final data = Leads.fromJson(response['lead']);
+        
+        if(data.id!.isNotEmpty){
+          currentLeadDetail = data ;
+          emit(LeadsDetailLoaded());
+        }else{
+          emit(LeadsDetailError("Something went wrong !"));
+        }
+      }else{
+        emit(LeadsDetailError("Something went wrong !"));
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Leads Cubit");
+      emit(LeadsDetailError(e.toString()));
+    }
+  }
+
   Future<void> searchLeads() async {
     try {
       currentSearchLeads.clear();
@@ -252,6 +281,53 @@ class LeadsCubit extends Cubit<LeadsState> {
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Leads Cubit");
       emit(LeadsSearchError(e.toString()));
+    }
+  }
+
+
+  Future<void> updateLeadPhoto({
+    required File file,
+    required String id,
+  }) async {
+    try {
+      emit(LeadsPhotoUpdating());
+      final response = await CustomerUseCase(getIt()).updateCustomerPhoto(file: file, id: id);
+      if(response != null && response['success']== true){
+        showToast(msg: response['message'], backColor: AppColor.green);
+        emit(LeadsPhotoUpdated());
+      }else{
+        showToast(msg: "Something went wrong !", backColor: AppColor.red);
+        emit(LeadsPhotoError("Something went wrong !"));
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(LeadsPhotoError(e.toString()));
+    }
+  }
+
+  Future<void> sendEmail({
+    required String custId,
+    required String subject,
+    required String message
+  }) async {
+    try {
+      emit(LeadsSendingEmail());
+      final response = await CustomerUseCase(getIt()).sendHimEmail(
+        formdata: {
+          'customer_id' : custId,
+          'subject' : subject,
+          'message' : message,
+        }
+      );
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+        emit(LeadsEmailSent());
+      }else{
+        emit(LeadsEmailSentError("Something went wrong !"));
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(LeadsEmailSentError(e.toString()));
     }
   }
 

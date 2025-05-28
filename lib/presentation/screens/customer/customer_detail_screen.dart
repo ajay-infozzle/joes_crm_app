@@ -9,7 +9,7 @@ import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_header.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/edit_customer_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/expandable_section.dart';
-import 'package:joes_jwellery_crm/presentation/screens/customer/widget/send_him_email_dialog.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/send_email_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/take_customer_photo_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
@@ -202,11 +202,12 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                         title: "Basic Details",
                         content: {
                           "ID": customer.id ?? '-',
+                          "Store": customer.store ?? '-',
+                          "Title": '-',
                           "Name": customer.name ?? '-',
                           "Surname": customer.surname ?? '-',
                           "Email": customer.email ?? '-',
                           "Country": customer.country ?? '-',
-                          "Store": customer.store ?? '-',
                           "Contact Number": customer.phone ?? '-',
                           "Birthday": customer.birthday ?? '-',
                           "Anniversary": customer.anniversary ?? '-',
@@ -244,6 +245,15 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                         title: "Activity Stream",
                         isActivityStream: true,
                         activityList: customer.activityStream,
+                      ),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: ExpandableSection(
+                        title: "Communication Log",
+                        isCommLog: true,
+                        commList: customer.communicationLog,
                       ),
                     ),
 
@@ -345,6 +355,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   void onTakePhotoSelected({required BuildContext context}) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) => TakeCustomerPhotoDialog(
         onSave: (file) {
           context.read<CustomerCubit>().updateCustomerPhoto(
@@ -367,11 +378,12 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
 
     showDialog(
       context: context,
-      builder: (_) => SendHimEmailDialog(
+      builder: (_) => SendEmailDialog(
         subjectController: subjectController, 
         messageController: messageController, 
         subjectFocus: subjectFocus, 
         messageFocus: messageFocus, 
+        title: 'Send Him Email',
         onSend: () async{
           await context.read<CustomerCubit>().sendHimEmail(
             custId: customer.id!,

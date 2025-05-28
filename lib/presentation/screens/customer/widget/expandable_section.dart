@@ -4,6 +4,7 @@ import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/single_customer_model.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/activity_list_widget.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/comm_log_list_widget.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/sales_list_widget.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/sms_log_list_widget.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/wish_list_widget.dart';
@@ -15,11 +16,13 @@ class ExpandableSection extends StatefulWidget {
   final bool isSales;
   final bool isSmsLogs;
   final bool isWishList;
+  final bool isCommLog;
   final Map<String, String>? content;
   final List<ActivityStream>? activityList;
   final List<Sales>? salesList;
   final List<SmsLog>? smsLogList;
   final List<WishList>? wishList;
+  final List<CommunicationLog>? commList;
 
   const ExpandableSection({
     super.key, 
@@ -29,10 +32,12 @@ class ExpandableSection extends StatefulWidget {
     this.isSales = false,
     this.isSmsLogs = false,
     this.isWishList = false,
+    this.isCommLog = false,
     this.activityList,
     this.salesList,
     this.smsLogList,
-    this.wishList
+    this.wishList,
+    this.commList
   });
 
   @override
@@ -82,7 +87,7 @@ class _ExpandableSectionState extends State<ExpandableSection> {
             ),
           ),
 
-          if (_isExpanded && (widget.content != null || widget.activityList != null || widget.salesList != null || widget.smsLogList != null || widget.wishList != null))
+          if (_isExpanded && (widget.content != null || widget.activityList != null || widget.salesList != null || widget.smsLogList != null || widget.commList != null ||widget.wishList != null))
             Container(
               width: width,
               decoration: BoxDecoration(
@@ -105,12 +110,15 @@ class _ExpandableSectionState extends State<ExpandableSection> {
                       return SmsLogListWidget(smsLogList: widget.smsLogList!); 
                     } else if (widget.isWishList && widget.wishList != null) {
                       return WishListWidget(wishList: widget.wishList!); 
+                    } else if(widget.isCommLog && widget.commList != null){
+                      return CommLogListWidget(commList: widget.commList!); 
                     } else if (widget.content != null) {
                       return Column(
                         children: widget.content!.entries.map((entry) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: AppDimens.spacing4),
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
                                   flex: 2,

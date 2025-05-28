@@ -12,6 +12,7 @@ import 'package:joes_jwellery_crm/presentation/screens/dashboard/dashboard_scree
 import 'package:joes_jwellery_crm/presentation/screens/email/email_thread_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/add_leads_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/edit_leads_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/leads/lead_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/search_lead_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/splash_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/task/task_edit_screen.dart';
@@ -68,6 +69,19 @@ class AppRoutes {
             pageBuilder: (context, state) {
               return customPageRouteBuilder(
                 const AddLeadsScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.leadScreen,
+            name: RoutesName.leadScreen,
+            pageBuilder: (context, state) {
+              final String id = state.extra as String;
+              return customPageRouteBuilder(
+                LeadScreen(id: id),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

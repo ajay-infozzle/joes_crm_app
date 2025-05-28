@@ -68,7 +68,11 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
   void initState() {
     super.initState();
 
-   emailController.text = context.read<CustomerCubit>().tempCustEmail;
+    if(context.read<CustomerCubit>().tempCustGender == 'M'){
+      emailController.text = context.read<CustomerCubit>().tempCustEmail;
+    }else{
+      wifeEmailController.text = context.read<CustomerCubit>().tempCustEmail;
+    }
    context.read<CustomerCubit>().currentPickedImg = null ;
   }
 
@@ -123,25 +127,39 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                   right: AppDimens.spacing15,
                 ),
                 children: [
-                  TextfieldTitleTextWidget(title: "Store"),
+                  TextfieldTitleTextWidget(title: "Store", isMandatory: true,),
                   5.h,
                   StoreDropdown(
                     storeList: context.read<HomeCubit>().storeList, 
                     onSelected: (selectedStore) => customerCubit.changeStore(selectedStore),
                     initialSelected: customerCubit.store,
                   ),
+                  10.h,
+
+                  TextfieldTitleTextWidget(title: "His Name"),
+                  _buildField("His Name", nameController, nameFocus),
                   7.h,
 
-                  TextfieldTitleTextWidget(title: "Name"),
-                  _buildField("Name", nameController, nameFocus),
+                  TextfieldTitleTextWidget(title: "Her Name"),
+                  _buildField("Her Name",spouseNameController,spouseNameFocus,),
                   7.h,
 
                   TextfieldTitleTextWidget(title: "Surname"),
                   _buildField("Surname", surnameController, surnameFocus),
                   7.h,
 
-                  TextfieldTitleTextWidget(title: "Email"),
-                  _buildField("Email", emailController, emailFocus),
+                  TextfieldTitleTextWidget(title: "His Email"),
+                  _buildField(
+                    "His Email", emailController, emailFocus, 
+                    isEnable: customerCubit.tempCustGender == 'M' ? false : true
+                  ),
+                  7.h,
+
+                  TextfieldTitleTextWidget(title: "Her Email"),
+                  _buildField(
+                    "Her Email",wifeEmailController,wifeEmailFocus,
+                    isEnable: customerCubit.tempCustGender == 'F' ? false : true
+                  ),
                   7.h,
 
                   TextfieldTitleTextWidget(title: "Photo"),
@@ -164,38 +182,18 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                   ),
                   7.h,
 
-                  TextfieldTitleTextWidget(title: "Phone"),
-                  _buildPhoneField("Phone", phoneController, phoneFocus),
+                  TextfieldTitleTextWidget(title: "His cell number"),
+                  _buildPhoneField("His cell number", phoneController, phoneFocus),
                   7.h,
 
-                  TextfieldTitleTextWidget(title: "Spouse Name"),
-                  _buildField(
-                    "Spouse Name",
-                    spouseNameController,
-                    spouseNameFocus,
-                  ),
+                  TextfieldTitleTextWidget(title: "Her cell number"),
+                  _buildPhoneField("Her cell number",wifePhoneController,wifePhoneFocus,),
                   7.h,
 
-                  TextfieldTitleTextWidget(title: "Spouse Email"),
-                  _buildField(
-                    "Spouse Email",
-                    wifeEmailController,
-                    wifeEmailFocus,
-                  ),
-                  7.h,
-
-                  TextfieldTitleTextWidget(title: "Spouse Phone"),
-                  _buildPhoneField(
-                    "Spouse Phone",
-                    wifePhoneController,
-                    wifePhoneFocus,
-                  ),
-                  7.h,
-
-                  TextfieldTitleTextWidget(title: "Birthday"),
+                  TextfieldTitleTextWidget(title: "His Birthday"),
                   GestureDetector(
                     child: _buildField(
-                      "Birthday",
+                      "His Birthday",
                       birthController,
                       birthFocus,
                       isEnable: false,
@@ -206,10 +204,10 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                   ),
                   7.h,
 
-                  TextfieldTitleTextWidget(title: "Spouse Birthday"),
+                  TextfieldTitleTextWidget(title: "Her Birthday"),
                   GestureDetector(
                     child: _buildField(
-                      "Spouse Birthday",
+                      "Her Birthday",
                       spouseBirthController,
                       spouseBirthFocus,
                       isEnable: false,

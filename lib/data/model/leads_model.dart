@@ -30,6 +30,9 @@ class Leads {
   String? name;
   String? surname;
   String? email;
+  String? phone;
+  String? address;
+  String? notes;
   String? followDate;
   String? amount;
   String? salesAssoc2;
@@ -46,6 +49,9 @@ class Leads {
       this.name,
       this.surname,
       this.email,
+      this.phone,
+      this.address,
+      this.notes,
       this.followDate,
       this.amount,
       this.salesAssoc2,
@@ -57,11 +63,14 @@ class Leads {
     id = json['id'];
     customerId = json['customer_id'];
     status = json['status'];
-    photo = json['photo'];
+    photo = json['photo'] ?? "";
     title = json['title'];
     name = json['name'];
     surname = json['surname'];
     email = json['email'];
+    phone = json['phone'] ?? "";
+    address = json['address'] ?? "";
+    notes = json['notes'] ?? "";
     followDate = json['follow_date'];
     amount = json['amount'];
     salesAssoc2 = json['sales_assoc_2'];
@@ -75,11 +84,14 @@ class Leads {
     data['id'] = id;
     data['customer_id'] = customerId;
     data['status'] = status;
-    data['photo'] = photo;
+    data['photo'] = photo ?? "";
     data['title'] = title;
     data['name'] = name;
     data['surname'] = surname;
     data['email'] = email;
+    data['phone'] = phone ?? "";
+    data['address'] = address ?? "";
+    data['notes'] = notes ?? "";
     data['follow_date'] = followDate;
     data['amount'] = amount;
     data['sales_assoc_2'] = salesAssoc2;
