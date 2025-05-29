@@ -13,8 +13,10 @@ import 'package:joes_jwellery_crm/presentation/widgets/custom_text_field.dart';
 class SendEmailDialog extends StatelessWidget {
   final TextEditingController subjectController;
   final TextEditingController messageController;
+  final TextEditingController toController;
   final FocusNode subjectFocus;
   final FocusNode messageFocus;
+  final FocusNode toFocus;
   final String title;
   final VoidCallback onSend;
 
@@ -22,8 +24,10 @@ class SendEmailDialog extends StatelessWidget {
     super.key,
     required this.subjectController,
     required this.messageController,
+    required this.toController,
     required this.subjectFocus,
     required this.messageFocus,
+    required this.toFocus,
     this.title = 'Send Him Email' ,
     required this.onSend,
   });
@@ -46,16 +50,23 @@ class SendEmailDialog extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
         content: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextfieldTitleTextWidget(title: "Subject"),
-              _buildField("Subject", subjectController, subjectFocus),
-              7.h,
-      
-              TextfieldTitleTextWidget(title: "Message"),
-              _buildField("Message", messageController, messageFocus, maxline: 8),
-              7.h,
-            ],
+          child: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              children: [
+                TextfieldTitleTextWidget(title: "To"),
+                _buildField("To", toController, toFocus, enable: false),
+                7.h,
+            
+                TextfieldTitleTextWidget(title: "Subject"),
+                _buildField("Subject", subjectController, subjectFocus),
+                7.h,
+                  
+                TextfieldTitleTextWidget(title: "Message"),
+                _buildField("Message", messageController, messageFocus, maxline: 8),
+                7.h,
+              ],
+            ),
           ),
         ),
         actions: [
@@ -96,8 +107,8 @@ class SendEmailDialog extends StatelessWidget {
                 borderRadius: AppDimens.buttonRadius16,
                 onPressed: () {
                   currentFocus.unfocus();
-      
-                  if (subjectController.text.isNotEmpty && messageController.text.isNotEmpty) {
+
+                  if (toController.text.isNotEmpty && subjectController.text.isNotEmpty && messageController.text.isNotEmpty) {
                     onSend();
                   } else {
                     showToast(msg: "All fields are required !");
@@ -116,6 +127,7 @@ class SendEmailDialog extends StatelessWidget {
     TextEditingController controller,
     FocusNode focusNode, {
     int maxline = 1,
+    bool enable = true,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppDimens.spacing6),
@@ -124,7 +136,7 @@ class SendEmailDialog extends StatelessWidget {
         focusNode: focusNode,
         fieldBackColor: AppColor.greenishGrey.withValues(alpha: 0.4),
         hintText: "",
-        enabled: true,
+        enabled: enable,
         keyboardType: TextInputType.text,
         maxline: maxline,
         textInputAction: TextInputAction.next,

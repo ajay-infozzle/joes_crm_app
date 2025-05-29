@@ -122,7 +122,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         ),
                       ),
                     ),
-                    hintText: "Search Title, Description",
+                    hintText: "Search Title, Description, Status",
                     hintStyle: TextStyle(
                       color: AppColor.primary.withValues(alpha: .8),
                     ),

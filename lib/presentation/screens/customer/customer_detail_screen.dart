@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
@@ -10,6 +11,7 @@ import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/edit_customer_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/expandable_section.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/send_email_dialog.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/send_water_taxi_email.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/take_customer_photo_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
@@ -27,6 +29,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<CustomerCubit>().currentCustomer = null;
     context.read<CustomerCubit>().fetchSingleCustomer(id: widget.id);
   }
 
@@ -67,13 +70,24 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
             ),
             onSelected: (value) {
               if (value == 'edit') {
-                onEditSelected(context : context);
+                context.read<CustomerCubit>().currentCustomer != null ? onEditSelected(context : context) : showAppSnackBar(context, message: "Not available !");
               } else if (value == 'delete') {
                 showAppSnackBar(context, message: "Not available !");
               } else if (value == 'take_photo') {
-                onTakePhotoSelected(context : context);
+                context.read<CustomerCubit>().currentCustomer != null ? onTakePhotoSelected(context : context) : showAppSnackBar(context, message: "Not available !");
               } else if (value == 'send_him_email') {
-                onSendHimEmailSelected(context : context);
+                context.read<CustomerCubit>().currentCustomer != null ? onSendHimEmailSelected(context : context) : showAppSnackBar(context, message: "Not available !");
+              } else if (value == 'send_her_email') {
+                context.read<CustomerCubit>().currentCustomer != null ? onSendHerEmailSelected(context : context) : showAppSnackBar(context, message: "Not available !");
+              } else if (value == 'send_water_taxi_email') {
+                context.read<CustomerCubit>().currentCustomer != null ? onSendWaterTaxiEmailSelected(context : context) : showAppSnackBar(context, message: "Not available !");
+              } else if (value == 'send_appr_cert_email') {
+                // onSendHerEmailSelected(context : context);
+              } else if (value == 'add_sale') {
+                context.pushNamed(
+                  RoutesName.addSaleScreen,
+                  extra: context.read<CustomerCubit>().currentCustomer!.id ?? ""
+                );
               }
             },
             itemBuilder: (BuildContext context) => [
@@ -153,6 +167,17 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                   ],
                 ),
               ),
+
+              PopupMenuItem<String>(
+                value: 'add_sale',
+                child: Row(
+                  children: [
+                    Image.asset(AssetsConstant.emailIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
+                    5.w,
+                    Text('Add Sale')
+                  ],
+                ),
+              ),
             ],
           ),
         ],
@@ -203,20 +228,20 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                         content: {
                           "ID": customer.id ?? '-',
                           "Store": customer.store ?? '-',
-                          "Title": '-',
-                          "Name": customer.name ?? '-',
+                          "Title": customer.title?.toLowerCase().capitalizeFirst() ?? '-',
+                          "His name": customer.name ?? '-',
+                          "Her name": customer.spouseName ?? '-',
                           "Surname": customer.surname ?? '-',
-                          "Email": customer.email ?? '-',
+                          "His email": customer.email ?? '-',
+                          "Her email": customer.wifeEmail ?? '-',
                           "Country": customer.country ?? '-',
-                          "Contact Number": customer.phone ?? '-',
-                          "Birthday": customer.birthday ?? '-',
+                          "His cell number": customer.phone ?? '-',
+                          "Her cell number": customer.wifePhone ?? '-',
+                          "His birthday": customer.birthday ?? '-',
+                          "Her birthday": customer.wifeBirthday ?? '-',
                           "Anniversary": customer.anniversary ?? '-',
-                          "Spouse Name": customer.spouseName ?? '-',
-                          "Wife Email": customer.wifeEmail ?? '-',
-                          "Wife Phone": customer.wifePhone ?? '-',
-                          "Wife Birthday": customer.wifeBirthday ?? '-',
-                          "Total Sales": customer.totalSales ?? '-',
-                          "Last Sale Date": customer.lastSaleDate ?? '-',
+                          "Total sales": customer.totalSales ?? '-',
+                          "Last sale date": customer.lastSaleDate ?? '-',
                         },
                       ),
                     ),
@@ -278,7 +303,8 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   }
   
   void onEditSelected({required BuildContext context}) {
-    final customer = (context.read<CustomerCubit>().state as CustomerLoaded).customer;
+    // final customer = (context.read<CustomerCubit>().state as CustomerLoaded).customer;
+    final customer = context.read<CustomerCubit>().currentCustomer!;
 
     final nameFocus = FocusNode();
     final spouseNameFocus = FocusNode();
@@ -294,9 +320,11 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
     final surnameController = TextEditingController(text: customer.surname ?? '');
     final emailController = TextEditingController(text: customer.email ?? '');
     final wifeEmailController = TextEditingController(text: customer.wifeEmail ?? '');
-    final countryController = TextEditingController(text: customer.country ?? '');
+    // final countryController = TextEditingController(text: customer.country ?? '');
     final phoneController = TextEditingController(text: customer.phone ?? '');
     final wifePhoneController = TextEditingController(text: customer.wifePhone ?? '');
+
+    context.read<CustomerCubit>().country = context.read<CustomerCubit>().getCountry(customer.country ?? "") ;
 
     showDialog(
       context: context,
@@ -306,7 +334,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         surnameController: surnameController,
         emailController: emailController,
         wifeEmailController: wifeEmailController,
-        countryController: countryController,
+        // countryController: countryController,
         phoneController: phoneController,
         wifePhoneController: wifePhoneController,
         nameFocus: nameFocus,
@@ -324,7 +352,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
             surname: surnameController.text,
             email: emailController.text,
             phone: phoneController.text,
-            country: countryController.text,
+            country: context.read<CustomerCubit>().checkCountry(),
             spouseName: spouseNameController.text,
             wifeEmail: wifeEmailController.text,
             wifePhone: wifePhoneController.text,
@@ -368,19 +396,24 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   }
   
   void onSendHimEmailSelected({required BuildContext context}) {
-    final customer = (context.read<CustomerCubit>().state as CustomerLoaded).customer;
+    // final customer = (context.read<CustomerCubit>().state as CustomerLoaded).customer;
+    final customer = context.read<CustomerCubit>().currentCustomer!;
 
     final subjectFocus = FocusNode();
     final messageFocus = FocusNode();
+    final toFocus = FocusNode();
     
     final subjectController = TextEditingController();
     final messageController = TextEditingController();
+    final toController = TextEditingController(text: customer.email);
 
     showDialog(
       context: context,
       builder: (_) => SendEmailDialog(
         subjectController: subjectController, 
         messageController: messageController, 
+        toController: toController,
+        toFocus: toFocus,
         subjectFocus: subjectFocus, 
         messageFocus: messageFocus, 
         title: 'Send Him Email',
@@ -389,6 +422,58 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
             custId: customer.id!,
             subject: subjectController.text,
             message: messageController.text 
+          );
+        },
+      ),
+    );
+  }
+
+  void onSendHerEmailSelected({required BuildContext context}) {
+    // final customer = (context.read<CustomerCubit>().state as CustomerLoaded).customer;
+    final customer = context.read<CustomerCubit>().currentCustomer!;
+
+    final subjectFocus = FocusNode();
+    final messageFocus = FocusNode();
+    final toFocus = FocusNode();
+    
+    final subjectController = TextEditingController();
+    final messageController = TextEditingController();
+    final toController = TextEditingController(text: customer.wifeEmail?? "");
+
+    showDialog(
+      context: context,
+      builder: (_) => SendEmailDialog(
+        subjectController: subjectController, 
+        messageController: messageController, 
+        toController: toController,
+        toFocus: toFocus,
+        subjectFocus: subjectFocus, 
+        messageFocus: messageFocus, 
+        title: 'Send Her Email',
+        onSend: () async{
+          await context.read<CustomerCubit>().sendHerEmail(
+            custId: customer.id!,
+            subject: subjectController.text,
+            message: messageController.text,
+            herEmail: customer.wifeEmail?? "" 
+          );
+        },
+      ),
+    );
+  }
+
+  void onSendWaterTaxiEmailSelected({required BuildContext context}) {
+    // final customer = (context.read<CustomerCubit>().state as CustomerLoaded).customer;
+    final customer = context.read<CustomerCubit>().currentCustomer!;
+    final email = customer.email!.isNotEmpty ? customer.email : customer.wifeEmail! ;
+    showDialog(
+      context: context,
+      builder: (_) => SendWaterTaxiEmailDialog(
+        toEmail: email!, 
+        onSend: (formdata) async{
+          formdata["customer_id"] = customer.id;
+          await context.read<CustomerCubit>().sendWaterTaxiEmail(
+            formdata: formdata
           );
         },
       ),

@@ -123,7 +123,7 @@ class _ExpandableSectionState extends State<ExpandableSection> {
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    entry.key, style: TextStyle(fontSize: AppDimens.textSize14, fontWeight: FontWeight.w500)
+                                    entry.key, style: TextStyle(fontSize: AppDimens.textSize14, fontWeight: FontWeight.w600, color: AppColor.primary)
                                   ),
                                 ),
 

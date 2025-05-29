@@ -11,7 +11,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputAction textInputAction;
   final bool obscureText;
   final bool enabled;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final Color? fieldBackColor;
   final ValueChanged<String>? onChanged;
   final String? Function(String?)? validator;
@@ -25,7 +25,7 @@ class CustomTextField extends StatelessWidget {
     this.textInputAction = TextInputAction.next,
     this.obscureText = false,
     this.enabled = true,
-    required this.focusNode,
+    this.focusNode,
     this.fieldBackColor,
     this.onChanged,
     this.validator,
@@ -70,7 +70,7 @@ class CustomTextField extends StatelessWidget {
         textInputAction: textInputAction,
         onChanged: onChanged,
         validator: validator,
-        onTapOutside: (event) => focusNode.unfocus(),
+        onTapOutside: (event) => focusNode?.unfocus(),
         maxLines: maxline,
       ),
     );

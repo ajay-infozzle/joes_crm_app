@@ -40,6 +40,18 @@ class CustomerUseCase {
     return repository.sendHimEmail(formdata: formdata);
   }
 
+  Future<dynamic> sendHerEmail({
+    required Map<String, dynamic> formdata,
+  }) {
+    return repository.sendHerEmail(formdata: formdata);
+  }
+
+  Future<dynamic> sendWaterTaxiEmail({
+    required Map<String, dynamic> formdata,
+  }) {
+    return repository.sendWaterTaxiEmail(formdata: formdata);
+  }
+
   Future<dynamic> updateCustomerPhoto({
     required File file,
     required String id,

@@ -403,7 +403,9 @@ class _LeadScreenState extends State<LeadScreen> {
 
     final subjectFocus = FocusNode();
     final messageFocus = FocusNode();
+    final toFocus = FocusNode();
     
+    final toController = TextEditingController(text: currentLeadDetail?.email ?? "");
     final subjectController = TextEditingController();
     final messageController = TextEditingController();
 
@@ -413,6 +415,8 @@ class _LeadScreenState extends State<LeadScreen> {
       builder: (_) => SendEmailDialog(
         subjectController: subjectController, 
         messageController: messageController, 
+        toController: toController,
+        toFocus: toFocus,
         subjectFocus: subjectFocus, 
         messageFocus: messageFocus, 
         title: 'Send Email',

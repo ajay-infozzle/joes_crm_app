@@ -33,11 +33,13 @@ class CustomerCubit extends Cubit<CustomerState> {
     }
   }
 
+  Customer? currentCustomer ;
   Future<void> fetchSingleCustomer({required String id}) async {
     try {
       emit(CustomerLoading());
       final response = await customerUseCase.fetchSingleCustomer(id: id);
       final data = SingleCustomerModel.fromJson(response);
+      currentCustomer = data.customer ;
       emit(CustomerLoaded(data.customer ?? Customer()));
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Customer Cubit");
@@ -75,6 +77,21 @@ class CustomerCubit extends Cubit<CustomerState> {
         return "SintMaarten" ;
       default:
         return "other";
+    }
+  }
+
+  String getCountry(String currentCntry){
+    switch (currentCntry) {
+      case "UnitedStates":
+        return "United States" ;
+      case "Canada":
+        return "Canada" ;
+      case "UnitedKingdom":
+        return "United Kingdom" ;
+      case "SintMaarten":
+        return "Sint Maarten (Dutch part)" ;
+      default:
+        return "";
     }
   }
 
@@ -315,6 +332,54 @@ class CustomerCubit extends Cubit<CustomerState> {
           'message' : message,
         }
       );
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+        emit(CustomerEmailSent());
+      }else{
+        emit(CustomerEmailSentError("Something went wrong !"));
+      }
+      emit(CustomerEmailSent());
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(CustomerEmailSentError(e.toString()));
+    }
+  }
+
+  Future<void> sendHerEmail({
+    required String custId,
+    required String subject,
+    required String message,
+    required String herEmail,
+  }) async {
+    try {
+      emit(CustomerSendingEmail());
+      final response = await customerUseCase.sendHerEmail(
+        formdata: {
+          'customer_id' : custId,
+          'subject' : subject,
+          'message' : message,
+          'wife_email' : herEmail
+        }
+      );
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+        emit(CustomerEmailSent());
+      }else{
+        emit(CustomerEmailSentError("Something went wrong !"));
+      }
+      emit(CustomerEmailSent());
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(CustomerEmailSentError(e.toString()));
+    }
+  }
+
+  Future<void> sendWaterTaxiEmail({
+    required Map<String , dynamic> formdata,
+  }) async {
+    try {
+      emit(CustomerSendingEmail());
+      final response = await customerUseCase.sendWaterTaxiEmail(formdata: formdata);
       if(response != null){
         showToast(msg: response['message'], backColor: AppColor.green);
         emit(CustomerEmailSent());

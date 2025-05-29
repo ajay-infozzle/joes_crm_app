@@ -21,6 +21,7 @@ class SingleCustomerModel {
 class Customer {
   String? id;
   String? name;
+  String? title;
   String? spouseName;
   String? surname;
   String? email;
@@ -45,6 +46,7 @@ class Customer {
   Customer(
       {this.id,
       this.name,
+      this.title,
       this.spouseName,
       this.surname,
       this.email,
@@ -69,6 +71,7 @@ class Customer {
   Customer.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    title = json['title'];
     spouseName = json['spouse_name'];
     surname = json['surname'];
     email = json['email'];
@@ -120,6 +123,7 @@ class Customer {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
+    data['title'] = title;
     data['spouse_name'] = spouseName;
     data['surname'] = surname;
     data['email'] = email;

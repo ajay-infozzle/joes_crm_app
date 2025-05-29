@@ -20,6 +20,12 @@ abstract class CustomerRepository {
   Future<dynamic> sendHimEmail({
     required Map<String, dynamic> formdata,
   });
+  Future<dynamic> sendHerEmail({
+    required Map<String, dynamic> formdata,
+  });
+  Future<dynamic> sendWaterTaxiEmail({
+    required Map<String, dynamic> formdata,
+  });
   Future<dynamic> updateCustomerPhoto({
     required File file,
     required String id,

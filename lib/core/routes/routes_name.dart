@@ -15,4 +15,6 @@ class RoutesName {
   static const String taskListScreen = "task-list";
   static const String taskScreen = "task";
   static const String editTaskScreen = "edit-task";
+  static const String addSaleScreen = "add-sale";
+  static const String editSaleScreen = "edit-sale";
 }

@@ -10,6 +10,8 @@ import 'package:joes_jwellery_crm/data/repository/home/home_repo.dart';
 import 'package:joes_jwellery_crm/data/repository/home/home_repo_impl.dart';
 import 'package:joes_jwellery_crm/data/repository/leads/leads_repo.dart';
 import 'package:joes_jwellery_crm/data/repository/leads/leads_repo_impl.dart';
+import 'package:joes_jwellery_crm/data/repository/sale/sale_repo.dart';
+import 'package:joes_jwellery_crm/data/repository/sale/sale_repo_impl.dart';
 import 'package:joes_jwellery_crm/data/repository/sms/sms_repo.dart';
 import 'package:joes_jwellery_crm/data/repository/sms/sms_repo_impl.dart';
 import 'package:joes_jwellery_crm/data/repository/task/task_repo.dart';
@@ -21,6 +23,7 @@ import 'package:joes_jwellery_crm/domain/usecases/customer_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/home_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/auth_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/leads_usecase.dart';
+import 'package:joes_jwellery_crm/domain/usecases/sale_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/sms_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/task_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/whatsapp_usecase.dart';
@@ -30,6 +33,7 @@ import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart
 import 'package:joes_jwellery_crm/presentation/bloc/dashboard/dashboard_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/leads/leads_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/sale/sale_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sms/sms_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/task/task_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/whatsapp/whatsapp_cubit.dart';
@@ -58,6 +62,7 @@ void dependencyInjection() async{
   getIt.registerLazySingleton<SmsRepository>(() => SmsRepoImpl(getIt()));
   getIt.registerLazySingleton<LeadsRepository>(() => LeadsRepoImpl(getIt()));
   getIt.registerLazySingleton<TaskRepository>(() => TaskRepoImpl(apiService:getIt()));
+  getIt.registerLazySingleton<SaleRepository>(() => SaleRepoImpl(getIt()));
 
 
   //~ usecases 
@@ -69,6 +74,7 @@ void dependencyInjection() async{
   getIt.registerLazySingleton<SmsUsecase>(() => SmsUsecase(getIt()));
   getIt.registerLazySingleton<LeadsUseCase>(() => LeadsUseCase(getIt()));
   getIt.registerLazySingleton<TaskUsecase>(() => TaskUsecase(repository:getIt()));
+  getIt.registerLazySingleton<SaleUsecase>(() => SaleUsecase(getIt()));
 
 
   //~ cubits
@@ -81,5 +87,6 @@ void dependencyInjection() async{
   getIt.registerFactory<WhatsappCubit>(() => WhatsappCubit(whatsappUsecase: getIt()));
   getIt.registerFactory<LeadsCubit>(() => LeadsCubit(leadsUseCase: getIt()));
   getIt.registerFactory<TaskCubit>(() => TaskCubit(taskUsecase: getIt()));
+  getIt.registerFactory<SaleCubit>(() => SaleCubit(saleUsecase: getIt()));
 
 }

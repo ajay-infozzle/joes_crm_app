@@ -14,6 +14,7 @@ import 'package:joes_jwellery_crm/presentation/screens/leads/add_leads_screen.da
 import 'package:joes_jwellery_crm/presentation/screens/leads/edit_leads_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/lead_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/search_lead_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/sales/add_sale_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/splash_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/task/task_edit_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/task/task_list_screen.dart';
@@ -135,6 +136,19 @@ class AppRoutes {
               final Task task = state.extra as Task;
               return customPageRouteBuilder(
                 TaskEditScreen(task: task),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.addSaleScreen,
+            name: RoutesName.addSaleScreen,
+            pageBuilder: (context, state) {
+              final String custId = state.extra as String;
+              return customPageRouteBuilder(
+                AddSaleScreen(custId: custId),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );
