@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -5,7 +7,9 @@ import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/auth/auth_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/dashboard/dashboard_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 
 class AppDrawer extends StatelessWidget {
   final void Function(String)? onItemSelected;
@@ -66,6 +70,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Sales', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               context.pop();
+              context.pushNamed(RoutesName.saleScreen);
               onItemSelected?.call('Sales');
             },
           ),
@@ -94,6 +99,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Email Templates', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               context.pop();
+              context.pushNamed(RoutesName.emailTemplatesScreen);
               onItemSelected?.call('Email Templates');
             },
           ),
@@ -112,6 +118,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('SMS Templates', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               context.pop();
+              showAppSnackBar(context, message: "Coming Soon !");
               onItemSelected?.call('SMS Templates');
             },
           ),
@@ -121,6 +128,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('SMS Campaigns', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               context.pop();
+              showAppSnackBar(context, message: "Coming Soon !");
               onItemSelected?.call('SMS Campaigns');
             },
           ),
@@ -130,6 +138,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Free Items', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               context.pop();
+              context.pushNamed(RoutesName.freeItemsScreen);
               onItemSelected?.call('Free Items');
             },
           ),
@@ -138,8 +147,15 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
-            onTap: () {
+            onTap: () async{
               context.pop();
+              bool isSuccess = await context.read<AuthCubit>().logout();
+              if(isSuccess){
+                showAppSnackBar(context, message: "logged out succesfuly", backgroundColor: AppColor.green);
+                context.goNamed(RoutesName.loginScreen);
+              }else{
+                showAppSnackBar(context, message: "Something went wrong in logging out..");
+              }
               onItemSelected?.call('Logout');
             },
           ),

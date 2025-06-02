@@ -65,7 +65,8 @@ class CustomerRepositoryImpl implements CustomerRepository {
     required String country, 
     required String spouseName, 
     required String wifeEmail, 
-    required String wifePhone
+    required String wifePhone,
+    required String notes,
   }) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
@@ -88,6 +89,7 @@ class CustomerRepositoryImpl implements CustomerRepository {
           'country' : country,
           'phone' : phone,
           'wife_phone' : wifePhone,
+          'notes' : notes,
         }),
       );
       

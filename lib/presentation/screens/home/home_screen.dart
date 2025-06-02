@@ -10,6 +10,7 @@ import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/auth/auth_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/dashboard/dashboard_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/email/email_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/home/widget/header_items.dart';
 import 'package:joes_jwellery_crm/presentation/screens/home/widget/log_section_widget.dart';
@@ -58,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     context.read<HomeCubit>().fetchHomeData();
+    context.read<EmailCubit>().fetchAllEmailTemplates();
   }
 
   @override

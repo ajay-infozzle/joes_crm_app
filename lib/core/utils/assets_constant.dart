@@ -31,6 +31,7 @@ class AssetsConstant {
   static const taskIcon = "$assetIconPath/task.png";
   static const logoutIcon = "$assetIconPath/logout.png";
   static const cameraIcon = "$assetIconPath/camera.png";
+  static const addSaleIcon = "$assetIconPath/add_sale.png";
 
 
   /// images ///

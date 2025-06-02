@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:joes_jwellery_crm/core/utils/session_manager.dart';
 import 'package:joes_jwellery_crm/data/network/api_service.dart';
-import 'package:joes_jwellery_crm/data/repository/sale/sale_repo.dart';
+import 'package:joes_jwellery_crm/data/repository/email/email_repo.dart';
 
-class SaleRepoImpl implements SaleRepository{
-  final ApiService apiService;
-  SaleRepoImpl(this.apiService);
+class EmailRepoImpl implements EmailRepository{
+  final ApiService apiService ;
+  EmailRepoImpl(this.apiService);
 
   @override
-  Future<dynamic> addSale({required Map<String, dynamic> formdata}) async{
+  Future<dynamic> addEmailTemp({required Map<String, dynamic> formdata}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -16,11 +16,11 @@ class SaleRepoImpl implements SaleRepository{
       final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'sales',
-          'task' : 'addSale',
+          'view' : 'emailtpls',
+          'task' : 'addEmailTpl',
           'token' : token
         },
-        body: FormData.fromMap(formdata),
+        body: FormData.fromMap(formdata)
       );
       
       return response;
@@ -30,7 +30,7 @@ class SaleRepoImpl implements SaleRepository{
   }
 
   @override
-  Future<dynamic> deleteSale(String id) async{
+  Future<dynamic> deleteEmailTemp({required String id}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -38,8 +38,8 @@ class SaleRepoImpl implements SaleRepository{
       final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'sales',
-          'task' : 'deleteSale',
+          'view' : 'emailtpls',
+          'task' : 'deleteEmailTpl',
           'token' : token
         },
         body: FormData.fromMap({'id' : id})
@@ -52,7 +52,7 @@ class SaleRepoImpl implements SaleRepository{
   }
 
   @override
-  Future<dynamic> getSales() async{
+  Future<dynamic> fetchEmailTemps() async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -60,8 +60,8 @@ class SaleRepoImpl implements SaleRepository{
       final response = await apiService.get(
         '',
         queryParams: {
-          'view' : 'sales',
-          'task' : 'getSales',
+          'view' : 'emailtpls',
+          'task' : 'getEmailTpls',
           'token' : token
         }
       );
@@ -73,7 +73,7 @@ class SaleRepoImpl implements SaleRepository{
   }
 
   @override
-  Future<dynamic> getSingleSale(String id) async{
+  Future<dynamic> fetchSingleEmailTemp({required String id}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -81,8 +81,8 @@ class SaleRepoImpl implements SaleRepository{
       final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'sales',
-          'task' : 'getSale',
+          'view' : 'emailtpls',
+          'task' : 'getEmailTpl',
           'token' : token
         },
         body: FormData.fromMap({'id' : id})
@@ -95,7 +95,7 @@ class SaleRepoImpl implements SaleRepository{
   }
 
   @override
-  Future<dynamic> updateSale({required Map<String, dynamic> formdata}) async{
+  Future<dynamic> updateEmailTemp({required Map<String, dynamic> formdata}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -103,11 +103,11 @@ class SaleRepoImpl implements SaleRepository{
       final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'sales',
-          'task' : 'editSale',
+          'view' : 'emailtpls',
+          'task' : 'editEmailTpl',
           'token' : token
         },
-        body: FormData.fromMap(formdata),
+        body: FormData.fromMap(formdata)
       );
       
       return response;

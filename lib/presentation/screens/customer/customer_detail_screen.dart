@@ -172,7 +172,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                 value: 'add_sale',
                 child: Row(
                   children: [
-                    Image.asset(AssetsConstant.emailIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
+                    Image.asset(AssetsConstant.addSaleIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
                     5.w,
                     Text('Add Sale')
                   ],
@@ -314,12 +314,14 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
     final countryFocus = FocusNode();
     final phoneFocus = FocusNode();
     final wifePhoneFocus = FocusNode();
+    final notesFocus = FocusNode();
 
     final nameController = TextEditingController(text: customer.name ?? '');
     final spouseNameController = TextEditingController(text: customer.spouseName ?? '');
     final surnameController = TextEditingController(text: customer.surname ?? '');
     final emailController = TextEditingController(text: customer.email ?? '');
     final wifeEmailController = TextEditingController(text: customer.wifeEmail ?? '');
+    final notesController = TextEditingController(text: customer.notes ?? '');
     // final countryController = TextEditingController(text: customer.country ?? '');
     final phoneController = TextEditingController(text: customer.phone ?? '');
     final wifePhoneController = TextEditingController(text: customer.wifePhone ?? '');
@@ -345,6 +347,8 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         countryFocus: countryFocus,
         phoneFocus: phoneFocus,
         wifePhoneFocus: wifePhoneFocus,
+        notesController: notesController,
+        notesFocus: notesFocus,
         onSave: () {
           context.read<CustomerCubit>().updateCustomer(
             id: widget.id,
@@ -356,6 +360,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
             spouseName: spouseNameController.text,
             wifeEmail: wifeEmailController.text,
             wifePhone: wifePhoneController.text,
+            notes: notesController.text,
           );
         },
       ),

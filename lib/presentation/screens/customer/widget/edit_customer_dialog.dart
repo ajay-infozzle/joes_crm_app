@@ -19,6 +19,7 @@ class EditCustomerDialog extends StatelessWidget {
   // final TextEditingController countryController;
   final TextEditingController phoneController;
   final TextEditingController wifePhoneController;
+  final TextEditingController notesController;
   final FocusNode nameFocus;
   final FocusNode spouseNameFocus;
   final FocusNode surnameFocus;
@@ -27,6 +28,7 @@ class EditCustomerDialog extends StatelessWidget {
   final FocusNode countryFocus;
   final FocusNode phoneFocus;
   final FocusNode wifePhoneFocus;
+  final FocusNode notesFocus;
   final VoidCallback onSave;
 
   const EditCustomerDialog({
@@ -39,6 +41,7 @@ class EditCustomerDialog extends StatelessWidget {
     // required this.countryController,
     required this.phoneController,
     required this.wifePhoneController,
+    required this.notesController,
     required this.nameFocus,
     required this.spouseNameFocus,
     required this.surnameFocus,
@@ -47,6 +50,7 @@ class EditCustomerDialog extends StatelessWidget {
     required this.countryFocus,
     required this.phoneFocus,
     required this.wifePhoneFocus,
+    required this.notesFocus,
     required this.onSave,
   });
 
@@ -181,6 +185,15 @@ class EditCustomerDialog extends StatelessWidget {
                   );
                 },
               ),
+              7.h,
+
+              TextfieldTitleTextWidget(title: "Notes"),
+              _buildField(
+                "Notes",
+                notesController,
+                notesFocus,
+                maxline: 7,
+              ),
               12.h,
             ],
           ),
@@ -238,6 +251,7 @@ class EditCustomerDialog extends StatelessWidget {
     TextEditingController controller,
     FocusNode focusNode, {
     bool enable = true,
+    int maxline = 1
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppDimens.spacing6),
@@ -249,6 +263,7 @@ class EditCustomerDialog extends StatelessWidget {
         enabled: enable,
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
+        maxline: maxline,
       ),
     );
   }

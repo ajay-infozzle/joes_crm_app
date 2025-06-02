@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
+import 'package:joes_jwellery_crm/data/model/email_templates_model.dart';
 import 'package:joes_jwellery_crm/data/model/leads_model.dart';
 import 'package:joes_jwellery_crm/data/model/single_task_model.dart';
 import 'package:joes_jwellery_crm/presentation/screens/auth/login_screen.dart';
@@ -9,12 +10,20 @@ import 'package:joes_jwellery_crm/presentation/screens/customer/customer_detail_
 import 'package:joes_jwellery_crm/presentation/screens/customer/customer_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/search_customer_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/dashboard/dashboard_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/email/add_email_template_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/email/edit_email_template_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/email/email_templates_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/email/email_thread_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/email/single_email_template_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/free_item/add_item_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/free_item/free_items_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/add_leads_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/edit_leads_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/lead_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/search_lead_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/sales/add_sale_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/sales/sales_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/sales/single_sale_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/splash_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/task/task_edit_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/task/task_list_screen.dart';
@@ -143,6 +152,31 @@ class AppRoutes {
           ),
 
           GoRoute(
+            path: RoutesName.saleScreen,
+            name: RoutesName.saleScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const SalesScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.singleSaleScreen,
+            name: RoutesName.singleSaleScreen,
+            pageBuilder: (context, state) {
+              final String saleId = state.extra as String;
+              return customPageRouteBuilder(
+                SingleSaleScreen(saleId: saleId),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
             path: RoutesName.addSaleScreen,
             name: RoutesName.addSaleScreen,
             pageBuilder: (context, state) {
@@ -213,6 +247,83 @@ class AppRoutes {
               final thread = state.extra as List<Map<String, dynamic>>?;
               return customPageRouteBuilder(
                 EmailThreadScreen(threadMessages: thread??[]),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.emailTemplatesScreen,
+            name: RoutesName.emailTemplatesScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const EmailTemplatesScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.singleEmailTemplateScreen,
+            name: RoutesName.singleEmailTemplateScreen,
+            pageBuilder: (context, state) {
+              final tempId = state.extra as String ;
+              return customPageRouteBuilder(
+                SingleEmailTemplateScreen(
+                  tempId: tempId,
+                ),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.editEmailTemplateScreen,
+            name: RoutesName.editEmailTemplateScreen,
+            pageBuilder: (context, state) {
+              final template = state.extra as Emailtpls ;
+              return customPageRouteBuilder(
+                EditEmailTemplateScreen(template: template),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.addEmailTemplateScreen,
+            name: RoutesName.addEmailTemplateScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const AddEmailTemplateScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          /// free item
+          GoRoute(
+            path: RoutesName.freeItemsScreen,
+            name: RoutesName.freeItemsScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const FreeItemsScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.addFreeItemScreen,
+            name: RoutesName.addFreeItemScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const AddFreeItemScreen(),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

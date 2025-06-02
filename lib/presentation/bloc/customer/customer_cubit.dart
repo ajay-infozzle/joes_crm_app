@@ -283,10 +283,11 @@ class CustomerCubit extends Cubit<CustomerState> {
     required String spouseName,
     required String wifeEmail,
     required String wifePhone,
+    required String notes,
   }) async {
     try {
       emit(CustomerLoading());
-      final response = await customerUseCase.editCustomer(id: id, name: name, surname: surname, email: email, phone: phone, country: country, spouseName: spouseName, wifeEmail: wifeEmail, wifePhone: wifePhone);
+      final response = await customerUseCase.editCustomer(id: id, name: name, surname: surname, email: email, phone: phone, country: country, spouseName: spouseName, wifeEmail: wifeEmail, wifePhone: wifePhone, notes : notes);
       if(response != null){
         showToast(msg: response['message'], backColor: AppColor.green);
 

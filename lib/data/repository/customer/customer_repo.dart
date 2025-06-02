@@ -12,7 +12,8 @@ abstract class CustomerRepository {
     required String country,
     required String spouseName,
     required String wifeEmail,
-    required String wifePhone
+    required String wifePhone,
+    required String notes,
   });
   Future<dynamic> addCustomerDetail({
     required Map<String, dynamic> formdata,

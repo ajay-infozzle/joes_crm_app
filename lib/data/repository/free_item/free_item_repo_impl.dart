@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:joes_jwellery_crm/core/utils/session_manager.dart';
 import 'package:joes_jwellery_crm/data/network/api_service.dart';
-import 'package:joes_jwellery_crm/data/repository/sale/sale_repo.dart';
+import 'package:joes_jwellery_crm/data/repository/free_item/free_item_repo.dart';
 
-class SaleRepoImpl implements SaleRepository{
-  final ApiService apiService;
-  SaleRepoImpl(this.apiService);
+class FreeItemRepoImpl implements FreeItemRepository{
+  final ApiService apiService ;
+  FreeItemRepoImpl(this.apiService);
 
   @override
-  Future<dynamic> addSale({required Map<String, dynamic> formdata}) async{
+  Future<dynamic> addFreeItem({required Map<String, dynamic> formdata}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -16,11 +16,11 @@ class SaleRepoImpl implements SaleRepository{
       final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'sales',
-          'task' : 'addSale',
+          'view' : 'freeitems',
+          'task' : 'addItem',
           'token' : token
         },
-        body: FormData.fromMap(formdata),
+        body: FormData.fromMap(formdata)
       );
       
       return response;
@@ -30,7 +30,7 @@ class SaleRepoImpl implements SaleRepository{
   }
 
   @override
-  Future<dynamic> deleteSale(String id) async{
+  Future<dynamic> deleteSingleFreeItem({required String itemId}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -38,11 +38,11 @@ class SaleRepoImpl implements SaleRepository{
       final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'sales',
-          'task' : 'deleteSale',
+          'view' : 'freeitems',
+          'task' : 'deleteItem',
           'token' : token
         },
-        body: FormData.fromMap({'id' : id})
+        body: FormData.fromMap({'id' : itemId})
       );
       
       return response;
@@ -52,7 +52,29 @@ class SaleRepoImpl implements SaleRepository{
   }
 
   @override
-  Future<dynamic> getSales() async{
+  Future<dynamic> editFreeItem({required Map<String, dynamic> formdata}) async{
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.post(
+        '',
+        queryParams: {
+          'view' : 'freeitems',
+          'task' : 'editItem',
+          'token' : token
+        },
+        body: FormData.fromMap(formdata)
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
+
+  @override
+  Future<dynamic> getAllFreeItems() async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -60,8 +82,8 @@ class SaleRepoImpl implements SaleRepository{
       final response = await apiService.get(
         '',
         queryParams: {
-          'view' : 'sales',
-          'task' : 'getSales',
+          'view' : 'freeitems',
+          'task' : 'getItems',
           'token' : token
         }
       );
@@ -73,7 +95,7 @@ class SaleRepoImpl implements SaleRepository{
   }
 
   @override
-  Future<dynamic> getSingleSale(String id) async{
+  Future<dynamic> getSingleFreeItem({required String itemId}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -81,33 +103,11 @@ class SaleRepoImpl implements SaleRepository{
       final response = await apiService.post(
         '',
         queryParams: {
-          'view' : 'sales',
-          'task' : 'getSale',
+          'view' : 'freeitems',
+          'task' : 'getItem',
           'token' : token
         },
-        body: FormData.fromMap({'id' : id})
-      );
-      
-      return response;
-    } catch (e) {
-      rethrow ;
-    }
-  }
-
-  @override
-  Future<dynamic> updateSale({required Map<String, dynamic> formdata}) async{
-    final sessionManager = SessionManager();
-    String token = sessionManager.getToken() ?? "";
-
-    try {
-      final response = await apiService.post(
-        '',
-        queryParams: {
-          'view' : 'sales',
-          'task' : 'editSale',
-          'token' : token
-        },
-        body: FormData.fromMap(formdata),
+        body: FormData.fromMap({'id' : itemId})
       );
       
       return response;

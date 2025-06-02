@@ -8,12 +8,15 @@ import 'package:joes_jwellery_crm/presentation/bloc/auth/auth_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/call/call_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/dashboard/dashboard_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/email/email_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/free_item/free_item_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/leads/leads_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sale/sale_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sms/sms_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/task/task_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/whatsapp/whatsapp_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/wishlist/wishlist_cubit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +40,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<WhatsappCubit>()),
         BlocProvider(create: (context) => getIt<LeadsCubit>()),
         BlocProvider(create: (context) => getIt<TaskCubit>()),
-        BlocProvider(create: (context) => getIt<SaleCubit>())
+        BlocProvider(create: (context) => getIt<SaleCubit>()),
+        BlocProvider(create: (context) => getIt<EmailCubit>()),
+        BlocProvider(create: (context) => getIt<FreeItemCubit>()),
+        BlocProvider(create: (context) => getIt<WishlistCubit>()),
       ],
       child: MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),

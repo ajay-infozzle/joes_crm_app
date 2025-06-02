@@ -4,6 +4,7 @@ import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/single_customer_model.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 
 class CustomerHeader extends StatelessWidget {
   final Customer customer;
@@ -51,7 +52,9 @@ class CustomerHeader extends StatelessWidget {
                 backgroundColor: AppColor.greenishGrey,
                 child: IconButton(
                   icon: Image.asset(AssetsConstant.whatsappIcon, width: AppDimens.spacing18, height: AppDimens.spacing22, color: AppColor.primary), 
-                  onPressed: () {}
+                  onPressed: () {
+                    showAppSnackBar(context, message: "Coming soon !", backgroundColor: AppColor.red);
+                  }
                 ),
               ),
 
@@ -60,7 +63,9 @@ class CustomerHeader extends StatelessWidget {
                 backgroundColor: AppColor.greenishGrey,
                 child: IconButton(
                   icon: Image.asset(AssetsConstant.callIcon, width: AppDimens.spacing18, height: AppDimens.spacing22, color: AppColor.primary), 
-                  onPressed: () {}
+                  onPressed: () {
+                    showAppSnackBar(context, message: "Coming soon !", backgroundColor: AppColor.red);
+                  }
                 ),
               ),
 
@@ -69,7 +74,9 @@ class CustomerHeader extends StatelessWidget {
                 backgroundColor: AppColor.greenishGrey,
                 child: IconButton(
                   icon: Image.asset(AssetsConstant.emailIcon, width: AppDimens.spacing18, height: AppDimens.spacing22, color: AppColor.primary), 
-                  onPressed: () {}
+                  onPressed: () {
+                    showAppSnackBar(context, message: "Coming soon !", backgroundColor: AppColor.red);
+                  }
                 ),
               ),
 
@@ -78,7 +85,9 @@ class CustomerHeader extends StatelessWidget {
                 backgroundColor: AppColor.greenishGrey,
                 child: IconButton(
                   icon: Image.asset(AssetsConstant.chatIcon, width: AppDimens.spacing18, height: AppDimens.spacing22, color: AppColor.primary), 
-                  onPressed: () {}
+                  onPressed: () {
+                    showAppSnackBar(context, message: "Coming soon !", backgroundColor: AppColor.red);
+                  }
                 ),
               ),
 

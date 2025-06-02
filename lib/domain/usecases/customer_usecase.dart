@@ -23,9 +23,10 @@ class CustomerUseCase {
     required String country,
     required String spouseName,
     required String wifeEmail,
-    required String wifePhone
+    required String wifePhone,
+    required String notes
   }) {
-    return repository.editCustomerDetail(id: id, name: name, surname: surname, email: email, phone: phone, country: country, spouseName: spouseName, wifeEmail: wifeEmail, wifePhone: wifePhone);
+    return repository.editCustomerDetail(id: id, name: name, surname: surname, email: email, phone: phone, country: country, spouseName: spouseName, wifeEmail: wifeEmail, wifePhone: wifePhone,notes: notes);
   }
 
   Future<dynamic> addCustomer({

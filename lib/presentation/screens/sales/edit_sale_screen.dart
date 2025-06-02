@@ -5,6 +5,7 @@ import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/assoc_list_model.dart';
+import 'package:joes_jwellery_crm/data/model/sales_list_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sale/sale_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/auth/widget/textfield_title_text_widget.dart';
@@ -12,15 +13,15 @@ import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_text_field.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/store_drop_down_widget.dart';
 
-class AddSaleScreen extends StatefulWidget {
-  final String custId ;
-  const AddSaleScreen({super.key, required this.custId});
+class EditSaleScreen extends StatefulWidget {
+  final Sale sale ;
+  const EditSaleScreen({super.key, required this.sale});
 
   @override
-  State<AddSaleScreen> createState() => _AddSaleScreenState();
+  State<EditSaleScreen> createState() => _EditSaleScreenState();
 }
 
-class _AddSaleScreenState extends State<AddSaleScreen> {
+class _EditSaleScreenState extends State<EditSaleScreen> {
 
   final TextEditingController saleDateController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
@@ -33,6 +34,15 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
   final FocusNode notesFocus = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+
+    saleDateController.text = widget.sale.saleDate ?? '';
+    amountController.text = widget.sale.amount ?? '';
+    notesController.text = widget.sale.notes ?? '';
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     
@@ -43,7 +53,7 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
         scrolledUnderElevation: 0,
         backgroundColor: AppColor.white,
         title: Text(
-          "Add New Sale",
+          "Edit Sale",
           style: TextStyle(
             fontSize: AppDimens.textSize20,
             fontWeight: FontWeight.bold,
@@ -63,13 +73,13 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
             // }
 
             if(state is SaleFormSaved){
-              saleDateController.clear();
-              amountController.clear();
-              notesController.clear();
-              assocController.clear();
-              pdfController.clear();
-              context.read<SaleCubit>().currentPickedPdf = null ;
-              context.read<SaleCubit>().store = null ;
+              // saleDateController.clear();
+              // amountController.clear();
+              // notesController.clear();
+              // assocController.clear();
+              // pdfController.clear();
+              // context.read<SaleCubit>().currentPickedPdf = null ;
+              // context.read<SaleCubit>().store = null ;
             }
           },
           builder: (context, state) {
@@ -165,7 +175,8 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
                         onPressed: () {
                           FocusScope.of(context).unfocus();
                           saleCubit.addSale(formdata: {
-                            'customer_id' : widget.custId,
+                            'id' : widget.sale.id,
+                            'customer_id' : widget.sale.customerId,
                             'store_id' : saleCubit.store?.id,
                             'sale_date' : saleDateController.text,
                             'amount' : amountController.text,
