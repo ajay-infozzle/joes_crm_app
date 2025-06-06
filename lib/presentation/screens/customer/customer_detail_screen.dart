@@ -493,7 +493,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
       builder: (_) => SendApprCirtEmail(
         customer: customer, 
         onSend: (formdata) async{
-          await context.read<CustomerCubit>().sendWaterTaxiEmail(
+          await context.read<CustomerCubit>().sendApprCertEmail(
             formdata: formdata
           );
         },

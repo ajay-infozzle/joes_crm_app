@@ -144,7 +144,7 @@ class _SendApprCirtEmailState extends State<SendApprCirtEmail> {
         BlocConsumer<CustomerCubit, CustomerState>(
           listener: (context, state) {
             if(state is CustomerEmailSent){
-              showAppSnackBar(context, message: "Appraisal certificate sent");
+              // showAppSnackBar(context, message: "Appraisal certificate sent");
               context.pop();
             }
           },
@@ -165,10 +165,31 @@ class _SendApprCirtEmailState extends State<SendApprCirtEmail> {
               borderRadius: AppDimens.buttonRadius16,
               onPressed: () {
                 FocusScope.of(context).unfocus();
+                if(custNameController.text.isEmpty){
+                  showToast(msg: "Customer name require", backColor: AppColor.red);
+                  return ;
+                }
+                if(dateController.text.isEmpty){
+                  showToast(msg: "Date require", backColor: AppColor.red);
+                  return ;
+                }
+                if(addressController.text.isEmpty){
+                  showToast(msg: "Address require", backColor: AppColor.red);
+                  return ;
+                }
+                if(descController.text.isEmpty){
+                  showToast(msg: "Description require", backColor: AppColor.red);
+                  return ;
+                }
+                if(apprValueController.text.isEmpty){
+                  showToast(msg: "Appraised value require", backColor: AppColor.red);
+                  return ;
+                }
+
                 final formdata = {
                   'customer_id' : widget.customer.id,
                   'date' : dateController.text,
-                  'datcustomer_name' : custNameController.text,
+                  'customer_name' : custNameController.text,
                   'address' : addressController.text,
                   'description' : descController.text,
                   'appraised_value' : apprValueController.text,
