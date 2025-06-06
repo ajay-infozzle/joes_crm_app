@@ -6,12 +6,14 @@ import 'package:joes_jwellery_crm/data/model/assoc_list_model.dart';
 class AssocDropdown extends StatefulWidget {
   final List<Users> usersList;
   final Function(Users selectedUser) onSelected;
+  final String title ;
   final Users? initialSelected; 
 
   const AssocDropdown({
     super.key,
     required this.usersList,
     required this.onSelected,
+    this.title ="Select sales assoc" ,
     this.initialSelected,
   });
 
@@ -49,7 +51,7 @@ class _AssocDropdownState extends State<AssocDropdown> {
         isExpanded: true,
         underline: SizedBox(),
         icon: Icon(Icons.keyboard_arrow_down_rounded),
-        hint: const Text("Select sales assoc"),
+        hint: Text(widget.title),
         value: selectedUser,
         items: widget.usersList.map((user) {
           return DropdownMenuItem<Users>(

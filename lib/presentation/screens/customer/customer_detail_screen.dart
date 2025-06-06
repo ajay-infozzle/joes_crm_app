@@ -10,6 +10,7 @@ import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_header.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/edit_customer_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/expandable_section.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/send_appr_cirt_email.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/send_email_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/send_water_taxi_email.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/take_customer_photo_dialog.dart';
@@ -82,7 +83,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
               } else if (value == 'send_water_taxi_email') {
                 context.read<CustomerCubit>().currentCustomer != null ? onSendWaterTaxiEmailSelected(context : context) : showAppSnackBar(context, message: "Not available !");
               } else if (value == 'send_appr_cert_email') {
-                // onSendHerEmailSelected(context : context);
+                context.read<CustomerCubit>().currentCustomer != null ? onSendApprCertEmailSelected(context : context) : showAppSnackBar(context, message: "Not available !");
               } else if (value == 'add_sale') {
                 context.pushNamed(
                   RoutesName.addSaleScreen,
@@ -477,6 +478,21 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         toEmail: email!, 
         onSend: (formdata) async{
           formdata["customer_id"] = customer.id;
+          await context.read<CustomerCubit>().sendWaterTaxiEmail(
+            formdata: formdata
+          );
+        },
+      ),
+    );
+  }
+
+  void onSendApprCertEmailSelected({required BuildContext context}) {
+    final customer = context.read<CustomerCubit>().currentCustomer!;
+    showDialog(
+      context: context,
+      builder: (_) => SendApprCirtEmail(
+        customer: customer, 
+        onSend: (formdata) async{
           await context.read<CustomerCubit>().sendWaterTaxiEmail(
             formdata: formdata
           );

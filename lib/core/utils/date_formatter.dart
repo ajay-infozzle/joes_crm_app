@@ -7,7 +7,7 @@ Map<String, String> formatDateTime(String rawDateTime) {
     final dateTime = DateTime.parse(rawDateTime);
     final day = DateFormat('dd').format(dateTime);
     final suffix = getDaySuffix(int.parse(day));
-    final monthYear = DateFormat('MMMM, yyyy').format(dateTime);
+    final monthYear = DateFormat('MMM, yyyy').format(dateTime);
     final time = DateFormat('HH:mm').format(dateTime);
 
     return {
@@ -20,6 +20,11 @@ Map<String, String> formatDateTime(String rawDateTime) {
       'time': '',
     };
   }
+}
+
+String getDMY(String inputDate) {
+  DateTime date = DateFormat('yyyy-MM-dd').parse(inputDate);
+  return DateFormat('d MMM yyyy').format(date);
 }
 
 String getDaySuffix(int day) {

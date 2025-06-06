@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
+import 'package:joes_jwellery_crm/core/utils/api_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/single_customer_model.dart';
@@ -25,11 +26,11 @@ class CustomerHeader extends StatelessWidget {
       child: Column(
         children: [
           CircleAvatar(
-            radius: AppDimens.radius24,
+            radius: AppDimens.radius26,
             backgroundColor: AppColor.greenishGrey.withValues(alpha: .6),
             backgroundImage: customer.photo != null && customer.photo != "" 
             ? NetworkImage(
-              "https://crm.joesjewelry.com${customer.photo}",
+              "${ApiConstant.demoBaseUrl}${customer.photo}",
             ) 
             :AssetImage(AssetsConstant.personIcon),
             // child: Icon(Icons.person, size: AppDimens.radius26, color: AppColor.white),

@@ -10,6 +10,10 @@ class CustomerUseCase {
     return repository.getCustomers();
   }
 
+  Future<dynamic> filterCustomers({required Map<String, dynamic> formdata}) {
+    return repository.filterCustomers(formdata: formdata);
+  }
+
   Future<dynamic> fetchSingleCustomer({required String id}) {
     return repository.getCustomerDetail(id);
   }
@@ -51,6 +55,12 @@ class CustomerUseCase {
     required Map<String, dynamic> formdata,
   }) {
     return repository.sendWaterTaxiEmail(formdata: formdata);
+  }
+
+  Future<dynamic> sendApprCertEmail({
+    required Map<String, dynamic> formdata,
+  }) {
+    return repository.sendApprCertEmail(formdata: formdata);
   }
 
   Future<dynamic> updateCustomerPhoto({

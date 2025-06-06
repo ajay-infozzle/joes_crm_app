@@ -21,6 +21,7 @@ import 'package:joes_jwellery_crm/presentation/screens/leads/add_leads_screen.da
 import 'package:joes_jwellery_crm/presentation/screens/leads/edit_leads_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/lead_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/search_lead_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/report/reports_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/sales/add_sale_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/sales/sales_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/sales/single_sale_screen.dart';
@@ -28,6 +29,8 @@ import 'package:joes_jwellery_crm/presentation/screens/splash_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/task/task_edit_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/task/task_list_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/task/task_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/wishlist/all_wishlist_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/wishlist/single_wish_screen.dart';
 
 class AppRoutes {
   static final GoRouter router = GoRouter(
@@ -324,6 +327,45 @@ class AppRoutes {
             pageBuilder: (context, state) {
               return customPageRouteBuilder(
                 const AddFreeItemScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          /// wishlist
+          GoRoute(
+            path: RoutesName.allWishlistScreen,
+            name: RoutesName.allWishlistScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const AllWishlistScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.singleWishScreen,
+            name: RoutesName.singleWishScreen,
+            pageBuilder: (context, state) {
+              final wishId = state.extra as String ;
+              return customPageRouteBuilder(
+                SingleWishScreen(wishId: wishId),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          /// reports
+          GoRoute(
+            path: RoutesName.reposrtsScreen,
+            name: RoutesName.reposrtsScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const ReportsScreen(),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

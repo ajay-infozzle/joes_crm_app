@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
+import 'package:joes_jwellery_crm/core/utils/api_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/single_customer_model.dart';
 
@@ -71,13 +72,20 @@ class WishListWidget extends StatelessWidget {
                     5.w,
                     Expanded(
                       flex: 2,
-                      child: Image.network(
-                        item.photo!.isNotEmpty
-                            ? "https://joescrm.mydemoweblink.com/${item.photo}"
-                            : "",
+                      child: Container(
                         height: 100,
                         width: 100,
-                        fit: BoxFit.cover,
+                        decoration: BoxDecoration(
+                          color: AppColor.primary.withValues(alpha: .5),
+                        ),
+                        child: Image.network(
+                          item.photo!.isNotEmpty
+                              ? "${ApiConstant.demoBaseUrl}/${item.photo}"
+                              : "",
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ],

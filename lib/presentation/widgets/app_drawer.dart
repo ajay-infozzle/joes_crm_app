@@ -56,6 +56,16 @@ class AppDrawer extends StatelessWidget {
           ),
 
           ListTile(
+            // leading: const Icon(Icons.person),
+            title: const Text('Wishlist', style: TextStyle(fontWeight: FontWeight.bold)),
+            onTap: () {
+              context.pop();
+              context.pushNamed(RoutesName.allWishlistScreen);
+              onItemSelected?.call('Wishlist');
+            },
+          ),
+
+          ListTile(
             // leading: const Icon(Icons.task),
             title: const Text('Tasks', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
@@ -80,6 +90,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Reports', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               context.pop();
+              context.pushNamed(RoutesName.reposrtsScreen);
               onItemSelected?.call('Reports');
             },
           ),

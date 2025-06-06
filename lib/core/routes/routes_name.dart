@@ -37,4 +37,6 @@ class RoutesName {
   static const String allWishlistScreen = "all-wishlist";
   static const String singleWishScreen = "single-wish";
   static const String editWishlistScreen = "edit-wishlist";
+
+  static const String reposrtsScreen = "reports";
 }

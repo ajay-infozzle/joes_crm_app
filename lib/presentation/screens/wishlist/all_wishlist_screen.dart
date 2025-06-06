@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,51 +5,48 @@ import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
-import 'package:joes_jwellery_crm/data/model/customer_list_model.dart';
-import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
-import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_filter.dart';
-import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_tile.dart';
+import 'package:joes_jwellery_crm/data/model/all_wishlist_model.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/wishlist/wishlist_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/screens/wishlist/widget/wishlist_tile.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
-class CustomerScreen extends StatefulWidget {
-  const CustomerScreen({super.key});
+class AllWishlistScreen extends StatefulWidget {
+  const AllWishlistScreen({super.key});
 
   @override
-  State<CustomerScreen> createState() => _CustomerScreenState();
+  State<AllWishlistScreen> createState() => _AllWishlistScreenState();
 }
 
-class _CustomerScreenState extends State<CustomerScreen> {
-
-  List<Customers> filteredCustomers = [];
-  List<Customers> allCustomers = [];
-  TextEditingController searchController = TextEditingController();
+class _AllWishlistScreenState extends State<AllWishlistScreen> {
+  final TextEditingController searchController = TextEditingController();
+  List<Wishlist> filteredItems = [];
 
   @override
   void initState() {
     super.initState();
-    context.read<CustomerCubit>().fetchCustomers();
-  }
-
-  void filterSearch(String query) {
-    setState(() {
-      filteredCustomers =
-          allCustomers.where((customer) {
-            return customer.id!.contains(query) ||
-                customer.store!.toLowerCase().contains(query.toLowerCase()) ||
-                (customer.name != null ? customer.name!.toLowerCase().contains(query.toLowerCase()) : false);
-          }).toList();
+    context.read<WishlistCubit>().fetchAllWishlist().then((_) {
+      setState(() {
+        filteredItems = List.from(context.read<WishlistCubit>().wishlist);
+      });
     });
   }
 
-  void _onDataLoaded(List<Customers> customers) {
-    allCustomers = customers ;
-    filteredCustomers = searchController.text.isEmpty
-          ? allCustomers
-          : allCustomers
-              .where((item) => item.name
-                  ?.toLowerCase()
-                  .contains(searchController.text.toLowerCase()) ?? false)
-              .toList();
+  void filterSearch(String query) {
+    final allItems = context.read<WishlistCubit>().wishlist;
+
+    final lowerQuery = query.toLowerCase();
+
+    setState(() {
+      filteredItems = allItems.where((item) {
+        final name = (item.customer ?? '').toLowerCase();
+        final surname = (item.product ?? '').toLowerCase();
+        final followDate = (item.followDate ?? '').toLowerCase();
+
+        return followDate.contains(lowerQuery) ||
+            surname.contains(lowerQuery) ||
+            name.contains(lowerQuery);
+      }).toList();
+    });
   }
 
   @override
@@ -60,15 +55,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
     return Scaffold(
       backgroundColor: AppColor.greenishGrey,
-
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        backgroundColor: AppColor.primary,
-        foregroundColor: AppColor.white,
+        backgroundColor: AppColor.white,
         title: SizedBox(
-          // width: width * 0.33,
           child: Text(
-            "Customer",
+            "Wishlist",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: AppDimens.spacing18,
@@ -79,47 +71,18 @@ class _CustomerScreenState extends State<CustomerScreen> {
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_rounded,
-            color: AppColor.white,
+            color: AppColor.primary,
           ),
           onPressed: () {
             context.pop();
           },
         ),
         actions: [
-          IconButton(
-            icon: Image.asset(
-              AssetsConstant.filterIcon,
-              width: AppDimens.icon18,
-              height: AppDimens.icon18,
-              color: AppColor.white,
-            ),
-            onPressed: () {
-              showDialog(
-                barrierDismissible: false,
-                context: context, 
-                builder: (context) {
-                  return CustomerFilter(
-                    onSearch: (formdata) {
-                      context.read<CustomerCubit>().filterCustomers(formdata: formdata);
-                    },
-                  );
-                },
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.add,
-              size: AppDimens.icon25,
-              color: AppColor.white,
-            ),
-            onPressed: () {
-              context.pushNamed(RoutesName.searchCustomerScreen);
-            },
-          ),
         ],
         elevation: 0,
       ),
+
+
       body: SafeArea(
         child: Container(
           width: width,
@@ -127,10 +90,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: AppDimens.spacing10,
-                  horizontal: AppDimens.spacing15
-                ),
+                padding: EdgeInsets.all(width * 0.04),
                 child: TextField(
                   controller: searchController,
                   onChanged: filterSearch,
@@ -149,7 +109,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         ),
                       ),
                     ),
-                    hintText: "Search for ID, Name, Store...",
+                    hintText: "product, customer name",
                     hintStyle: TextStyle(
                       color: AppColor.primary.withValues(alpha: .8),
                     ),
@@ -168,30 +128,28 @@ class _CustomerScreenState extends State<CustomerScreen> {
               ),
 
               Expanded(
-                child: BlocConsumer<CustomerCubit, CustomerState>(
+                child: BlocConsumer<WishlistCubit, WishlistState>(
                   listener: (context, state) {
-                    if (state is CustomerListLoaded) {
-                      allCustomers.clear();
-                      filteredCustomers.clear();
-                      _onDataLoaded(state.customers);
-                    }
+                    
                   },
                   builder: (context, state) {
-                    if (state is CustomerListLoading) {
+                    WishlistCubit wishlistCubit = context.read<WishlistCubit>();
+
+                    if (state is WishlistLoading) {
                       return Center(child: CircularProgressIndicator(color: AppColor.primary));
                     }
-                    else if (state is CustomerListError) {
+                    else if (state is WishlistError) {
                       return RetryWidget(
                         onTap: () async{
-                          context.read<CustomerCubit>().fetchCustomers();
+                          wishlistCubit.fetchAllWishlist();
                         },
                       );
                     }
-                    else if (allCustomers.isNotEmpty){
+                    else if (wishlistCubit.wishlist.isNotEmpty) {
                       return RefreshIndicator(
                         color: AppColor.primary,
                         onRefresh: () async {
-                          context.read<CustomerCubit>().fetchCustomers();
+                          wishlistCubit.fetchAllWishlist();
                         },
                         child: ListView.builder(
                           physics: const AlwaysScrollableScrollPhysics(),
@@ -199,35 +157,29 @@ class _CustomerScreenState extends State<CustomerScreen> {
                             horizontal: AppDimens.spacing15,
                             vertical: AppDimens.spacing8,
                           ),
-                          itemCount: filteredCustomers.length,
+                          itemCount: filteredItems.length,
                           itemBuilder: (context, index) {
-                            Customers customer = filteredCustomers[index];
-                            return CustomerTile(
-                              customer: customer,
+                            return WishlistTile(
+                              wish: filteredItems[index], 
                               onView: () {
-                                log(
-                                  "customer id => ${customer.id}",
-                                  name: "customer tile",
-                                );
-                                context.pushNamed(
-                                  RoutesName.customerDetailScreen,
-                                  extra: {'name': customer.name, 'id': customer.id},
-                                );
+                                context.pushNamed(RoutesName.singleWishScreen, extra: filteredItems[index].id);
                               },
                             );
                           },
                         ),
                       );
-                    }else {
+                    }
+                    else {
                       return SizedBox();
                     }
                   },
-                ),
-              ),
+                ) 
+              )
             ],
           ),
-        ),
+        ) 
       ),
+      
     );
   }
 }

@@ -34,6 +34,28 @@ class CustomerRepositoryImpl implements CustomerRepository {
   }
 
   @override
+  Future<dynamic> filterCustomers({required Map<String, dynamic> formdata}) async {
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.post(
+        '',
+        queryParams: {
+          'view' : 'customers',
+          'task' : 'getCustomers',
+          'token' : token
+        },
+        body: FormData.fromMap(formdata)
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
+
+  @override
   Future<dynamic> getCustomerDetail(String id) async {
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
@@ -184,6 +206,30 @@ class CustomerRepositoryImpl implements CustomerRepository {
         queryParams: {
           'view' : 'customers',
           'task' : 'sendWaterTaxiEmail',
+          'token' : token
+        },
+        body: FormData.fromMap(formdata),
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
+
+  @override
+  Future<dynamic> sendApprCertEmail({
+    required Map<String, dynamic> formdata
+  }) async{
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.post(
+        '',
+        queryParams: {
+          'view' : 'customers',
+          'task' : 'sendAppraisalCertificateEmail',
           'token' : token
         },
         body: FormData.fromMap(formdata),

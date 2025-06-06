@@ -14,6 +14,8 @@ import 'package:joes_jwellery_crm/data/repository/home/home_repo.dart';
 import 'package:joes_jwellery_crm/data/repository/home/home_repo_impl.dart';
 import 'package:joes_jwellery_crm/data/repository/leads/leads_repo.dart';
 import 'package:joes_jwellery_crm/data/repository/leads/leads_repo_impl.dart';
+import 'package:joes_jwellery_crm/data/repository/report/report_repo.dart';
+import 'package:joes_jwellery_crm/data/repository/report/report_repo_impl.dart';
 import 'package:joes_jwellery_crm/data/repository/sale/sale_repo.dart';
 import 'package:joes_jwellery_crm/data/repository/sale/sale_repo_impl.dart';
 import 'package:joes_jwellery_crm/data/repository/sms/sms_repo.dart';
@@ -31,6 +33,7 @@ import 'package:joes_jwellery_crm/domain/usecases/free_item_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/home_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/auth_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/leads_usecase.dart';
+import 'package:joes_jwellery_crm/domain/usecases/reports_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/sale_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/sms_usecase.dart';
 import 'package:joes_jwellery_crm/domain/usecases/task_usecase.dart';
@@ -44,6 +47,7 @@ import 'package:joes_jwellery_crm/presentation/bloc/email/email_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/free_item/free_item_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/leads/leads_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/reports/reports_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sale/sale_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sms/sms_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/task/task_cubit.dart';
@@ -78,6 +82,7 @@ void dependencyInjection() async{
   getIt.registerLazySingleton<EmailRepository>(() => EmailRepoImpl(getIt()));
   getIt.registerLazySingleton<FreeItemRepository>(() => FreeItemRepoImpl(getIt()));
   getIt.registerLazySingleton<WishlistRepository>(() => WishlistRepoImpl(getIt()));
+  getIt.registerLazySingleton<ReportRepository>(() => ReportRepoImpl(getIt()));
 
 
   //~ usecases 
@@ -93,6 +98,7 @@ void dependencyInjection() async{
   getIt.registerLazySingleton<EmailUsecase>(() => EmailUsecase(getIt()));
   getIt.registerLazySingleton<FreeItemUsecase>(() => FreeItemUsecase(getIt()));
   getIt.registerLazySingleton<WishlistUsecase>(() => WishlistUsecase(getIt()));
+  getIt.registerLazySingleton<ReportsUsecase>(() => ReportsUsecase(getIt()));
 
 
   //~ cubits
@@ -109,5 +115,6 @@ void dependencyInjection() async{
   getIt.registerFactory<EmailCubit>(() => EmailCubit(emailUsecase: getIt()));
   getIt.registerFactory<FreeItemCubit>(() => FreeItemCubit(freeItemUsecase: getIt()));
   getIt.registerFactory<WishlistCubit>(() => WishlistCubit(wishlistUsecase: getIt()));
+  getIt.registerFactory<ReportsCubit>(() => ReportsCubit(reportsUsecase: getIt()));
 
 }

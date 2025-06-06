@@ -33,6 +33,18 @@ class CustomerCubit extends Cubit<CustomerState> {
     }
   }
 
+  Future<void> filterCustomers({required Map<String, dynamic> formdata}) async {
+    try {
+      emit(CustomerListLoading());
+      final response = await customerUseCase.filterCustomers(formdata: formdata);
+      final data = CustomerListModel.fromJson(response);
+      emit(CustomerListLoaded(data.customers??[]));
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(CustomerListError(e.toString()));
+    }
+  }
+
   Customer? currentCustomer ;
   Future<void> fetchSingleCustomer({required String id}) async {
     try {
@@ -339,7 +351,6 @@ class CustomerCubit extends Cubit<CustomerState> {
       }else{
         emit(CustomerEmailSentError("Something went wrong !"));
       }
-      emit(CustomerEmailSent());
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Customer Cubit");
       emit(CustomerEmailSentError(e.toString()));
@@ -368,7 +379,6 @@ class CustomerCubit extends Cubit<CustomerState> {
       }else{
         emit(CustomerEmailSentError("Something went wrong !"));
       }
-      emit(CustomerEmailSent());
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Customer Cubit");
       emit(CustomerEmailSentError(e.toString()));
@@ -387,7 +397,24 @@ class CustomerCubit extends Cubit<CustomerState> {
       }else{
         emit(CustomerEmailSentError("Something went wrong !"));
       }
-      emit(CustomerEmailSent());
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(CustomerEmailSentError(e.toString()));
+    }
+  }
+
+  Future<void> sendApprCertEmail({
+    required Map<String , dynamic> formdata,
+  }) async {
+    try {
+      emit(CustomerSendingEmail());
+      final response = await customerUseCase.sendApprCertEmail(formdata: formdata);
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+        emit(CustomerEmailSent());
+      }else{
+        emit(CustomerEmailSentError("Something went wrong !"));
+      }
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Customer Cubit");
       emit(CustomerEmailSentError(e.toString()));
