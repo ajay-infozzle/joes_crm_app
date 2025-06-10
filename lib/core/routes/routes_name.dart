@@ -29,12 +29,19 @@ class RoutesName {
   static const String addEmailTemplateScreen = "add-email-template";
   static const String editEmailTemplateScreen = "edit-email-template";
 
+  static const String emailCampaignScreen = "email-campaign";
+  static const String singleEmailCampaignScreen = "single-email-campaign";
+  static const String smsCampaignScreen = "sms-campaign";
+  static const String singleSmsCampaignScreen = "single-sms-campaign";
+
   static const String freeItemsScreen = "free-items";
   static const String freeSingleItemScreen = "free-single-item";
   static const String addFreeItemScreen = "add-free-item";
   static const String editFreeItemScreen = "edit-free-item";
 
   static const String allWishlistScreen = "all-wishlist";
+  static const String addWishScreen = "add-wish";
+  static const String editWishScreen = "edit-wish";
   static const String singleWishScreen = "single-wish";
   static const String editWishlistScreen = "edit-wishlist";
 

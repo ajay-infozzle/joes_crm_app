@@ -2,12 +2,14 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/data/model/appraisal_report_model.dart';
 import 'package:joes_jwellery_crm/data/model/assoc_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/store_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/water_taxi_report_model.dart';
 import 'package:joes_jwellery_crm/domain/usecases/reports_usecase.dart';
 import 'package:joes_jwellery_crm/presentation/screens/report/widget/store_user_table.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 
 part 'reports_state.dart';
 
@@ -51,6 +53,23 @@ class ReportsCubit extends Cubit<ReportsState> {
       emit(WaterTaxiError(e.toString()));
     }
   } 
+
+  Future<void> deleteWaterTaxiReport({required String id}) async {
+    try {
+      emit(WaterTaxiLoading());
+      final response = await reportsUsecase.deleteWaterTaxiReport(id: id);
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+        fetchWaterTaxiReports();
+      }else{
+        emit(WaterTaxiError("Something went wrong !"));
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Reports Cubit");
+      emit(WaterTaxiError(e.toString()));
+    }
+  } 
+  
 
   Future<void> filterWaterTaxiReports() async {
     try {
@@ -132,6 +151,22 @@ class ReportsCubit extends Cubit<ReportsState> {
       appraisalSummaryList = summarizeAppraisalData(appraisalReports);
 
       emit(AppraisalLoaded());
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Reports Cubit");
+      emit(AppraisalError(e.toString()));
+    }
+  } 
+
+  Future<void> deleteAppraisalReport({required String id}) async {
+    try {
+      emit(AppraisalLoading());
+      final response = await reportsUsecase.deleteAppraisalReport(id: id);
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+        fetchAppraisalReports();
+      }else{
+        emit(AppraisalError("Something went wrong !"));
+      }
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Reports Cubit");
       emit(AppraisalError(e.toString()));

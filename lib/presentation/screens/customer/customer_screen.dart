@@ -7,10 +7,12 @@ import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
+import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/customer_list_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_filter.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_tile.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
 class CustomerScreen extends StatefulWidget {
@@ -21,7 +23,6 @@ class CustomerScreen extends StatefulWidget {
 }
 
 class _CustomerScreenState extends State<CustomerScreen> {
-
   List<Customers> filteredCustomers = [];
   List<Customers> allCustomers = [];
   TextEditingController searchController = TextEditingController();
@@ -38,20 +39,27 @@ class _CustomerScreenState extends State<CustomerScreen> {
           allCustomers.where((customer) {
             return customer.id!.contains(query) ||
                 customer.store!.toLowerCase().contains(query.toLowerCase()) ||
-                (customer.name != null ? customer.name!.toLowerCase().contains(query.toLowerCase()) : false);
+                (customer.name != null
+                    ? customer.name!.toLowerCase().contains(query.toLowerCase())
+                    : false);
           }).toList();
     });
   }
 
   void _onDataLoaded(List<Customers> customers) {
-    allCustomers = customers ;
-    filteredCustomers = searchController.text.isEmpty
-          ? allCustomers
-          : allCustomers
-              .where((item) => item.name
-                  ?.toLowerCase()
-                  .contains(searchController.text.toLowerCase()) ?? false)
-              .toList();
+    allCustomers = customers;
+    filteredCustomers =
+        searchController.text.isEmpty
+            ? allCustomers
+            : allCustomers
+                .where(
+                  (item) =>
+                      item.name?.toLowerCase().contains(
+                        searchController.text.toLowerCase(),
+                      ) ??
+                      false,
+                )
+                .toList();
   }
 
   @override
@@ -77,10 +85,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-            color: AppColor.white,
-          ),
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: AppColor.white),
           onPressed: () {
             context.pop();
           },
@@ -96,11 +101,13 @@ class _CustomerScreenState extends State<CustomerScreen> {
             onPressed: () {
               showDialog(
                 barrierDismissible: false,
-                context: context, 
+                context: context,
                 builder: (context) {
                   return CustomerFilter(
                     onSearch: (formdata) {
-                      context.read<CustomerCubit>().filterCustomers(formdata: formdata);
+                      context.read<CustomerCubit>().filterCustomers(
+                        formdata: formdata,
+                      );
                     },
                   );
                 },
@@ -129,7 +136,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(
                   vertical: AppDimens.spacing10,
-                  horizontal: AppDimens.spacing15
+                  horizontal: AppDimens.spacing15,
                 ),
                 child: TextField(
                   controller: searchController,
@@ -167,6 +174,39 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 ),
               ),
 
+              // BlocBuilder<CustomerCubit, CustomerState>(
+              //   buildWhen: (previous, current) => current is filterChangeState,
+              //   builder: (context, state) {
+              //     return Padding(
+              //       padding: EdgeInsets.symmetric(
+              //         vertical: AppDimens.spacing10,
+              //         horizontal: AppDimens.spacing15,
+              //       ),
+              //       child: Row(
+              //         children: [
+              //           Expanded(
+              //             child: CustomButton(
+              //               text: "Email Campaign",
+              //               backgroundColor: AppColor.green,
+              //               fontSize: AppDimens.textSize14,
+              //               onPressed: () {},
+              //             ),
+              //           ),
+              //           10.w,
+              //           Expanded(
+              //             child: CustomButton(
+              //               text: "SMS Campaign",
+              //               backgroundColor: AppColor.green,
+              //               fontSize: AppDimens.textSize14,
+              //               onPressed: () {},
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     );
+              //   },
+              // ),
+
               Expanded(
                 child: BlocConsumer<CustomerCubit, CustomerState>(
                   listener: (context, state) {
@@ -178,16 +218,18 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   },
                   builder: (context, state) {
                     if (state is CustomerListLoading) {
-                      return Center(child: CircularProgressIndicator(color: AppColor.primary));
-                    }
-                    else if (state is CustomerListError) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppColor.primary,
+                        ),
+                      );
+                    } else if (state is CustomerListError) {
                       return RetryWidget(
-                        onTap: () async{
+                        onTap: () async {
                           context.read<CustomerCubit>().fetchCustomers();
                         },
                       );
-                    }
-                    else if (allCustomers.isNotEmpty){
+                    } else if (allCustomers.isNotEmpty) {
                       return RefreshIndicator(
                         color: AppColor.primary,
                         onRefresh: () async {
@@ -211,14 +253,17 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                 );
                                 context.pushNamed(
                                   RoutesName.customerDetailScreen,
-                                  extra: {'name': customer.name, 'id': customer.id},
+                                  extra: {
+                                    'name': customer.name,
+                                    'id': customer.id,
+                                  },
                                 );
                               },
                             );
                           },
                         ),
                       );
-                    }else {
+                    } else {
                       return SizedBox();
                     }
                   },

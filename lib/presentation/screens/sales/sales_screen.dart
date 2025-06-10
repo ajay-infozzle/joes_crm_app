@@ -5,6 +5,7 @@ import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/data/model/sales_list_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sale/sale_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/screens/sales/widget/sales_filter.dart';
 import 'package:joes_jwellery_crm/presentation/screens/sales/widget/sales_tile.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
@@ -72,6 +73,29 @@ class _SalesScreenState extends State<SalesScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Image.asset(
+              AssetsConstant.filterIcon,
+              width: AppDimens.icon18,
+              height: AppDimens.icon18,
+              color: AppColor.primary,
+            ),
+            onPressed: () {
+              showDialog(
+                barrierDismissible: false,
+                context: context, 
+                builder: (context) {
+                  return SalesFilter(
+                    onSearch: (formdata) {
+                      context.read<SaleCubit>().filterSales(formdata: formdata);
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
 
       body: SafeArea(

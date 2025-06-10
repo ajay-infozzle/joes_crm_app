@@ -11,6 +11,7 @@ import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/leads/leads_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/send_email_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/take_customer_photo_dialog.dart';
+import 'package:joes_jwellery_crm/presentation/screens/leads/widget/follow_up_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
@@ -103,7 +104,18 @@ class _LeadScreenState extends State<LeadScreen> {
               } else if (value == 'send_email') {
                 onSendEmailSelected(context : context);
               } else if (value == 'follow_up') {
-                // onFollowUpSelected(context : context);
+                showDialog(
+                  barrierDismissible: false,
+                  context: context, 
+                  builder: (context) {
+                    return FolloUpDialog(
+                      onSave: (formdata) {
+                        formdata['lead_id'] = widget.id ;
+                        context.read<LeadsCubit>().saveFollowUpLeads(formdata: formdata);
+                      }, 
+                    );
+                  },
+                );
               }
             },
             itemBuilder:

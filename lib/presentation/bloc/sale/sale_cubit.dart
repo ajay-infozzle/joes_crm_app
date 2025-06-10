@@ -58,6 +58,19 @@ class SaleCubit extends Cubit<SaleState> {
     }
   }
 
+  Future<void> filterSales({required Map<String, dynamic> formdata}) async {
+    try {
+      emit(SaleListLoading());
+      final response = await saleUsecase.filterSales(formdata: formdata);
+      final data = SalesListModel.fromJson(response);
+      allSalesList = data.sales ?? [] ;
+      emit(SaleListLoaded(data.sales??[]));
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Sale Cubit");
+      emit(SaleListError(e.toString()));
+    }
+  }
+
   Future<void> fetchSale({required String saleId}) async {
     try {
       emit(SaleLoading());

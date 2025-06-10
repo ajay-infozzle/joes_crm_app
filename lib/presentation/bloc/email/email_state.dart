@@ -52,3 +52,14 @@ class EmailTemplFormError extends EmailState {
   @override
   List<Object> get props => [message];
 }
+
+
+final class EmailCampLoading extends EmailState {}
+final class EmailCampLoaded extends EmailState {}
+class EmailCampError extends EmailState {
+  final String message;
+  const EmailCampError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

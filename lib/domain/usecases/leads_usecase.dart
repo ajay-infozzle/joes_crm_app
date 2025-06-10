@@ -9,6 +9,14 @@ class LeadsUseCase {
     return repository.getAllLeads();
   }
 
+  Future<dynamic> filterLeads({required Map<String, dynamic> formdata}) {
+    return repository.filterLeads(formdata: formdata);
+  }
+
+  Future<dynamic> saveFollowUpLeads({required Map<String, dynamic> formdata}) {
+    return repository.saveFollowUpLeads(formdata: formdata);
+  }
+
   Future<dynamic> searchLeads({
     required Map<String, String> query,
   }) {

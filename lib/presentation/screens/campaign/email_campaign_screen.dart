@@ -1,53 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
-import 'package:joes_jwellery_crm/data/model/all_wishlist_model.dart';
-import 'package:joes_jwellery_crm/presentation/bloc/wishlist/wishlist_cubit.dart';
-import 'package:joes_jwellery_crm/presentation/screens/wishlist/widget/wishlist_filter.dart';
-import 'package:joes_jwellery_crm/presentation/screens/wishlist/widget/wishlist_tile.dart';
+import 'package:joes_jwellery_crm/data/model/email_camp_list_model.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/email/email_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/screens/campaign/widget/email_campaign_tile.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
-class AllWishlistScreen extends StatefulWidget {
-  const AllWishlistScreen({super.key});
+class EmailCampaignScreen extends StatefulWidget {
+  const EmailCampaignScreen({super.key});
 
   @override
-  State<AllWishlistScreen> createState() => _AllWishlistScreenState();
+  State<EmailCampaignScreen> createState() => _EmailCampaignScreenState();
 }
 
-class _AllWishlistScreenState extends State<AllWishlistScreen> {
-  final TextEditingController searchController = TextEditingController();
-  List<Wishlist> filteredItems = [];
+class _EmailCampaignScreenState extends State<EmailCampaignScreen> {
+  TextEditingController searchController = TextEditingController();
+  FocusNode searchFousNode = FocusNode();
+  List<Emailcampaigns> filteredCampgns = [];
 
   @override
   void initState() {
     super.initState();
-    context.read<WishlistCubit>().fetchAllWishlist().then((_) {
-      setState(() {
-        filteredItems = List.from(context.read<WishlistCubit>().wishlist);
-      });
-    });
+
+    context.read<EmailCubit>().fetchAllEmailCampaign();
   }
 
   void filterSearch(String query) {
-    final allItems = context.read<WishlistCubit>().wishlist;
+    final allCampgns = context.read<EmailCubit>().allEmailCampgns;
 
     final lowerQuery = query.toLowerCase();
 
     setState(() {
-      filteredItems = allItems.where((item) {
-        final name = (item.customer ?? '').toLowerCase();
-        final surname = (item.product ?? '').toLowerCase();
-        final followDate = (item.followDate ?? '').toLowerCase();
-
-        return followDate.contains(lowerQuery) ||
-            surname.contains(lowerQuery) ||
-            name.contains(lowerQuery);
+      filteredCampgns = allCampgns.where((campgn) {
+        final id = (campgn.id ?? '').toLowerCase();
+        final title = (campgn.title ?? '').toLowerCase();
+        
+        return id.contains(lowerQuery) ||
+            title.contains(lowerQuery) ;
       }).toList();
     });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,57 +56,22 @@ class _AllWishlistScreenState extends State<AllWishlistScreen> {
     return Scaffold(
       backgroundColor: AppColor.greenishGrey,
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         scrolledUnderElevation: 0,
         backgroundColor: AppColor.white,
-        title: SizedBox(
-          child: Text(
-            "Wishlist",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: AppDimens.spacing18,
-            ),
+        title: Text(
+          "Email Campaigns",
+          style: TextStyle(
+            fontSize: AppDimens.textSize20,
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-            color: AppColor.primary,
-          ),
-          onPressed: () {
-            context.pop();
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Image.asset(
-              AssetsConstant.filterIcon,
-              width: AppDimens.icon18,
-              height: AppDimens.icon18,
-              color: AppColor.primary,
-            ),
-            onPressed: () {
-              showDialog(
-                barrierDismissible: false,
-                context: context, 
-                builder: (context) {
-                  return WishlistFilter(
-                    onSearch: (formdata) {
-                      context.read<WishlistCubit>().filterWishlist(formdata: formdata);
-                    },
-                  );
-                },
-              );
-            },
-          ),
-        ],
-        elevation: 0,
       ),
-
 
       body: SafeArea(
         child: Container(
-          width: width,
+          width:  width,
           color: AppColor.white,
           child: Column(
             children: [
@@ -131,7 +95,7 @@ class _AllWishlistScreenState extends State<AllWishlistScreen> {
                         ),
                       ),
                     ),
-                    hintText: "product, customer name",
+                    hintText: "title",
                     hintStyle: TextStyle(
                       color: AppColor.primary.withValues(alpha: .8),
                     ),
@@ -150,28 +114,30 @@ class _AllWishlistScreenState extends State<AllWishlistScreen> {
               ),
 
               Expanded(
-                child: BlocConsumer<WishlistCubit, WishlistState>(
+                child: BlocConsumer<EmailCubit, EmailState>(
                   listener: (context, state) {
-                    
+                    if(state is EmailCampLoaded){
+                      filteredCampgns = context.read<EmailCubit>().allEmailCampgns ;
+                    }
                   },
                   builder: (context, state) {
-                    WishlistCubit wishlistCubit = context.read<WishlistCubit>();
+                    EmailCubit emailCubit = context.read<EmailCubit>();
 
-                    if (state is WishlistLoading) {
+                    if (state is EmailCampLoading) {
                       return Center(child: CircularProgressIndicator(color: AppColor.primary));
                     }
-                    else if (state is WishlistError) {
+                    else if (state is EmailCampError) {
                       return RetryWidget(
                         onTap: () async{
-                          wishlistCubit.fetchAllWishlist();
+                          emailCubit.fetchAllEmailCampaign();
                         },
                       );
                     }
-                    else if (wishlistCubit.wishlist.isNotEmpty) {
+                    else if (emailCubit.allEmailCampgns.isNotEmpty) {
                       return RefreshIndicator(
                         color: AppColor.primary,
                         onRefresh: () async {
-                          wishlistCubit.fetchAllWishlist();
+                          emailCubit.fetchAllEmailCampaign();
                         },
                         child: ListView.builder(
                           physics: const AlwaysScrollableScrollPhysics(),
@@ -179,14 +145,9 @@ class _AllWishlistScreenState extends State<AllWishlistScreen> {
                             horizontal: AppDimens.spacing15,
                             vertical: AppDimens.spacing8,
                           ),
-                          itemCount: filteredItems.length,
+                          itemCount: filteredCampgns.length,
                           itemBuilder: (context, index) {
-                            return WishlistTile(
-                              wish: filteredItems[index], 
-                              onView: () {
-                                context.pushNamed(RoutesName.singleWishScreen, extra: filteredItems[index].id);
-                              },
-                            );
+                            return EmailCampaignTile(campgn: filteredCampgns[index]);
                           },
                         ),
                       );
@@ -195,13 +156,13 @@ class _AllWishlistScreenState extends State<AllWishlistScreen> {
                       return SizedBox();
                     }
                   },
-                ) 
-              )
+                ) ,
+              ),
             ],
           ),
         ) 
       ),
-      
     );
   }
+  
 }

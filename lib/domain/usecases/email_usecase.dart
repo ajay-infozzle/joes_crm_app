@@ -23,4 +23,12 @@ class EmailUsecase {
   Future<dynamic> updateEmailTemp({required Map<String, dynamic> formdata}){
     return repository.updateEmailTemp(formdata: formdata);
   }
+
+  Future<dynamic> fetchEmailCampgns(){
+    return repository.fetchEmailCampgns();
+  }
+
+  Future<dynamic> fetchSingleEmailCampgns({required String id}){
+    return repository.fetchSingleEmailCampgns(id: id);
+  }
 }

@@ -89,6 +89,11 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                   RoutesName.addSaleScreen,
                   extra: context.read<CustomerCubit>().currentCustomer!.id ?? ""
                 );
+              } else if (value == 'add_wish') {
+                context.pushNamed(
+                  RoutesName.addWishScreen,
+                  extra: context.read<CustomerCubit>().currentCustomer!.id ?? ""
+                );
               }
             },
             itemBuilder: (BuildContext context) => [
@@ -176,6 +181,17 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                     Image.asset(AssetsConstant.addSaleIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
                     5.w,
                     Text('Add Sale')
+                  ],
+                ),
+              ),
+              
+              PopupMenuItem<String>(
+                value: 'add_wish',
+                child: Row(
+                  children: [
+                    Image.asset(AssetsConstant.addSaleIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
+                    5.w,
+                    Text('Add Wish')
                   ],
                 ),
               ),

@@ -120,6 +120,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Email Campaigns', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               context.pop();
+              context.pushNamed(RoutesName.emailCampaignScreen);
               onItemSelected?.call('Email Campaigns');
             },
           ),

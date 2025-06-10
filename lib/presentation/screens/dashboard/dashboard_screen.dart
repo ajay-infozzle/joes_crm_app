@@ -47,39 +47,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
       onPopInvokedWithResult: (didPop, result) {},
       child: Scaffold(
         backgroundColor: AppColor.greenishGrey,
-        bottomNavigationBar: BlocBuilder<DashboardCubit, DashboardState>(
-          buildWhen: (previous, current) => current is DashboardIndexChange || current is DashboardInitial,
-          builder: (context, state) {
-            return CurvedNavigationBar(
-              items:
-                  _navItems.asMap().entries.map((entry) {
-                    int i = entry.key;
-                    var item = entry.value;
-                    return CurvedNavigationBarItem(
-                      child: Image.asset(
-                        item["icon"],
-                        width: AppDimens.spacing22,
-                        height: AppDimens.spacing22,
-                        color: AppColor.primary,
-                      ),
-                      label: context.read<DashboardCubit>().index == i
-                              ? ''
-                              : item["label"],
-                      labelStyle: TextStyle(
-                        fontSize: AppDimens.textSize12,
-                        color: AppColor.primary,
-                      ),
-                    );
-                  }).toList(),
-              color: AppColor.white,
-              buttonBackgroundColor: AppColor.white,
-              backgroundColor: AppColor.greenishGrey.withValues(alpha: 0.3),
-              onTap: (selectedIndex) => context.read<DashboardCubit>().changeIndex(selectedIndex),
-              animationCurve: Curves.easeInOut,
-              animationDuration: const Duration(milliseconds: 300),
-              index: context.read<DashboardCubit>().index,
-            );
-          },
+        bottomNavigationBar: SafeArea(
+          child: BlocBuilder<DashboardCubit, DashboardState>(
+            buildWhen: (previous, current) => current is DashboardIndexChange || current is DashboardInitial,
+            builder: (context, state) {
+              return CurvedNavigationBar(
+                items:
+                    _navItems.asMap().entries.map((entry) {
+                      int i = entry.key;
+                      var item = entry.value;
+                      return CurvedNavigationBarItem(
+                        child: Image.asset(
+                          item["icon"],
+                          width: AppDimens.spacing22,
+                          height: AppDimens.spacing22,
+                          color: AppColor.primary,
+                        ),
+                        label: context.read<DashboardCubit>().index == i
+                                ? ''
+                                : item["label"],
+                        labelStyle: TextStyle(
+                          fontSize: AppDimens.textSize12,
+                          color: AppColor.primary,
+                        ),
+                      );
+                    }).toList(),
+                color: AppColor.white,
+                buttonBackgroundColor: AppColor.white,
+                backgroundColor: AppColor.greenishGrey.withValues(alpha: 0.3),
+                onTap: (selectedIndex) => context.read<DashboardCubit>().changeIndex(selectedIndex),
+                animationCurve: Curves.easeInOut,
+                animationDuration: const Duration(milliseconds: 300),
+                index: context.read<DashboardCubit>().index,
+              );
+            },
+          ),
         ),
         body: SafeArea(
           child: BlocBuilder<DashboardCubit, DashboardState>(

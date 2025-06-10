@@ -8,6 +8,10 @@ class WishlistUsecase {
     return repository.getAllWishlist();
   }
 
+  Future<dynamic> filterWishlist({required Map<String, dynamic> formdata}) {
+    return repository.filterWishlist(formdata: formdata);
+  }
+
   Future<dynamic> fetchSingleWish({required String id}) {
     return repository.getSingleWish(wishId: id);
   }

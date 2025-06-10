@@ -234,6 +234,48 @@ class LeadsCubit extends Cubit<LeadsState> {
     }
   }
 
+  Future<void> filterLeads({required Map<String, dynamic> formdata}) async {
+    try {
+      allLeads.clear();
+
+      emit(LeadsSearching());
+      final response = await leadsUseCase.filterLeads(formdata: formdata);
+      if(response != null){
+        final data = LeadsModel.fromJson(response);
+        
+        if(data.leads!.isNotEmpty){
+          showToast(msg: "${data.leads!.length} leads found", backColor: AppColor.green);
+          allLeads = data.leads!;
+          emit(LeadsLoaded());
+        }else{
+          showToast(msg: "${data.leads!.length} leads found", backColor: AppColor.greenishGrey, textColor: AppColor.primary);
+          emit(LeadsLoaded());
+        }
+      }else{
+        emit(LeadsSearchError("Something went wrong !"));
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Leads Cubit");
+      emit(LeadsSearchError(e.toString()));
+    }
+  }
+
+  Future<void> saveFollowUpLeads({required Map<String, dynamic> formdata}) async {
+    try {
+      emit(LeadsSearching());
+      final response = await leadsUseCase.saveFollowUpLeads(formdata: formdata);
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+        emit(LeadsLoaded());
+      }else{
+        emit(LeadsSearchError("Something went wrong !"));
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Leads Cubit");
+      emit(LeadsSearchError(e.toString()));
+    }
+  }
+
   Future<void> getLeadDetail(String id) async {
     try {
       emit(LeadsDetailLoading());

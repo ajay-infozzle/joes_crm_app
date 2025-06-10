@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
+import 'package:joes_jwellery_crm/data/model/email_camp_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/email_templates_model.dart';
 import 'package:joes_jwellery_crm/domain/usecases/email_usecase.dart';
 import 'package:joes_jwellery_crm/presentation/screens/email/widget/email_type_dropdown.dart';
@@ -138,6 +139,34 @@ class EmailCubit extends Cubit<EmailState> {
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Email Cubit");
       emit(EmailTemplFormError(e.toString()));
+    }
+  }
+
+  List<Emailcampaigns> allEmailCampgns = [];
+  Future<void> fetchAllEmailCampaign() async {
+    try {
+      emit(EmailCampLoading());
+      final response = await emailUsecase.fetchEmailCampgns();
+      final data = EmailCampaignListModel.fromJson(response);
+      allEmailCampgns = data.emailcampaigns ?? [] ;
+      emit(EmailCampLoaded());
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Email Cubit");
+      emit(EmailCampError(e.toString()));
+    }
+  }
+
+
+  Future<void> fetchSingleEmailCampgn({required String id}) async {
+    try {
+      emit(EmailCampLoading());
+      final response = await emailUsecase.fetchSingleEmailCampgns(id: id);
+      // final data = Emailtpls.fromJson(response['emailtpl']);
+      // currentEmailTempl = data ;
+      emit(EmailCampLoaded());
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Email Cubit");
+      emit(EmailCampError(e.toString()));
     }
   }
 

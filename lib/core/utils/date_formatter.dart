@@ -23,6 +23,9 @@ Map<String, String> formatDateTime(String rawDateTime) {
 }
 
 String getDMY(String inputDate) {
+  if(inputDate == ''){
+    return '' ;
+  }
   DateTime date = DateFormat('yyyy-MM-dd').parse(inputDate);
   return DateFormat('d MMM yyyy').format(date);
 }

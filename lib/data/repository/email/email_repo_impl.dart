@@ -116,4 +116,48 @@ class EmailRepoImpl implements EmailRepository{
     }
   }
 
+
+  @override
+  Future<dynamic> fetchEmailCampgns() async{
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.get(
+        '',
+        queryParams: {
+          'view' : 'emailcampaigns',
+          'task' : 'getEmailCampaigns',
+          'token' : token
+        }
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
+
+  @override
+  Future<dynamic> fetchSingleEmailCampgns({required String id}) async{
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.post(
+        '',
+        queryParams: {
+          'view' : 'emailcampaigns',
+          'task' : 'getEmailCampaign',
+          'token' : token
+        },
+        body: FormData.fromMap({'id' : id})
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
+
 }

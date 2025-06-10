@@ -8,6 +8,10 @@ class SaleUsecase {
     return repository.getSales();
   }
 
+  Future<dynamic> filterSales({required Map<String, dynamic> formdata}) {
+    return repository.filterSales(formdata: formdata);
+  }
+
   Future<dynamic> fetchSingleSale({required String id}) {
     return repository.getSingleSale(id);
   }

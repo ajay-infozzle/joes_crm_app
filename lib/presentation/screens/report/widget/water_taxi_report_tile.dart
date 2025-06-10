@@ -10,7 +10,9 @@ import 'package:joes_jwellery_crm/data/model/assoc_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/store_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/water_taxi_report_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/reports/reports_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/confirmation_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WaterTaxiReportTile extends StatelessWidget {
@@ -129,7 +131,21 @@ class WaterTaxiReportTile extends StatelessWidget {
             top: 0,
             child: GestureDetector(
               onTap: () {
-                
+                showDialog(
+                  barrierDismissible: false,
+                  context: context, 
+                  builder: (context) {
+                    return ConfirmationDialog(
+                      title: "Confirm Deletion", 
+                      message: "Do you want to delete this report ?", 
+                      confirmText: "Delete", 
+                      confirmColor: AppColor.red, 
+                      onConfirmed: () {
+                        // context.read<ReportsCubit>().deleteWaterTaxiReport(id: report.id??'') ;
+                      },
+                    );
+                  },
+                );
               },
               child: Container(
                 width: AppDimens.buttonHeight30,

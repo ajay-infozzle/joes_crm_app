@@ -27,6 +27,19 @@ class WishlistCubit extends Cubit<WishlistState> {
     }
   }
 
+  Future<void> filterWishlist({required Map<String, dynamic> formdata}) async {
+    try {
+      emit(WishlistLoading());
+      final response = await wishlistUsecase.filterWishlist(formdata: formdata);
+      final data = AllwishlistModel.fromJson(response);
+      wishlist = data.wishlist ?? [] ;
+      emit(WishlistLoaded());
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Wishlist Cubit");
+      emit(WishlistError(e.toString()));
+    }
+  }
+
   Future<void> fetchSingleWish({required String wishId}) async {
     try {
       emit(WishlistLoading());

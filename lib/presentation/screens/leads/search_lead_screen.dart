@@ -7,6 +7,7 @@ import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/leads/leads_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/screens/leads/widget/leads_filter.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/widget/leads_list_widget.dart';
 import 'package:joes_jwellery_crm/presentation/screens/leads/widget/leads_search_list_widget.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
@@ -62,6 +63,28 @@ class _SearchLeadScreenState extends State<SearchLeadScreen> {
           },
         ),
         actions: [
+          IconButton(
+            icon: Image.asset(
+              AssetsConstant.filterIcon,
+              width: AppDimens.icon18,
+              height: AppDimens.icon18,
+              color: AppColor.primary,
+            ),
+            onPressed: () {
+              showDialog(
+                barrierDismissible: false,
+                context: context, 
+                builder: (context) {
+                  return LeadsFilter(
+                    onSearch: (formdata) {
+                      context.read<LeadsCubit>().filterLeads(formdata: formdata);  
+                    },
+                  );
+                },
+              );
+            },
+          ),
+
           IconButton(
             icon: Icon(
               Icons.add,

@@ -8,6 +8,10 @@ class ReportsUsecase {
     return repository.getWaterTaxiReport();
   }
 
+  Future<dynamic> deleteWaterTaxiReport({required String id}) {
+    return repository.deleteWaterTaxiReport(id: id);
+  }
+
   Future<dynamic> filterWaterTexiReport({
     required Map<String, dynamic> formdata,
   }) {
@@ -16,6 +20,10 @@ class ReportsUsecase {
 
   Future<dynamic> fetchAllAppraisalReport() {
     return repository.getAppraisalReport();
+  }
+
+  Future<dynamic> deleteAppraisalReport({required String id}) {
+    return repository.deleteAppraisalReport(id: id);
   }
 
   Future<dynamic> filterAppraisalReport({

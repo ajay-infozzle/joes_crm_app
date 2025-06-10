@@ -73,6 +73,54 @@ class ReportRepoImpl implements ReportRepository{
   }
 
   @override
+  Future<dynamic> deleteAppraisalReport({required String id}) async{
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.post(
+        '',
+        queryParams: {
+          'view' : 'reports',
+          'task' : 'deleteAppraisalCertificateEmailReport',
+          'token' : token
+        },
+        body: FormData.fromMap({
+          'id' : id,
+        })
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
+
+  @override
+  Future<dynamic> deleteWaterTaxiReport({required String id}) async{
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.post(
+        '',
+        queryParams: {
+          'view' : 'reports',
+          'task' : 'deleteWaterTaxiEmailReportData',
+          'token' : token
+        },
+        body: FormData.fromMap({
+          'id' : id,
+        })
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
+
+  @override
   Future<dynamic> getWaterTaxiReport() async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
