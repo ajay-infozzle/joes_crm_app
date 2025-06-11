@@ -7,10 +7,12 @@ import 'package:equatable/equatable.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/utils/custome_image_picker.dart';
+import 'package:joes_jwellery_crm/core/utils/dependency_injection.dart';
 import 'package:joes_jwellery_crm/data/model/customer_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/single_customer_model.dart';
 import 'package:joes_jwellery_crm/data/model/store_list_model.dart';
 import 'package:joes_jwellery_crm/domain/usecases/customer_usecase.dart';
+import 'package:joes_jwellery_crm/domain/usecases/email_usecase.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/origination_dropdown_widget.dart';
 
@@ -33,7 +35,9 @@ class CustomerCubit extends Cubit<CustomerState> {
     }
   }
 
+  Map<String, dynamic> customerFilterFormData = {};
   Future<void> filterCustomers({required Map<String, dynamic> formdata}) async {
+    customerFilterFormData = formdata ;
     try {
       emit(CustomerListLoading());
       final response = await customerUseCase.filterCustomers(formdata: formdata);
@@ -42,6 +46,28 @@ class CustomerCubit extends Cubit<CustomerState> {
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Customer Cubit");
       emit(CustomerListError(e.toString()));
+    }
+  }
+
+  Future<void> sendEmailCampaign({
+    required Map<String , dynamic> formdata,
+  }) async {
+    try {
+      formdata.addAll(formdata);
+      
+      emit(CustomerSendingEmail());
+      final response = await EmailUsecase(getIt()).sendEmailCampaign(formdata: formdata);
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+
+        customerFilterFormData.clear();
+        emit(CustomerEmailSent());
+      }else{
+        emit(CustomerEmailSentError("Something went wrong !"));
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(CustomerEmailSentError(e.toString()));
     }
   }
 

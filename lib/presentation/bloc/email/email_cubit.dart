@@ -156,13 +156,13 @@ class EmailCubit extends Cubit<EmailState> {
     }
   }
 
-
+  Emailcampaign? currentEmailCamp ;
   Future<void> fetchSingleEmailCampgn({required String id}) async {
     try {
       emit(EmailCampLoading());
       final response = await emailUsecase.fetchSingleEmailCampgns(id: id);
-      // final data = Emailtpls.fromJson(response['emailtpl']);
-      // currentEmailTempl = data ;
+      final data = SingleEmailCampaignModel.fromJson(response);
+      currentEmailCamp = data.emailcampaign ;
       emit(EmailCampLoaded());
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Email Cubit");

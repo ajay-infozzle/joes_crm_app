@@ -8,6 +8,7 @@ import 'package:joes_jwellery_crm/core/utils/api_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
+import 'package:joes_jwellery_crm/core/utils/helpers.dart';
 import 'package:joes_jwellery_crm/data/model/store_list_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/wishlist/wishlist_cubit.dart';
@@ -86,7 +87,7 @@ class _SingleWishScreenState extends State<SingleWishScreen> {
             ),
             onSelected: (value) {
               if (value == 'edit') {
-                // onTakePhotoSelected(context: context);
+                context.pushNamed(RoutesName.editWishScreen, extra: context.read<WishlistCubit>().currentWish);
               } 
             },
             itemBuilder:(BuildContext context) => [
@@ -200,6 +201,12 @@ class _SingleWishScreenState extends State<SingleWishScreen> {
                             contentRow(
                               title: "Sales associate(s)",
                               data: assocs,
+                            ),
+                            10.h,
+
+                            contentRow(
+                              title: "Sales associate 2",
+                              data: getUser(context, wishlistCubit.currentWish?.salesAssoc2 ?? "_"),
                             ),
                             10.h,
                     

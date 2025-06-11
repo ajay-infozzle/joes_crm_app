@@ -31,4 +31,8 @@ class EmailUsecase {
   Future<dynamic> fetchSingleEmailCampgns({required String id}){
     return repository.fetchSingleEmailCampgns(id: id);
   }
+
+  Future<dynamic> sendEmailCampaign({required Map<String, dynamic> formdata}){
+    return repository.sendEmailCampaign(formdata: formdata);
+  }
 }

@@ -30,6 +30,14 @@ String getDMY(String inputDate) {
   return DateFormat('d MMM yyyy').format(date);
 }
 
+String getDM(String inputDate) {
+  if(inputDate == ''){
+    return '' ;
+  }
+  DateTime date = DateFormat('yyyy-MM-dd').parse(inputDate);
+  return DateFormat('d MMM').format(date);
+}
+
 String getDaySuffix(int day) {
   if (day >= 11 && day <= 13) return 'th';
   switch (day % 10) {

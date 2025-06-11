@@ -20,6 +20,8 @@ class ExpandableSection extends StatefulWidget {
   final Map<String, String>? content;
   final List<ActivityStream>? activityList;
   final List<Sales>? salesList;
+  final String totalSale ;
+  final String lastSaleDate ;
   final List<SmsLog>? smsLogList;
   final List<WishList>? wishList;
   final List<CommunicationLog>? commList;
@@ -35,6 +37,8 @@ class ExpandableSection extends StatefulWidget {
     this.isCommLog = false,
     this.activityList,
     this.salesList,
+    this.totalSale = '',
+    this.lastSaleDate = '',
     this.smsLogList,
     this.wishList,
     this.commList
@@ -105,7 +109,29 @@ class _ExpandableSectionState extends State<ExpandableSection> {
                     if (widget.isActivityStream && widget.activityList != null) {
                       return ActivityListWidget(activityList: widget.activityList);
                     } else if (widget.isSales && widget.salesList != null) {
-                      return SalesListWidget(salesList: widget.salesList!); 
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SalesListWidget(salesList: widget.salesList!),
+                          
+                          Text(
+                            "Total sales : ${widget.totalSale}",
+                            style: TextStyle(
+                              fontSize: AppDimens.textSize14,
+                              color: AppColor.primary,
+                            ),
+                          ),
+
+                          Text(
+                            "Last sale date : ${widget.lastSaleDate}",
+                            style: TextStyle(
+                              fontSize: AppDimens.textSize14,
+                              color: AppColor.primary,
+                            ),
+                          ),
+                          
+                        ],
+                      ); 
                     } else if (widget.isSmsLogs && widget.smsLogList != null) {
                       return SmsLogListWidget(smsLogList: widget.smsLogList!); 
                     } else if (widget.isWishList && widget.wishList != null) {

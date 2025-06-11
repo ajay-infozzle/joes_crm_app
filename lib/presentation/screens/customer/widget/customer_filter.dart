@@ -152,7 +152,7 @@ class _CustomerFilterState extends State<CustomerFilter> {
                             isEnable: false,
                           ),
                           onTap: () async {
-                            birthFromDateCont.text = getDMY(await getDateFromUser(context));
+                            birthFromDateCont.text = getDM(await getDateFromUser(context));
                           },
                         ),
                       ],
@@ -171,7 +171,7 @@ class _CustomerFilterState extends State<CustomerFilter> {
                             isEnable: false,
                           ),
                           onTap: () async {
-                            birthToDateCont.text = getDMY(await getDateFromUser(context));
+                            birthToDateCont.text = getDM(await getDateFromUser(context));
                           },
                         ),
                       ],

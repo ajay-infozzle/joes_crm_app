@@ -10,6 +10,8 @@ import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/customer_list_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/screens/campaign/widget/send_email_campaign_dialog.dart';
+import 'package:joes_jwellery_crm/presentation/screens/campaign/widget/send_sms_campaign_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_filter.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_tile.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
@@ -31,6 +33,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
   void initState() {
     super.initState();
     context.read<CustomerCubit>().fetchCustomers();
+
+    context.read<CustomerCubit>().customerFilterFormData = {};
   }
 
   void filterSearch(String query) {
@@ -174,38 +178,66 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 ),
               ),
 
-              // BlocBuilder<CustomerCubit, CustomerState>(
-              //   buildWhen: (previous, current) => current is filterChangeState,
-              //   builder: (context, state) {
-              //     return Padding(
-              //       padding: EdgeInsets.symmetric(
-              //         vertical: AppDimens.spacing10,
-              //         horizontal: AppDimens.spacing15,
-              //       ),
-              //       child: Row(
-              //         children: [
-              //           Expanded(
-              //             child: CustomButton(
-              //               text: "Email Campaign",
-              //               backgroundColor: AppColor.green,
-              //               fontSize: AppDimens.textSize14,
-              //               onPressed: () {},
-              //             ),
-              //           ),
-              //           10.w,
-              //           Expanded(
-              //             child: CustomButton(
-              //               text: "SMS Campaign",
-              //               backgroundColor: AppColor.green,
-              //               fontSize: AppDimens.textSize14,
-              //               onPressed: () {},
-              //             ),
-              //           ),
-              //         ],
-              //       ),
-              //     );
-              //   },
-              // ),
+              BlocBuilder<CustomerCubit, CustomerState>(
+                builder: (context, state) {
+                  if(context.read<CustomerCubit>().customerFilterFormData.isEmpty){
+                    return SizedBox();
+                  }
+
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppDimens.spacing10,
+                      horizontal: AppDimens.spacing15,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CustomButton(
+                            text: "Email Campaign",
+                            backgroundColor: AppColor.green,
+                            fontSize: AppDimens.textSize14,
+                            onPressed: () {
+                              showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) {
+                                  return SendEmailCampaignDialog(
+                                    from: '', 
+                                    onSend: (formdata) {
+                                      context.read<CustomerCubit>().sendEmailCampaign(formdata: formdata);
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        10.w,
+                        Expanded(
+                          child: CustomButton(
+                            text: "SMS Campaign",
+                            backgroundColor: AppColor.green,
+                            fontSize: AppDimens.textSize14,
+                            onPressed: () {
+                              showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) {
+                                  return SendSmsCampaignDialog(
+                                    onSend: (formdata) {
+                                      context.read<CustomerCubit>().sendEmailCampaign(formdata: formdata);
+                                    }, 
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
 
               Expanded(
                 child: BlocConsumer<CustomerCubit, CustomerState>(
@@ -264,7 +296,15 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         ),
                       );
                     } else {
-                      return SizedBox();
+                      return Center(
+                        child: Text(
+                          "Not Found",
+                          style: TextStyle(
+                            color: AppColor.primary.withValues(alpha: .7),
+                            fontSize: AppDimens.textSize14
+                          ),
+                        ),
+                      );
                     }
                   },
                 ),

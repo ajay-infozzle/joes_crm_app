@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
+import 'package:joes_jwellery_crm/core/utils/api_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
+import 'package:joes_jwellery_crm/core/utils/helpers.dart';
+import 'package:joes_jwellery_crm/data/model/all_wishlist_model.dart';
 import 'package:joes_jwellery_crm/data/model/assoc_list_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/wishlist/wishlist_cubit.dart';
@@ -14,15 +17,15 @@ import 'package:joes_jwellery_crm/presentation/widgets/assoc_dropdown_widget.dar
 import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_text_field.dart';
 
-class AddWishScreen extends StatefulWidget {
-  final String custId ;
-  const AddWishScreen({super.key, required this.custId});
+class EditWishScreen extends StatefulWidget {
+  final Wish wishData ;
+  const EditWishScreen({super.key, required this.wishData});
 
   @override
-  State<AddWishScreen> createState() => _AddWishScreenState();
+  State<EditWishScreen> createState() => _EditWishScreenState();
 }
 
-class _AddWishScreenState extends State<AddWishScreen> {
+class _EditWishScreenState extends State<EditWishScreen> {
 
   // final TextEditingController photoController = TextEditingController();
   final TextEditingController productController = TextEditingController();
@@ -44,6 +47,21 @@ class _AddWishScreenState extends State<AddWishScreen> {
   void initState() {
     super.initState();
 
+    productController.text = widget.wishData.product ?? '' ;
+    referenceController.text = widget.wishData.referenceNo ?? '' ;
+    amountController.text = widget.wishData.price ?? '' ;
+    followDateController.text = widget.wishData.followDate ?? '' ;
+
+    assoc = getUserObj(
+      context,
+      (widget.wishData.salesAssociates?.isNotEmpty ?? false)
+          ? widget.wishData.salesAssociates!.first.id ?? ''
+          : '',
+    );
+
+    
+    assoc2 = getUserObj(context, widget.wishData.salesAssoc2 ?? '');
+
     context.read<WishlistCubit>().currentPickedImg = null ;
   }
 
@@ -58,7 +76,7 @@ class _AddWishScreenState extends State<AddWishScreen> {
         scrolledUnderElevation: 0,
         backgroundColor: AppColor.white,
         title: Text(
-          "Add New Wish",
+          "Edit Wish",
           style: TextStyle(
             fontSize: AppDimens.textSize20,
             fontWeight: FontWeight.bold,
@@ -113,7 +131,14 @@ class _AddWishScreenState extends State<AddWishScreen> {
                       alignment: Alignment.center,
                       child: context.read<WishlistCubit>().currentPickedImg != null
                           ? Image.file(context.read<WishlistCubit>().currentPickedImg!, fit: BoxFit.cover)
-                          : const Text("Choose Image", style: TextStyle(color: Colors.black54)),
+                          : ( widget.wishData.photo == null || widget.wishData.photo == ''
+                            ? const Text("Choose Image", style: TextStyle(color: Colors.black54))
+                            : Image.network(
+                              "${ApiConstant.demoBaseUrl}${widget.wishData.photo}",
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(color: AppColor.primary.withValues(alpha: .04),),
+                              )
+                            ),
                     ),
                   ),
                   7.h,
@@ -171,16 +196,16 @@ class _AddWishScreenState extends State<AddWishScreen> {
                     children: [
                       CustomButton(
                         padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-                        text: "Add",
+                        text: "Edit",
                         onPressed: () {
                           FocusScope.of(context).unfocus();
-                          wishlistCubit.addWish(formdata: {
-                            'customer_id' : widget.custId,
+                          wishlistCubit.editWish(formdata: {
+                            'id' : widget.wishData.id,
                             'product' : productController.text,
                             'reference_no' : referenceController.text,
                             'price' : amountController.text,
                             'follow_date' : followDateController.text,
-                            'user_id' : assoc?.id ?? '',
+                            // 'user_id' : assoc?.id ?? '',
                             'sales_assoc_2' : assoc2?.id ?? '',
                           });
                         },

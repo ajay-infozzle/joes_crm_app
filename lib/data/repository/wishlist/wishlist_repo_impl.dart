@@ -8,6 +8,28 @@ class WishlistRepoImpl implements WishlistRepository{
   WishlistRepoImpl(this.apiService);
 
   @override
+  Future addWish({required Map<String, dynamic> formdata}) async{
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.post(
+        '',
+        queryParams: {
+          'view' : 'wishes',
+          'task' : 'addWish',
+          'token' : token
+        },
+        body: FormData.fromMap(formdata)
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
+
+  @override
   Future editWish({required Map<String, dynamic> formdata}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";

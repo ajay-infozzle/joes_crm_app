@@ -74,10 +74,10 @@ class EmailCampaignTile extends StatelessWidget {
             top: 0,
             child: GestureDetector(
               onTap: () {
-                // context.pushNamed(
-                //   RoutesName.singleEmailCampaignScreen,
-                //   extra: campgn.id
-                // );
+                context.pushNamed(
+                  RoutesName.singleEmailCampaignScreen,
+                  extra: campgn.id
+                );
               },
               child: Container(
                 width: AppDimens.buttonHeight30,

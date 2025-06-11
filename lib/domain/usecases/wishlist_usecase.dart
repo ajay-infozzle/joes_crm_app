@@ -16,6 +16,12 @@ class WishlistUsecase {
     return repository.getSingleWish(wishId: id);
   }
 
+  Future<dynamic> addWish({
+    required Map<String, dynamic> formdata,
+  }) {
+    return repository.addWish(formdata: formdata);
+  }
+
   Future<dynamic> editWish({
     required Map<String, dynamic> formdata,
   }) {

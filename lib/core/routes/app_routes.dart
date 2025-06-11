@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
+import 'package:joes_jwellery_crm/data/model/all_wishlist_model.dart';
 import 'package:joes_jwellery_crm/data/model/email_templates_model.dart';
 import 'package:joes_jwellery_crm/data/model/leads_model.dart';
 import 'package:joes_jwellery_crm/data/model/single_task_model.dart';
 import 'package:joes_jwellery_crm/presentation/screens/auth/login_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/campaign/email_campaign_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/campaign/single_email_campaign_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/add_customer_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/customer_detail_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/customer_screen.dart';
@@ -32,6 +34,7 @@ import 'package:joes_jwellery_crm/presentation/screens/task/task_list_screen.dar
 import 'package:joes_jwellery_crm/presentation/screens/task/task_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/wishlist/add_wish_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/wishlist/all_wishlist_screen.dart';
+import 'package:joes_jwellery_crm/presentation/screens/wishlist/edit_wish_screen.dart';
 import 'package:joes_jwellery_crm/presentation/screens/wishlist/single_wish_screen.dart';
 
 class AppRoutes {
@@ -350,6 +353,19 @@ class AppRoutes {
           ),
 
           GoRoute(
+            path: RoutesName.editWishScreen,
+            name: RoutesName.editWishScreen,
+            pageBuilder: (context, state) {
+              final wishData = state.extra as  Wish;
+              return customPageRouteBuilder(
+                EditWishScreen(wishData: wishData),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
             path: RoutesName.allWishlistScreen,
             name: RoutesName.allWishlistScreen,
             pageBuilder: (context, state) {
@@ -394,6 +410,19 @@ class AppRoutes {
             pageBuilder: (context, state) {
               return customPageRouteBuilder(
                 const EmailCampaignScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.singleEmailCampaignScreen,
+            name: RoutesName.singleEmailCampaignScreen,
+            pageBuilder: (context, state) {
+              final campgnId = state.extra as String ;
+              return customPageRouteBuilder(
+                SingleEmailCampaignScreen(campgnId: campgnId),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

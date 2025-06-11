@@ -21,3 +21,16 @@ String getUser(BuildContext context, String userId){
 
   return user.name ?? '_' ;
 }
+
+Users? getUserObj(BuildContext context, String userId){
+  if(userId.isEmpty){
+    return null; 
+  }
+
+  final user = context.read<HomeCubit>().usersList.firstWhere(
+    (e) => e.id == userId,
+    orElse: () => Users(id: userId, name: '_'),
+  );
+
+  return user ;
+}

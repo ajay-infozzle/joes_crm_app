@@ -18,3 +18,14 @@ final class WishlistError extends WishlistState {
   @override
   List<Object> get props => [message];
 }
+
+final class WishFormLoading extends WishlistState {}
+final class WishFormSaved extends WishlistState {}
+final class WishFormUpdate extends WishlistState {}
+final class WishFormError extends WishlistState {
+  final String message;
+  const WishFormError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
