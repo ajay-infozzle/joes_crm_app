@@ -34,3 +34,16 @@ Users? getUserObj(BuildContext context, String userId){
 
   return user ;
 }
+
+Stores? getStoreByNameObj(BuildContext context, String name){
+  if(name.isEmpty){
+    return null; 
+  }
+
+  final store = context.read<HomeCubit>().storeList.firstWhere(
+    (e) => e.name!.toLowerCase() == name.toLowerCase(),
+    orElse: () => Stores(id: '_', name: '_'),
+  );
+
+  return store ;
+}

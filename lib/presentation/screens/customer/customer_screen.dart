@@ -189,50 +189,77 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       vertical: AppDimens.spacing10,
                       horizontal: AppDimens.spacing15,
                     ),
-                    child: Row(
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: CustomButton(
-                            text: "Email Campaign",
-                            backgroundColor: AppColor.green,
-                            fontSize: AppDimens.textSize14,
-                            onPressed: () {
-                              showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) {
-                                  return SendEmailCampaignDialog(
-                                    from: '', 
-                                    onSend: (formdata) {
-                                      context.read<CustomerCubit>().sendEmailCampaign(formdata: formdata);
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomButton(
+                                text: "Email Campaign",
+                                backgroundColor: AppColor.green,
+                                fontSize: AppDimens.textSize14,
+                                onPressed: () {
+                                  showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return SendEmailCampaignDialog(
+                                        from: '', 
+                                        onSend: (formdata) {
+                                          context.read<CustomerCubit>().sendEmailCampaign(formdata: formdata);
+                                        },
+                                      );
                                     },
                                   );
                                 },
-                              );
-                            },
-                          ),
-                        ),
-                        10.w,
-                        Expanded(
-                          child: CustomButton(
-                            text: "SMS Campaign",
-                            backgroundColor: AppColor.green,
-                            fontSize: AppDimens.textSize14,
-                            onPressed: () {
-                              showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) {
-                                  return SendSmsCampaignDialog(
-                                    onSend: (formdata) {
-                                      context.read<CustomerCubit>().sendEmailCampaign(formdata: formdata);
-                                    }, 
+                              ),
+                            ),
+                            10.w,
+                            Expanded(
+                              child: CustomButton(
+                                text: "SMS Campaign",
+                                backgroundColor: AppColor.green,
+                                fontSize: AppDimens.textSize14,
+                                onPressed: () {
+                                  showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return SendSmsCampaignDialog(
+                                        onSend: (formdata) {
+                                          context.read<CustomerCubit>().sendEmailCampaign(formdata: formdata);
+                                        }, 
+                                      );
+                                    },
                                   );
                                 },
-                              );
-                            },
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
+                        10.h,
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${allCustomers.length} results",
+                            ),
+                            10.w,
+                            GestureDetector(
+                              onTap: () {
+                                context.read<CustomerCubit>().fetchCustomers();
+                              },
+                              child: Text(
+                                "Clear filter",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColor.greenishBlue
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   );

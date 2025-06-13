@@ -69,3 +69,25 @@ Future<String> getDateFromUser(BuildContext context) async{
     return '' ;
   }
 }
+
+Future<String> getDateFromUserTillToday(BuildContext context) async{
+  DateTime? pickedDate = await showDatePicker(
+    context: context, 
+    initialDate: DateTime.now(), 
+    firstDate: DateTime(1900), 
+    lastDate: DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    ),
+    currentDate: DateTime.now(),
+  );
+
+  if(pickedDate != null){
+    // return DateFormat.yMd().format(pickedDate);
+    // return DateFormat('d MMM').format(pickedDate);
+    return DateFormat('yyyy-MM-dd').format(pickedDate);
+  }else{
+    return '' ;
+  }
+}

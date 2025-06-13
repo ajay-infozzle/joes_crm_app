@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
@@ -62,7 +63,10 @@ class _AddEmailTemplateScreenState extends State<AddEmailTemplateScreen> {
           color: AppColor.white,
           child: BlocConsumer<EmailCubit, EmailState>(
             listener: (context, state) {
-              
+              if(state is EmailTemplFormSaved){
+                context.pop();
+                context.read<EmailCubit>().fetchAllEmailTemplates();
+              }
             },
             buildWhen: (previous, current) => current is EmailTemplFormUpdate || current is EmailTemplFormLoading || current is EmailTemplFormSaved || current is EmailTemplFormError,
             builder: (context, state) {

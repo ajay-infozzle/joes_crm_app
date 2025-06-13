@@ -45,29 +45,21 @@ class CustomerListError extends CustomerState {
   List<Object> get props => [message];
 }
 
-class CustomerAddFormLoading extends CustomerState {
-  
+class CustomerAddFormLoading extends CustomerState {}
+class CustomerAddFormUpdate extends CustomerState {}
+class CustomerAddFormSubmitted extends CustomerState {}
+
+class CustomerUpdateFormLoading extends CustomerState {}
+class CustomerUpdated extends CustomerState {}
+class CustomerUpdateFormError extends CustomerState {
+  final String message;
+  const CustomerUpdateFormError(this.message);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [message];
 }
 
-class CustomerAddFormUpdate extends CustomerState {
-  
-  @override
-  List<Object> get props => [];
-}
-
-class CustomerAddFormSubmitted extends CustomerState {
-  
-  @override
-  List<Object> get props => [];
-}
-
-class CustomerExistVerifying extends CustomerState {
-  
-  @override
-  List<Object> get props => [];
-}
+class CustomerExistVerifying extends CustomerState {}
 class CustomerExist extends CustomerState {
   final List<Customers> customers;
   const CustomerExist(this.customers);

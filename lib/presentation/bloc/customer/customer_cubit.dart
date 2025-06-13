@@ -23,11 +23,15 @@ class CustomerCubit extends Cubit<CustomerState> {
 
   CustomerCubit({required this.customerUseCase}) : super(CustomerInitial());
 
+  Map<String, dynamic> customerFilterFormData = {};
+
   Future<void> fetchCustomers() async {
     try {
       emit(CustomerListLoading());
       final response = await customerUseCase.fetchCustomers();
       final data = CustomerListModel.fromJson(response);
+
+      customerFilterFormData.clear();
       emit(CustomerListLoaded(data.customers??[]));
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Customer Cubit");
@@ -35,7 +39,6 @@ class CustomerCubit extends Cubit<CustomerState> {
     }
   }
 
-  Map<String, dynamic> customerFilterFormData = {};
   Future<void> filterCustomers({required Map<String, dynamic> formdata}) async {
     customerFilterFormData = formdata ;
     try {
@@ -102,7 +105,7 @@ class CustomerCubit extends Cubit<CustomerState> {
   }
 
   String checkCountry(){
-    switch (country) {
+    switch (country.trim()) {
       case "":
         return "" ;
       case "United States":
@@ -311,30 +314,41 @@ class CustomerCubit extends Cubit<CustomerState> {
   }
 
 
-  Future<void> updateCustomer({
-    required String id,
-    required String name,
-    required String surname,
-    required String email,
-    required String phone,
-    required String country,
-    required String spouseName,
-    required String wifeEmail,
-    required String wifePhone,
-    required String notes,
-  }) async {
+  Future<void> updateCustomer({required Map<String, dynamic> formdata}) async {
     try {
-      emit(CustomerLoading());
-      final response = await customerUseCase.editCustomer(id: id, name: name, surname: surname, email: email, phone: phone, country: country, spouseName: spouseName, wifeEmail: wifeEmail, wifePhone: wifePhone, notes : notes);
+      emit(CustomerUpdateFormLoading());
+      if(formdata['email'].trim().isEmpty && formdata['wife_email'].trim().isEmpty){
+        emit(CustomerUpdateFormError("His/Her email required !"));
+        return ;
+      }
+      if(formdata['email'].trim().isNotEmpty){
+        final emailResponse = await customerUseCase.validateEmail(email: formdata['email']!);
+        if(emailResponse['status'] != 200){
+          emit(CustomerUpdateFormError("Invalid His Email (${emailResponse['info']})"));
+          return ;
+        }
+      }
+      if(formdata['wife_email'].trim().isNotEmpty){
+        final wifeEmailResponse = await customerUseCase.validateEmail(email: formdata['wife_email']!);
+        if(wifeEmailResponse['status'] != 200){
+          emit(CustomerUpdateFormError("Invalid Her Email (${wifeEmailResponse['info']})"));
+          return ;
+        }
+      }
+      
+      final response = await customerUseCase.editCustomer(formdata: formdata);
       if(response != null){
         showToast(msg: response['message'], backColor: AppColor.green);
 
+        emit(CustomerUpdated());
         await fetchCustomers(); 
-        await fetchSingleCustomer(id: id);
+        await fetchSingleCustomer(id: formdata['id']);
+      }else{
+        emit(CustomerUpdateFormError("Something went wrong !"));
       }
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Customer Cubit");
-      emit(CustomerError(e.toString()));
+      emit(CustomerUpdateFormError(e.toString()));
     }
   }
 

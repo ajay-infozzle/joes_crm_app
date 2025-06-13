@@ -147,11 +147,11 @@ class _EmailTemplatesScreenState extends State<EmailTemplatesScreen> {
               Expanded(
                 child: BlocConsumer<EmailCubit, EmailState>(
                   listener: (context, state) {
-                    // if(state is EmailTemplDetailLoaded || state is EmailTemplDeleted){
-                    //   setState(() {
-                    //     filteredTemplates = List.from(context.read<EmailCubit>().allEmailTemplates);
-                    //   });
-                    // }
+                    if(state is EmailTempsLoaded){
+                      setState(() {
+                        filteredTemplates = List.from(context.read<EmailCubit>().allEmailTemplates);
+                      });
+                    }
                   },
                   builder: (context, state) {
                     EmailCubit emailCubit = context.read<EmailCubit>();

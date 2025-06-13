@@ -6,6 +6,8 @@ import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
+import 'package:joes_jwellery_crm/core/utils/helpers.dart';
+import 'package:joes_jwellery_crm/core/utils/session_manager.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/auth/widget/textfield_title_text_widget.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
@@ -151,6 +153,13 @@ class _SendWaterTaxiEmailDialogState extends State<SendWaterTaxiEmailDialog> {
                 ),
                 _buildDynamicCustomerFields(),
                 // _labelAndField("Sales Person", salesPersonController),
+
+                _labelAndField(
+                  "Sales Person",
+                  TextEditingController(text: getUser(context,  SessionManager().getUserId() ?? "")),
+                  FocusNode(),
+                  enabled: false,
+                ),
                 _labelAndField("Ship Name", shipNameController, shipNameFocus),
                 _labelAndField(
                   "Ride Count",

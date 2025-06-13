@@ -9,7 +9,6 @@ import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/email/email_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
-import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 
 class SingleEmailTemplateScreen extends StatefulWidget {
@@ -84,8 +83,8 @@ class _SingleEmailTemplateScreenState extends State<SingleEmailTemplateScreen> {
                   extra: context.read<EmailCubit>().currentEmailTempl,
                 );
               } else if (value == 'delete') {
-                // context.read<EmailCubit>().deleteEmailTemplate(id: widget.tempId);
-                showAppSnackBar(context, message: "Coming soon !");
+                context.read<EmailCubit>().deleteEmailTemplate(id: widget.tempId);
+                // showAppSnackBar(context, message: "Coming soon !");
               } 
             },
             itemBuilder:

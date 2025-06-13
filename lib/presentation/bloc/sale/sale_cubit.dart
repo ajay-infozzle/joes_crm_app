@@ -97,18 +97,17 @@ class SaleCubit extends Cubit<SaleState> {
       showToast(msg: "Please enter amount", backColor: AppColor.red);
       return ;
     }
-    if(formdata['notes'].isEmpty){
-      showToast(msg: "Please add note", backColor: AppColor.red);
-      return ;
-    }
+    // if(formdata['notes'].isEmpty){
+    //   showToast(msg: "Please add note", backColor: AppColor.red);
+    //   return ;
+    // }
     if(currentPickedPdf == null){
       showToast(msg: "Please add receipt pdf", backColor: AppColor.red);
       return ;
     }
 
     try {
-      String userId = SessionManager().getUserId() ?? '' ;
-      formdata['user_id'] = userId;
+      formdata['users_ids'] = selectedAssociates.map((e) => e.id ?? '').join(',');
       formdata['receipt_pdf'] = await MultipartFile.fromFile(
               currentPickedPdf!.files.single.path!, 
               filename: "${DateTime.now().millisecondsSinceEpoch}.pdf",

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/assoc_list_model.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sale/sale_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/auth/widget/textfield_title_text_widget.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_text_field.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/store_drop_down_widget.dart';
@@ -55,13 +58,10 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
       body: SafeArea(
         child:  BlocConsumer<SaleCubit, SaleState>( 
           listener: (context, state) {
-            // if(state is CustomerAddError){
-            //   showAppSnackBar(context, message: state.message, backgroundColor: AppColor.red);
-            // }
-            // if(state is CustomerAddFormSubmitted){
-            //   context.pop();
-            // }
-
+            if(state is SaleFormError){
+              showAppSnackBar(context, message: state.message, backgroundColor: AppColor.red);
+            }
+            
             if(state is SaleFormSaved){
               saleDateController.clear();
               amountController.clear();
@@ -69,7 +69,11 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
               assocController.clear();
               pdfController.clear();
               context.read<SaleCubit>().currentPickedPdf = null ;
+              context.read<SaleCubit>().selectedAssociates = [] ;
               context.read<SaleCubit>().store = null ;
+
+              context.pop();
+              context.read<CustomerCubit>().fetchSingleCustomer(id: context.read<CustomerCubit>().currentCustomer!.id ?? '');
             }
           },
           builder: (context, state) {
@@ -128,7 +132,7 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
                       isEnable: false,
                     ),
                     onTap: () async {
-                      saleDateController.text = await getDateFromUser(context);
+                      saleDateController.text = await getDateFromUserTillToday(context);
                     },
                   ),
                   7.h,
@@ -152,7 +156,7 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
                       await saleCubit.pickPdf();
                       pdfController.text = saleCubit.currentPickedPdf?.files.single.name ?? "";
                     },
-                    child: _buildField("Receipt Pdf", pdfController, null, isEnable: false),
+                    child: _buildField("Upload Pdf", pdfController, null, isEnable: false),
                   ),
                   30.h,
 

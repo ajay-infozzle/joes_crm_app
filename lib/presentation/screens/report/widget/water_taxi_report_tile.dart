@@ -141,7 +141,7 @@ class WaterTaxiReportTile extends StatelessWidget {
                       confirmText: "Delete", 
                       confirmColor: AppColor.red, 
                       onConfirmed: () {
-                        // context.read<ReportsCubit>().deleteWaterTaxiReport(id: report.id??'') ;
+                        context.read<ReportsCubit>().deleteWaterTaxiReport(id: report.id??'') ;
                       },
                     );
                   },

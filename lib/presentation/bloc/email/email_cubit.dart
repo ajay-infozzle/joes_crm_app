@@ -131,7 +131,7 @@ class EmailCubit extends Cubit<EmailState> {
       if(response != null){
         showToast(msg: response['message'], backColor: AppColor.green);
 
-        await fetchAllEmailTemplates();
+        // await fetchAllEmailTemplates();
         emit(EmailTemplFormSaved());
       }else{
         emit(EmailTemplFormError("Something went wrong !"));

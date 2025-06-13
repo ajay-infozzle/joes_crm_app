@@ -73,7 +73,7 @@ class LeadsListWidget extends StatelessWidget {
                 ),
           
                 Text(
-                  "Pending : ${leads.status!.capitalizeFirst()}",
+                  "Status : ${leads.status!.capitalizeFirst()}",
                   style: TextStyle(
                     fontSize: AppDimens.textSize14,
                     color: AppColor.primary

@@ -52,6 +52,13 @@ class _ExpandableSectionState extends State<ExpandableSection> {
   bool _isExpanded = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    _isExpanded = widget.content != null ? true : false ; //default open for basic info
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     

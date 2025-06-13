@@ -78,18 +78,7 @@ class CustomerRepositoryImpl implements CustomerRepository {
   }
   
   @override
-  Future<dynamic> editCustomerDetail({
-    required String id, 
-    required String name, 
-    required String surname, 
-    required String email, 
-    required String phone, 
-    required String country, 
-    required String spouseName, 
-    required String wifeEmail, 
-    required String wifePhone,
-    required String notes,
-  }) async{
+  Future<dynamic> editCustomerDetail({required Map<String, dynamic> formdata}) async{
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
@@ -101,18 +90,7 @@ class CustomerRepositoryImpl implements CustomerRepository {
           'task' : 'editCustomer',
           'token' : token
         },
-        body: FormData.fromMap({
-          'id': id,
-          'name': name,
-          'surname' : surname,
-          'spouse_name' : spouseName,
-          'email' : email,
-          'wife_email' : wifeEmail,
-          'country' : country,
-          'phone' : phone,
-          'wife_phone' : wifePhone,
-          'notes' : notes,
-        }),
+        body: FormData.fromMap(formdata),
       );
       
       return response;

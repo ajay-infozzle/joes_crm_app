@@ -4,13 +4,15 @@ import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
+import 'package:joes_jwellery_crm/core/utils/helpers.dart';
+import 'package:joes_jwellery_crm/core/utils/session_manager.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/auth/widget/textfield_title_text_widget.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_text_field.dart';
 
-class SendEmailDialog extends StatelessWidget {
+class SendEmailDialog extends StatefulWidget {
   final TextEditingController subjectController;
   final TextEditingController messageController;
   final TextEditingController toController;
@@ -33,13 +35,30 @@ class SendEmailDialog extends StatelessWidget {
   });
 
   @override
+  State<SendEmailDialog> createState() => _SendEmailDialogState();
+}
+
+class _SendEmailDialogState extends State<SendEmailDialog> {
+
+  TextEditingController fromController = TextEditingController();
+
+  FocusNode fromFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    fromController.text = getUserObj(context, SessionManager().getUserId()??'')?.email ?? ''  ;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final currentFocus = FocusScope.of(context);
     return PopScope(
       canPop: false,
       child: AlertDialog(
         title: Text(
-          title,
+          widget.title,
           style: TextStyle(color: AppColor.primary, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
@@ -54,16 +73,20 @@ class SendEmailDialog extends StatelessWidget {
             width: double.maxFinite,
             child: Column(
               children: [
+                TextfieldTitleTextWidget(title: "From"),
+                _buildField("From", fromController, fromFocus, enable: false),
+                7.h,
+
                 TextfieldTitleTextWidget(title: "To"),
-                _buildField("To", toController, toFocus, enable: false),
+                _buildField("To", widget.toController, widget.toFocus, enable: false),
                 7.h,
             
                 TextfieldTitleTextWidget(title: "Subject"),
-                _buildField("Subject", subjectController, subjectFocus),
+                _buildField("Subject", widget.subjectController, widget.subjectFocus),
                 7.h,
                   
                 TextfieldTitleTextWidget(title: "Message"),
-                _buildField("Message", messageController, messageFocus, maxline: 8),
+                _buildField("Message", widget.messageController, widget.messageFocus, maxline: 8),
                 7.h,
               ],
             ),
@@ -84,8 +107,8 @@ class SendEmailDialog extends StatelessWidget {
           BlocConsumer<CustomerCubit, CustomerState>(
             listener: (context, state) {
               if(state is CustomerEmailSent){
-                subjectController.clear();
-                messageController.clear();
+                widget.subjectController.clear();
+                widget.messageController.clear();
                 
                 context.pop();
               }
@@ -108,8 +131,8 @@ class SendEmailDialog extends StatelessWidget {
                 onPressed: () {
                   currentFocus.unfocus();
 
-                  if (toController.text.isNotEmpty && subjectController.text.isNotEmpty && messageController.text.isNotEmpty) {
-                    onSend();
+                  if (widget.toController.text.isNotEmpty && widget.subjectController.text.isNotEmpty && widget.messageController.text.isNotEmpty) {
+                    widget.onSend();
                   } else {
                     showToast(msg: "All fields are required !");
                   }

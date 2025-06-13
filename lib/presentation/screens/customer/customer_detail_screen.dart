@@ -251,6 +251,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                           "Surname": customer.surname ?? '-',
                           "His email": customer.email ?? '-',
                           "Her email": customer.wifeEmail ?? '-',
+                          "Vip":  '-',
                           "Country": customer.country ?? '-',
                           "His cell number": customer.phone ?? '-',
                           "Her cell number": customer.wifePhone ?? '-',
@@ -322,86 +323,30 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   }
   
   void onEditSelected({required BuildContext context}) {
-    // final customer = (context.read<CustomerCubit>().state as CustomerLoaded).customer;
     final customer = context.read<CustomerCubit>().currentCustomer!;
 
-    final nameFocus = FocusNode();
-    final spouseNameFocus = FocusNode();
-    final surnameFocus = FocusNode();
-    final emailFocus = FocusNode();
-    final wifeEmailFocus = FocusNode();
-    final countryFocus = FocusNode();
-    final phoneFocus = FocusNode();
-    final wifePhoneFocus = FocusNode();
-    final notesFocus = FocusNode();
-
-    final nameController = TextEditingController(text: customer.name ?? '');
-    final spouseNameController = TextEditingController(text: customer.spouseName ?? '');
-    final surnameController = TextEditingController(text: customer.surname ?? '');
-    final emailController = TextEditingController(text: customer.email ?? '');
-    final wifeEmailController = TextEditingController(text: customer.wifeEmail ?? '');
-    final notesController = TextEditingController(text: customer.notes ?? '');
-    // final countryController = TextEditingController(text: customer.country ?? '');
-    final phoneController = TextEditingController(text: customer.phone ?? '');
-    final wifePhoneController = TextEditingController(text: customer.wifePhone ?? '');
-
-    context.read<CustomerCubit>().country = context.read<CustomerCubit>().getCountry(customer.country ?? "") ;
+    // context.read<CustomerCubit>().country = context.read<CustomerCubit>().getCountry(customer.country ?? "") ;
 
     showDialog(
       context: context,
       builder: (_) => EditCustomerDialog(
-        nameController: nameController,
-        spouseNameController: spouseNameController,
-        surnameController: surnameController,
-        emailController: emailController,
-        wifeEmailController: wifeEmailController,
-        // countryController: countryController,
-        phoneController: phoneController,
-        wifePhoneController: wifePhoneController,
-        nameFocus: nameFocus,
-        spouseNameFocus: spouseNameFocus,
-        surnameFocus: surnameFocus,
-        emailFocus: emailFocus,
-        wifeEmailFocus: wifeEmailFocus,
-        countryFocus: countryFocus,
-        phoneFocus: phoneFocus,
-        wifePhoneFocus: wifePhoneFocus,
-        notesController: notesController,
-        notesFocus: notesFocus,
-        onSave: () {
+        customer: customer,
+        onSave: (formdata) {
           context.read<CustomerCubit>().updateCustomer(
-            id: widget.id,
-            name: nameController.text,
-            surname: surnameController.text,
-            email: emailController.text,
-            phone: phoneController.text,
-            country: context.read<CustomerCubit>().checkCountry(),
-            spouseName: spouseNameController.text,
-            wifeEmail: wifeEmailController.text,
-            wifePhone: wifePhoneController.text,
-            notes: notesController.text,
+            formdata: formdata
+            // name: nameController.text,
+            // surname: surnameController.text,
+            // email: emailController.text,
+            // phone: phoneController.text,
+            // country: context.read<CustomerCubit>().checkCountry(),
+            // spouseName: spouseNameController.text,
+            // wifeEmail: wifeEmailController.text,
+            // wifePhone: wifePhoneController.text,
+            // notes: notesController.text,
           );
         },
       ),
-    ).then((_) {
-      // nameFocus.dispose();
-      // spouseNameFocus.dispose();
-      // surnameFocus.dispose();
-      // emailFocus.dispose();
-      // wifeEmailFocus.dispose();
-      // countryFocus.dispose();
-      // phoneFocus.dispose();
-      // wifePhoneFocus.dispose();
-
-      // nameController.dispose();
-      // spouseNameController.dispose();
-      // surnameController.dispose();
-      // emailController.dispose();
-      // wifeEmailController.dispose();
-      // countryController.dispose();
-      // phoneController.dispose();
-      // wifePhoneController.dispose();
-    });
+    );
   }
 
   void onTakePhotoSelected({required BuildContext context}) {

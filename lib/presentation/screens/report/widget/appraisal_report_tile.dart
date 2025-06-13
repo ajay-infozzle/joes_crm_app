@@ -141,7 +141,7 @@ class AppraisalReportTile extends StatelessWidget {
                       confirmText: "Delete", 
                       confirmColor: AppColor.red, 
                       onConfirmed: () {
-                        // context.read<ReportsCubit>().deleteAppraisalReport(id: report.id??'') ;
+                        context.read<ReportsCubit>().deleteAppraisalReport(id: report.id??'') ;
                       },
                     );
                   },
