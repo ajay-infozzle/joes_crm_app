@@ -45,6 +45,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 customer.store!.toLowerCase().contains(query.toLowerCase()) ||
                 (customer.name != null
                     ? customer.name!.toLowerCase().contains(query.toLowerCase())
+                    : false) ||
+                (customer.surname != null
+                    ? customer.surname!.toLowerCase().contains(query.toLowerCase())
                     : false);
           }).toList();
     });

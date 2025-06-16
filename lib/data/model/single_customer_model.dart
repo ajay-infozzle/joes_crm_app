@@ -26,10 +26,18 @@ class Customer {
   String? surname;
   String? email;
   String? wifeEmail;
+  String? address;
+  String? addressVerified;
+  String? city;
+  String? state;
+  String? zip;
   String? country;
   String? store;
   String? phone;
   String? wifePhone;
+  String? vip;
+  String? ship;
+  String? storeId;
   String? birthday;
   String? wifeBirthday;
   String? anniversary;
@@ -51,6 +59,14 @@ class Customer {
       this.surname,
       this.email,
       this.wifeEmail,
+      this.address,
+      this.addressVerified,
+      this.city,
+      this.ship,
+      this.state,
+      this.storeId,
+      this.vip,
+      this.zip,
       this.country,
       this.store,
       this.phone,
@@ -76,6 +92,14 @@ class Customer {
     surname = json['surname'];
     email = json['email'];
     wifeEmail = json['wife_email'];
+    address = json['address'];
+    addressVerified = json['address_verified'];
+    city = json['city'];
+    state = json['state'];
+    zip = json['zip'];
+    vip = json['vip'];
+    ship = json['ship'];
+    storeId = json['store_id'];
     country = json['country'];
     store = json['store'];
     phone = json['phone'];

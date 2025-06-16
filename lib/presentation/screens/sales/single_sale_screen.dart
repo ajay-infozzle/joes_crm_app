@@ -207,8 +207,25 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                     
                             if(saleCubit.currentSale?.customerId != "0") //i.e for existing customer
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                TextButton(
+                                  onPressed: () {
+                                    
+                                  },
+                                  child: Text(
+                                    "View Receipt",
+                                    style: const TextStyle(
+                                      fontSize: AppDimens.textSize14,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColor.greenishBlue,
+                                    ),
+                                    softWrap: true,
+                                  ),
+                                ),
+
+                                10.w,
+
                                 TextButton(
                                   onPressed: () {
                                     context.pushNamed(
