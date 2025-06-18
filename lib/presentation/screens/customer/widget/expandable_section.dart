@@ -17,11 +17,13 @@ class ExpandableSection extends StatefulWidget {
   final bool isSmsLogs;
   final bool isWishList;
   final bool isCommLog;
+  final bool isNotes;
   final Map<String, String>? content;
   final List<ActivityStream>? activityList;
   final List<Sales>? salesList;
   final String totalSale ;
   final String lastSaleDate ;
+  final String notes ;
   final List<SmsLog>? smsLogList;
   final List<WishList>? wishList;
   final List<CommunicationLog>? commList;
@@ -35,6 +37,8 @@ class ExpandableSection extends StatefulWidget {
     this.isSmsLogs = false,
     this.isWishList = false,
     this.isCommLog = false,
+    this.isNotes = false,
+    this.notes = '',
     this.activityList,
     this.salesList,
     this.totalSale = '',
@@ -98,7 +102,7 @@ class _ExpandableSectionState extends State<ExpandableSection> {
             ),
           ),
 
-          if (_isExpanded && (widget.content != null || widget.activityList != null || widget.salesList != null || widget.smsLogList != null || widget.commList != null ||widget.wishList != null))
+          if (_isExpanded && (widget.content != null || widget.activityList != null || widget.salesList != null || widget.smsLogList != null || widget.commList != null || widget.wishList != null || widget.notes.isNotEmpty))
             Container(
               width: width,
               decoration: BoxDecoration(
@@ -145,7 +149,16 @@ class _ExpandableSectionState extends State<ExpandableSection> {
                       return WishListWidget(wishList: widget.wishList!); 
                     } else if(widget.isCommLog && widget.commList != null){
                       return CommLogListWidget(commList: widget.commList!); 
-                    } else if (widget.content != null) {
+                    } else if (widget.isNotes && widget.notes.isNotEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: AppDimens.spacing4),
+                        child: Text(
+                          widget.notes,
+                          style: const TextStyle(fontSize: AppDimens.textSize14, fontWeight: FontWeight.w400),
+                        ),
+                      );
+                    }
+                    else if (widget.content != null) {
                       return Column(
                         children: widget.content!.entries.map((entry) {
                           return Padding(

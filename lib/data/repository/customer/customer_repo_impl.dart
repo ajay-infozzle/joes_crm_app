@@ -124,6 +124,30 @@ class CustomerRepositoryImpl implements CustomerRepository {
   }
 
   @override
+  Future<dynamic> addNote({
+    required Map<String, dynamic> formdata
+  }) async{
+    final sessionManager = SessionManager();
+    String token = sessionManager.getToken() ?? "";
+
+    try {
+      final response = await apiService.post(
+        '',
+        queryParams: {
+          'view' : 'customers',
+          'task' : 'addNotes',
+          'token' : token
+        },
+        body: FormData.fromMap(formdata),
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow ;
+    }
+  }
+
+  @override
   Future<dynamic> sendHimEmail({
     required Map<String, dynamic> formdata
   }) async{

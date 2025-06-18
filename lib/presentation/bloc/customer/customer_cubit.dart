@@ -313,6 +313,24 @@ class CustomerCubit extends Cubit<CustomerState> {
     }
   }
 
+  Future<void> addNote({
+    required Map<String, dynamic> formdata
+  }) async {
+    try {
+      emit(CustomerUpdateFormLoading());
+      final response = await customerUseCase.addNote(formdata: formdata);
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+
+        emit(CustomerUpdated());
+        await fetchSingleCustomer(id: formdata['customer_id']);
+      }
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Customer Cubit");
+      emit(CustomerUpdateFormError(e.toString()));
+    }
+  }
+
 
   Future<void> updateCustomer({required Map<String, dynamic> formdata}) async {
     try {

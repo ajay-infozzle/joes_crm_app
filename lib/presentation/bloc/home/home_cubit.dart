@@ -16,6 +16,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   List<Stores> storeList = [];
   List<Users> usersList = [];
+  List<Users> salesAssocList = [];
 
   Future<void> fetchHomeData() async {
     emit(HomeLoading());
@@ -28,11 +29,16 @@ class HomeCubit extends Cubit<HomeState> {
       final storeData = StoreListModel.fromJson(storeResponse);
       storeList = storeData.stores ?? [] ;
 
-      //~ fetch users/assoc as well
+      //~ fetch users as well
       final usersResponse = await homeUseCase.getUsers();
       final usersData = AssocListModel.fromJson(usersResponse);
       usersList = usersData.users ?? [] ;
-      
+
+      //~ fetch assoc as well
+      final assocResponse = await homeUseCase.getUsers(isSalesAssoc: true);
+      final assocData = AssocListModel.fromJson(assocResponse);
+      salesAssocList = assocData.users ?? [] ;
+
       emit(HomeLoaded(data));
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Home Cubit");

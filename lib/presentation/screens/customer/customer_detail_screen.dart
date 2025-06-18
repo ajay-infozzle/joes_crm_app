@@ -7,6 +7,7 @@ import 'package:joes_jwellery_crm/core/theme/dimens.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/screens/customer/widget/add_note_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/customer_header.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/edit_customer_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/screens/customer/widget/expandable_section.dart';
@@ -94,6 +95,8 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                   RoutesName.addWishScreen,
                   extra: context.read<CustomerCubit>().currentCustomer!.id ?? ""
                 );
+              } else if (value == 'add_note') {
+                context.read<CustomerCubit>().currentCustomer != null ? onAddNoteSelected(context : context) : showAppSnackBar(context, message: "Not available !");
               }
             },
             itemBuilder: (BuildContext context) => [
@@ -192,6 +195,17 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                     Image.asset(AssetsConstant.addSaleIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
                     5.w,
                     Text('Add Wish')
+                  ],
+                ),
+              ),
+
+              PopupMenuItem<String>(
+                value: 'add_note',
+                child: Row(
+                  children: [
+                    Image.asset(AssetsConstant.editIcon, width: AppDimens.spacing15, height: AppDimens.spacing15, color: AppColor.primary),
+                    5.w,
+                    Text('Add Note')
                   ],
                 ),
               ),
@@ -312,6 +326,15 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                         wishList: customer.wishList,
                       ),
                     ),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: ExpandableSection(
+                        title: "Notes",
+                        isNotes: true,
+                        notes: customer.notes ?? '',
+                      ),
+                    ),
                   ],
                 );
               }
@@ -345,6 +368,22 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
             // wifeEmail: wifeEmailController.text,
             // wifePhone: wifePhoneController.text,
             // notes: notesController.text,
+          );
+        },
+      ),
+    );
+  }
+
+  void onAddNoteSelected({required BuildContext context}) {
+    final customer = context.read<CustomerCubit>().currentCustomer!;
+
+    showDialog(
+      context: context,
+      builder: (_) => AddNoteDialog(
+        customer: customer, 
+        onSave: (formdata) {
+          context.read<CustomerCubit>().addNote(
+            formdata: formdata,
           );
         },
       ),

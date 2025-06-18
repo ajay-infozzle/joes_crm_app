@@ -10,6 +10,9 @@ abstract class CustomerRepository {
   Future<dynamic> addCustomerDetail({
     required Map<String, dynamic> formdata,
   });
+  Future<dynamic> addNote({
+    required Map<String, dynamic> formdata,
+  });
   Future<dynamic> sendHimEmail({
     required Map<String, dynamic> formdata,
   });

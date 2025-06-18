@@ -136,7 +136,7 @@ class _ReportFilterDialogState extends State<ReportFilterDialog> {
               TextfieldTitleTextWidget(title: "Sales Person"),
               5.h,
               AssocDropdown(
-                usersList: context.read<HomeCubit>().usersList, 
+                usersList: context.read<HomeCubit>().salesAssocList, 
                 onSelected: (selectedUser) => setState(() {
                   salesPersonSelected = selectedUser ;
                 }),

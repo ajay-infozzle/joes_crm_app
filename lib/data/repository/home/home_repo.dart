@@ -1,5 +1,5 @@
 abstract class HomeRepository {
   Future<dynamic> fetch();
   Future<dynamic> getStores();
-  Future<dynamic> getUsers();
+  Future<dynamic> getUsers({required bool isSalesAssoc});
 }

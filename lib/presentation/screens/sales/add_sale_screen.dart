@@ -111,7 +111,7 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
                     onTap: () {
                       showSaleAssociatesDialog(
                         context: context, 
-                        associates: context.read<HomeCubit>().usersList, 
+                        associates: context.read<HomeCubit>().salesAssocList, 
                         initiallySelectedIds: saleCubit.selectedAssociates.map((e) => e.id ?? '').toList(), 
                         onDone: (assocs) {
                           saleCubit.selectedAssociates = assocs ;

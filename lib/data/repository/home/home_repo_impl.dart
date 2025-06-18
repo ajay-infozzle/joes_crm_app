@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:joes_jwellery_crm/core/utils/session_manager.dart';
 import 'package:joes_jwellery_crm/data/network/api_service.dart';
 import 'package:joes_jwellery_crm/data/repository/home/home_repo.dart';
@@ -51,18 +52,21 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
-  Future<dynamic> getUsers() async {
+  Future<dynamic> getUsers({required bool isSalesAssoc}) async {
     final sessionManager = SessionManager();
     String token = sessionManager.getToken() ?? "";
 
     try {
-      final response = await apiService.get(
+      final response = await apiService.post(
         '',
         queryParams: {
           'view' : 'users',
           'task' : 'getUsers',
           'token' : token
-        }
+        },
+        body: FormData.fromMap({
+          'type': isSalesAssoc ? 'sales' : '',
+        })
       );
       
       return response;

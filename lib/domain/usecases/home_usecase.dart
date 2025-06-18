@@ -12,7 +12,7 @@ class HomeUseCase {
     return repository.getStores();
   }
 
-  Future<dynamic> getUsers() {
-    return repository.getUsers();
+  Future<dynamic> getUsers({bool isSalesAssoc = false}) {
+    return repository.getUsers(isSalesAssoc: isSalesAssoc);
   }
 }

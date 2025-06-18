@@ -1,16 +1,21 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joes_jwellery_crm/core/routes/routes_name.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/theme/dimens.dart';
+import 'package:joes_jwellery_crm/core/utils/api_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/assets_constant.dart';
 import 'package:joes_jwellery_crm/core/utils/date_formatter.dart';
 import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/store_list_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sale/sale_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SingleSaleScreen extends StatefulWidget {
   final String saleId;
@@ -210,8 +215,18 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 TextButton(
-                                  onPressed: () {
-                                    
+                                  onPressed: () async{
+                                    if(saleCubit.currentSale?.receiptPdf != null) {
+                                      final url = Uri.parse('${ApiConstant.demoBaseUrl}${saleCubit.currentSale?.receiptPdf}');
+                        
+                                      if (await canLaunchUrl(url)) {
+                                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                                      } else {
+                                        showAppSnackBar(context, message: "Could not open PDF", backgroundColor: AppColor.red);
+                                      }
+                                    }else{
+                                      showToast(msg: "Receipt PDF not available");
+                                    }
                                   },
                                   child: Text(
                                     "View Receipt",

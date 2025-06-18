@@ -160,7 +160,7 @@ class _AddLeadsScreenState extends State<AddLeadsScreen> {
                   TextfieldTitleTextWidget(title: "Sales Assoc"),
                   5.h,
                   AssocDropdown(
-                    usersList: context.read<HomeCubit>().usersList, 
+                    usersList: context.read<HomeCubit>().salesAssocList, 
                     onSelected: (selectedUser) => leadsCubit.changeAssoc(selectedUser),
                     initialSelected: leadsCubit.assoc,
                   ),

@@ -100,6 +100,7 @@ class Sale {
   String? modificationDate;
   String? checkedOut;
   String? checkedOutTime;
+  String? receiptPdf;
   List<SalesAssociates>? salesAssociates;
 
   Sale(
@@ -119,6 +120,7 @@ class Sale {
       this.modificationDate,
       this.checkedOut,
       this.checkedOutTime,
+      this.receiptPdf,
       this.salesAssociates});
 
   Sale.fromJson(Map<String, dynamic> json) {
@@ -138,9 +140,10 @@ class Sale {
     modificationDate = json['modification_date'];
     checkedOut = json['checked_out'];
     checkedOutTime = json['checked_out_time'];
-    if (json['sales_associates'] != null) {
+    receiptPdf = json['receipt_pdf'];
+    if (json['users'] != null) {
       salesAssociates = <SalesAssociates>[];
-      json['sales_associates'].forEach((v) {
+      json['users'].forEach((v) {
         salesAssociates!.add(SalesAssociates.fromJson(v));
       });
     }
@@ -164,8 +167,9 @@ class Sale {
     data['modification_date'] = modificationDate;
     data['checked_out'] = checkedOut;
     data['checked_out_time'] = checkedOutTime;
+    data['receipt_pdf'] = receiptPdf;
     if (salesAssociates != null) {
-      data['sales_associates'] =
+      data['users'] =
           salesAssociates!.map((v) => v.toJson()).toList();
     }
     return data;

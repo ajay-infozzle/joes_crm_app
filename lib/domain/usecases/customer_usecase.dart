@@ -28,6 +28,12 @@ class CustomerUseCase {
     return repository.addCustomerDetail(formdata: formdata);
   }
 
+  Future<dynamic> addNote({
+    required Map<String, dynamic> formdata,
+  }) {
+    return repository.addNote(formdata: formdata);
+  }
+
   Future<dynamic> sendHimEmail({
     required Map<String, dynamic> formdata,
   }) {
