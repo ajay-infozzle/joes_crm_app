@@ -13,6 +13,7 @@ import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/data/model/store_list_model.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/home/home_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/sale/sale_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/screens/sales/widget/take_reciept_pdf_dialog.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/retry_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -90,7 +91,7 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
             ),
             onSelected: (value) {
               if (value == 'receipt_pdf') {
-                // onTakePhotoSelected(context: context);
+                onReceiptPdfSelected(context: context);
               } 
             },
             itemBuilder:(BuildContext context) => [
@@ -220,7 +221,10 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                                       final url = Uri.parse('${ApiConstant.demoBaseUrl}${saleCubit.currentSale?.receiptPdf}');
                         
                                       if (await canLaunchUrl(url)) {
-                                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                                        await launchUrl(
+                                          url, 
+                                          mode: LaunchMode.inAppBrowserView,
+                                        );
                                       } else {
                                         showAppSnackBar(context, message: "Could not open PDF", backgroundColor: AppColor.red);
                                       }
@@ -300,6 +304,20 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  void onReceiptPdfSelected({required BuildContext context}) {
+    showDialog(
+      context: context, 
+      barrierDismissible: false,
+      builder: (_) => TakeRecieptPdfDialog(
+        onSave: (file) {
+          context.read<SaleCubit>().uploadReceiptPdf(formdata: {
+            'id': widget.saleId,
+          }, pickedPdf: file);
+        },
+      ),
     );
   }
 

@@ -107,7 +107,9 @@ class WaterTaxiReportTile extends StatelessWidget {
                         final url = Uri.parse('${ApiConstant.demoBaseUrl}/show-pdf-certificate.php?type=watertaxi&id=${report.id}');
                         
                         if (await canLaunchUrl(url)) {
-                          await launchUrl(url, mode: LaunchMode.externalApplication);
+                          await launchUrl(
+                            url, mode: LaunchMode.inAppBrowserView
+                          );
                         } else {
                           showAppSnackBar(context, message: "Could not open PDF", backgroundColor: AppColor.red);
                         }

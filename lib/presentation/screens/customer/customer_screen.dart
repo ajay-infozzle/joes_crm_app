@@ -28,6 +28,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
   List<Customers> filteredCustomers = [];
   List<Customers> allCustomers = [];
   TextEditingController searchController = TextEditingController();
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -35,7 +36,19 @@ class _CustomerScreenState extends State<CustomerScreen> {
     context.read<CustomerCubit>().fetchCustomers();
 
     context.read<CustomerCubit>().customerFilterFormData = {};
+
+    scrollController = ScrollController();
   }
+
+  int currentPage = 1;
+  int pageSize = 20;
+  List<Customers> get paginatedCustomers {
+    final start = (currentPage - 1) * pageSize;
+    final end = (start + pageSize).clamp(0, filteredCustomers.length);
+    return filteredCustomers.sublist(start, end);
+  }
+
+  int get totalPages => (filteredCustomers.length / pageSize).ceil();
 
   void filterSearch(String query) {
     setState(() {
@@ -47,7 +60,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     ? customer.name!.toLowerCase().contains(query.toLowerCase())
                     : false) ||
                 (customer.surname != null
-                    ? customer.surname!.toLowerCase().contains(query.toLowerCase())
+                    ? customer.surname!.toLowerCase().contains(
+                      query.toLowerCase(),
+                    )
                     : false);
           }).toList();
     });
@@ -183,7 +198,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
               BlocBuilder<CustomerCubit, CustomerState>(
                 builder: (context, state) {
-                  if(context.read<CustomerCubit>().customerFilterFormData.isEmpty){
+                  if (context
+                      .read<CustomerCubit>()
+                      .customerFilterFormData
+                      .isEmpty) {
                     return SizedBox();
                   }
 
@@ -207,9 +225,13 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                     context: context,
                                     builder: (context) {
                                       return SendEmailCampaignDialog(
-                                        from: '', 
+                                        from: '',
                                         onSend: (formdata) {
-                                          context.read<CustomerCubit>().sendEmailCampaign(formdata: formdata);
+                                          context
+                                              .read<CustomerCubit>()
+                                              .sendEmailCampaign(
+                                                formdata: formdata,
+                                              );
                                         },
                                       );
                                     },
@@ -230,8 +252,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                     builder: (context) {
                                       return SendSmsCampaignDialog(
                                         onSend: (formdata) {
-                                          context.read<CustomerCubit>().sendEmailCampaign(formdata: formdata);
-                                        }, 
+                                          context
+                                              .read<CustomerCubit>()
+                                              .sendEmailCampaign(
+                                                formdata: formdata,
+                                              );
+                                        },
                                       );
                                     },
                                   );
@@ -245,9 +271,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "${allCustomers.length} results",
-                            ),
+                            Text("${allCustomers.length} results"),
                             10.w,
                             GestureDetector(
                               onTap: () {
@@ -257,12 +281,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                 "Clear filter",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: AppColor.greenishBlue
+                                  color: AppColor.greenishBlue,
                                 ),
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   );
@@ -275,6 +299,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     if (state is CustomerListLoaded) {
                       allCustomers.clear();
                       filteredCustomers.clear();
+                      currentPage = 1;
                       _onDataLoaded(state.customers);
                     }
                   },
@@ -298,14 +323,17 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           context.read<CustomerCubit>().fetchCustomers();
                         },
                         child: ListView.builder(
+                          controller: scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.symmetric(
                             horizontal: AppDimens.spacing15,
                             vertical: AppDimens.spacing8,
                           ),
-                          itemCount: filteredCustomers.length,
+                          // itemCount: filteredCustomers.length,
+                          itemCount: paginatedCustomers.length,
                           itemBuilder: (context, index) {
-                            Customers customer = filteredCustomers[index];
+                            // Customers customer = filteredCustomers[index];
+                            Customers customer = paginatedCustomers[index];
                             return CustomerTile(
                               customer: customer,
                               onView: () {
@@ -331,7 +359,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           "Not Found",
                           style: TextStyle(
                             color: AppColor.primary.withValues(alpha: .7),
-                            fontSize: AppDimens.textSize14
+                            fontSize: AppDimens.textSize14,
                           ),
                         ),
                       );
@@ -339,10 +367,71 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   },
                 ),
               ),
+
+              BlocBuilder<CustomerCubit, CustomerState>(
+                builder: (context, state) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.first_page),
+                        tooltip: 'First Page',
+                        onPressed: currentPage > 1
+                            ? () {
+                                setState(() => currentPage = 1);
+                                _scrollToTop();
+                              }
+                            : null,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.chevron_left),
+                        tooltip: 'Previous Page',
+                        onPressed: currentPage > 1
+                            ? () {
+                                setState(() => currentPage--);
+                                _scrollToTop();
+                              }
+                            : null,
+                      ),
+                      Text("Page $currentPage of $totalPages"),
+                      IconButton(
+                        icon: Icon(Icons.chevron_right),
+                        tooltip: 'Next Page',
+                        onPressed: currentPage < totalPages
+                            ? () {
+                                setState(() => currentPage++);
+                                _scrollToTop();
+                              }
+                            : null,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.last_page),
+                        tooltip: 'Last Page',
+                        onPressed: currentPage < totalPages
+                            ? () {
+                                setState(() => currentPage = totalPages);
+                                _scrollToTop();
+                              }
+                            : null,
+                      ),
+                    ],
+                  );
+                },
+              ),
+
             ],
           ),
         ),
       ),
     );
   }
+
+  void _scrollToTop() {
+    scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
 }

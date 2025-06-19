@@ -7,7 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:joes_jwellery_crm/core/theme/colors.dart';
 import 'package:joes_jwellery_crm/core/utils/custome_image_picker.dart';
-import 'package:joes_jwellery_crm/core/utils/session_manager.dart';
 import 'package:joes_jwellery_crm/data/model/assoc_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/sales_list_model.dart';
 import 'package:joes_jwellery_crm/data/model/store_list_model.dart';
@@ -152,8 +151,7 @@ class SaleCubit extends Cubit<SaleState> {
     }
 
     try {
-      String userId = SessionManager().getUserId() ?? '' ;
-      formdata['user_id'] = userId;
+      formdata['users_ids'] = selectedAssociates.map((e) => e.id ?? '').join(',');
       formdata['receipt_pdf'] = await MultipartFile.fromFile(
               currentPickedPdf!.files.single.path!, 
               filename: "${DateTime.now().millisecondsSinceEpoch}.pdf",
@@ -165,10 +163,41 @@ class SaleCubit extends Cubit<SaleState> {
       if(response != null){
         showToast(msg: response['message'], backColor: AppColor.green);
         emit(SaleFormSaved());
+
+        await fetchSale(saleId: formdata['id']);
       }else{
         emit(SaleFormError("Something went wrong !"));
       }
-      emit(SaleFormUpdate());
+    } catch (e) {
+      log("Error >> ${e.toString()}", name: "Sale Cubit");
+      emit(SaleFormError(e.toString()));
+    }
+  }
+
+  Future<void> uploadReceiptPdf({required Map<String, dynamic> formdata, required FilePickerResult? pickedPdf}) async {
+
+    if(pickedPdf == null){
+      showToast(msg: "Please add receipt pdf", backColor: AppColor.red);
+      return ;
+    }
+
+    try {
+      formdata['receipt_pdf'] = await MultipartFile.fromFile(
+              pickedPdf.files.single.path!, 
+              filename: "${DateTime.now().millisecondsSinceEpoch}.pdf",
+              contentType: MediaType('application', 'pdf')
+            );
+
+      emit(SaleFormLoading());
+      final response = await saleUsecase.updateSale(formdata: formdata);
+      if(response != null){
+        showToast(msg: response['message'], backColor: AppColor.green);
+        emit(SaleFormSaved());
+
+        await fetchSale(saleId: formdata['id']);
+      }else{
+        emit(SaleFormError("Something went wrong !"));
+      }
     } catch (e) {
       log("Error >> ${e.toString()}", name: "Sale Cubit");
       emit(SaleFormError(e.toString()));

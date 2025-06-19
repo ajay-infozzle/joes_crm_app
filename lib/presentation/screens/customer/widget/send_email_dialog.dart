@@ -7,10 +7,12 @@ import 'package:joes_jwellery_crm/core/utils/extensions.dart';
 import 'package:joes_jwellery_crm/core/utils/helpers.dart';
 import 'package:joes_jwellery_crm/core/utils/session_manager.dart';
 import 'package:joes_jwellery_crm/presentation/bloc/customer/customer_cubit.dart';
+import 'package:joes_jwellery_crm/presentation/bloc/email/email_cubit.dart';
 import 'package:joes_jwellery_crm/presentation/screens/auth/widget/textfield_title_text_widget.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/app_snackbar.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_button.dart';
 import 'package:joes_jwellery_crm/presentation/widgets/custom_text_field.dart';
+import 'package:joes_jwellery_crm/presentation/widgets/email_templ_dropdown.dart';
 
 class SendEmailDialog extends StatefulWidget {
   final TextEditingController subjectController;
@@ -87,6 +89,17 @@ class _SendEmailDialogState extends State<SendEmailDialog> {
                   
                 TextfieldTitleTextWidget(title: "Message"),
                 _buildField("Message", widget.messageController, widget.messageFocus, maxline: 8),
+                7.h,
+
+                TextfieldTitleTextWidget(title: "Email Template"),
+                7.h,
+                EmailTemplDropdown(
+                  templateList: context.read<EmailCubit>().allEmailTemplates,
+                  onSelected: (template) {
+                    widget.subjectController.text = template.subject ?? '';
+                    widget.messageController.text = template.content ?? '';  
+                  },
+                ),
                 7.h,
               ],
             ),
