@@ -1,15 +1,8 @@
 workflows:
-  android-workflow:
-    name: Android Workflow
+  android-build-only:
+    name: Android Build Only
     max_build_duration: 120
     environment:
-      # android_signing:
-      #   - joesAndroidKeystore
-      # groups:
-      #   - google_play
-      # vars:
-      #   PACKAGE_NAME: "com.joesjewelry.crm.app"
-      #   GOOGLE_PLAY_TRACK: production
       flutter: 3.29.0
     triggering:
       events:
@@ -20,47 +13,26 @@ workflows:
       cancel_previous_builds: true
     scripts:
       - name: Show Flutter version
-        script: |
-          flutter --version
- 
+        script: flutter --version
+
       - name: Set up local.properties
         script: |
           echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
 
       - name: Get Flutter packages
-        script: |
-          flutter packages pub get
-          
+        script: flutter pub get
+
       - name: Build APK
-        script: |
-          flutter build apk --release
-      # - name: Build AAB with Flutter
-      #   script: |
-      #     BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))      
-      #     flutter build appbundle --release \
-      #       --build-name=1.0.$BUILD_NUMBER \
-      #       --build-number=$BUILD_NUMBER
+        script: flutter build apk --release
+
     artifacts:
       - build/**/outputs/**/*.aab
       - build/**/outputs/**/*.apk
       - build/**/outputs/**/mapping.txt
       - flutter_drive.log
-        # publishing:
-        #   email:
-        #     recipients:
-        #       - ajay.m@infozzle.com
-        #     notify:
-        #       success: true
-        #       failure: false
-        #   google_play:
-        #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        #     track: $GOOGLE_PLAY_TRACK
 
-
-
-workflows:
   ios-build-only:
-    name: iOS Build
+    name: iOS Build Only
     environment:
       flutter: 3.29.0
       xcode: latest
@@ -75,7 +47,68 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
 
+
+
+# workflows:
+#   android-workflow:
+#     name: Android Workflow
+#     max_build_duration: 120
+#     environment:
+#       # android_signing:
+#       #   - joesAndroidKeystore
+#       # groups:
+#       #   - google_play
+#       # vars:
+#       #   PACKAGE_NAME: "com.joesjewelry.crm.app"
+#       #   GOOGLE_PLAY_TRACK: production
+#       flutter: 3.29.0
+#     triggering:
+#       events:
+#         - push
+#       branch_patterns:
+#         - pattern: main
+#           include: true
+#       cancel_previous_builds: true
+#     scripts:
+#       - name: Show Flutter version
+#         script: |
+#           flutter --version
  
+#       - name: Set up local.properties
+#         script: |
+#           echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
+
+#       - name: Get Flutter packages
+#         script: |
+#           flutter packages pub get
+          
+#       - name: Build APK
+#         script: |
+#           flutter build apk --release
+#       # - name: Build AAB with Flutter
+#       #   script: |
+#       #     BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))      
+#       #     flutter build appbundle --release \
+#       #       --build-name=1.0.$BUILD_NUMBER \
+#       #       --build-number=$BUILD_NUMBER
+#     artifacts:
+#       - build/**/outputs/**/*.aab
+#       - build/**/outputs/**/*.apk
+#       - build/**/outputs/**/mapping.txt
+#       - flutter_drive.log
+#         # publishing:
+#         #   email:
+#         #     recipients:
+#         #       - ajay.m@infozzle.com
+#         #     notify:
+#         #       success: true
+#         #       failure: false
+#         #   google_play:
+#         #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+#         #     track: $GOOGLE_PLAY_TRACK
+
+
+
 
 # workflows:
 #   ios-release:
