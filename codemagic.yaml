@@ -55,3 +55,57 @@ workflows:
         #   google_play:
         #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         #     track: $GOOGLE_PLAY_TRACK
+
+
+
+workflows:
+  ios-build-only:
+    name: iOS Build
+    environment:
+      flutter: 3.29.0
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install Flutter packages
+        script: flutter pub get
+
+      - name: Build IPA (unsigned)
+        script: flutter build ipa --debug --no-codesign
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+
+ 
+
+# workflows:
+#   ios-release:
+#     name: iOS Release to TestFlight
+#     environment:
+#       flutter: 3.29.0
+#       xcode: latest
+#       cocoapods: default
+#       vars:
+#         BUNDLE_ID: "com.joesjewelry.crm.app
+#       groups:
+#         - app_store_credentials
+#     scripts:
+#       - name: Set up keychain and code signing
+#         script: |
+#           keychain initialize
+#           app-store-connect fetch-signing-files "$BUNDLE_ID" \
+#             --type IOS_APP_STORE \
+#             --create \
+#             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+#             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+#             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY"
+#           keychain add-certificates
+#       - name: Get Flutter packages
+#         script: flutter pub get
+#       - name: Build iOS app
+#         script: flutter build ipa --release
+#     artifacts:
+#       - build/ios/ipa/*.ipa
+#     publishing:
+#       app_store_connect:
+#         auth: integration
+#         submit_to_testflight: true
