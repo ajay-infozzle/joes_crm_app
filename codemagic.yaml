@@ -26,9 +26,11 @@ workflows:
       - name: Set up local.properties
         script: |
           echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
+
       - name: Get Flutter packages
         script: |
           flutter packages pub get
+          
       - name: Build APK
         script: |
           flutter build apk --release
@@ -38,11 +40,11 @@ workflows:
       #     flutter build appbundle --release \
       #       --build-name=1.0.$BUILD_NUMBER \
       #       --build-number=$BUILD_NUMBER
-        artifacts:
-          - build/**/outputs/**/*.aab
-          - build/**/outputs/**/*.apk
-          - build/**/outputs/**/mapping.txt
-          - flutter_drive.log
+    artifacts:
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/*.apk
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
         # publishing:
         #   email:
         #     recipients:
