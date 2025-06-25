@@ -196,7 +196,7 @@ class _CustomerFilterState extends State<CustomerFilter> {
                             isEnable: false,
                           ),
                           onTap: () async {
-                            anniversaryFromDateCont.text = getDMY(await getDateFromUser(context));
+                            anniversaryFromDateCont.text = getDM(await getDateFromUser(context));
                           },
                         ),
                       ],
@@ -215,7 +215,7 @@ class _CustomerFilterState extends State<CustomerFilter> {
                             isEnable: false,
                           ),
                           onTap: () async {
-                            anniversaryToDateCont.text = getDMY(await getDateFromUser(context));
+                            anniversaryToDateCont.text = getDM(await getDateFromUser(context));
                           },
                         ),
                       ],

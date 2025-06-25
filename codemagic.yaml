@@ -6,13 +6,15 @@ workflows:
       flutter: 3.29.0
       xcode: latest
       cocoapods: default
+      groups:
+        - appstore_credentials
     triggering:
       events:
         - push
       branch_patterns:
         - pattern: main
           include: true
-      cancel_previous_builds: true      
+      cancel_previous_builds: true
     scripts:
       - name: Show Flutter version
         script: flutter --version
@@ -27,8 +29,17 @@ workflows:
       - name: Build Android APK
         script: flutter build apk --release
 
-      - name: Build iOS IPA (unsigned)
-        script: flutter build ipa --debug --no-codesign
+      - name: Set up iOS code signing and build
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "com.joesjewelry.crm.app" \
+            --type IOS_APP_STORE \
+            --create \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY"
+          keychain add-certificates
+          flutter build ipa --release
 
     artifacts:
       - build/**/outputs/**/*.aab
@@ -36,6 +47,11 @@ workflows:
       - build/**/outputs/**/mapping.txt
       - build/ios/ipa/*.ipa
       - flutter_drive.log
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
 
 
 # workflows:
