@@ -8,6 +8,8 @@ workflows:
       cocoapods: default
       groups:
         - appstore_credentials
+    integrations:
+      app_store_connect: true        
     triggering:
       events:
         - push
