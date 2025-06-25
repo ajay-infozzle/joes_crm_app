@@ -7,11 +7,7 @@ workflows:
       xcode: latest
       cocoapods: default
       groups:
-        - appstore_credentials 
-      automatic_code_signing:
-        team_id: V6Z22M74XC
-        bundle_identifier: com.joesjewelry.crm.app
-        type: IOS_APP_STORE    
+        - appstore_credentials   
     triggering:
       events:
         - push
@@ -33,8 +29,14 @@ workflows:
       # - name: Build Android APK
       #   script: flutter build apk --release
 
-      - name: Build iOS IPA with automatic signing
-        script: flutter build ipa --release
+      - name: Set up iOS Code Signing and Build
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "com.joesjewelry.crm.app" \
+            --type IOS_APP_STORE \
+            --create
+          keychain add-certificates
+          flutter build ipa --release
 
     artifacts:
       - build/**/outputs/**/*.aab
